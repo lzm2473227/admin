@@ -1,0 +1,190 @@
+<template>
+  <div class="index-manage">
+    <div class="index-stroe-title">
+      {{ title }}
+      <div @click="changestatus()" :class="showstatus==false ? 'index-menu-show' : 'index-menu-hidden'"></div>
+    </div>
+    <div class="index-manage-content" :class="showstatus==false?'contenthidden':''">
+      <el-tree
+        :data="data"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+      ></el-tree>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["title"],
+  data() {
+    return {
+      showstatus: false,
+      data: [
+        {
+          label: "门店配置",
+          key:'store'
+        },
+        {
+          label: "人员配置",
+         key:'user'
+        },
+        {
+          label: "机具配置",
+           key:'machines'
+        }, 
+        {
+          label: "商品配置",
+            key:'commodity'
+        },
+        {
+          label: "广告管理",
+           key:'advertment'
+        },
+        {
+          label: "文件管理",
+           key:'file'
+        },
+      ],
+       defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
+    };
+  },
+  methods:{
+      //显示隐藏
+      changestatus(){
+          let t= this;
+          if(t.showstatus===true) t.showstatus = false; else t.showstatus = true;
+          
+      },
+      handleNodeClick(obj){
+          console.log(obj)
+           let path = "";
+      switch (obj.key) {
+        case "store":
+          path = "/setting/storelist";
+          break;
+        case "user":
+          path = "/setting/clerklist";
+          break;
+        case "machines":
+          path = "/setting/machine";
+          break;
+        case "commodity":
+          path = "/product";
+          break;
+        case "advertment":
+          path = "/setting/advertmentlist";
+          break;
+        case "file":
+          path = "";
+          break;
+        default:
+          break;
+      }
+      if (path) {
+        this.$router.push({
+          path: path,
+          query: {}, //后续传递当前级别
+        });
+      }
+      }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+/* 
+店长组件样式
+*/
+.index-manage {
+  width: 180px;
+  border-top: 1px solid #b8d0f2;
+  border-bottom: 1px solid #b8d0f2;
+  // padding-top: 16px;
+}
+.index-stroe-title {
+  height: 38px;
+  background: #ecf3fb;
+  font-size: 14px;
+  font-family: Source Han Sans CN;
+  font-weight: 500;
+  color: #333333;
+  line-height: 38px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-sizing: border-box;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.index-menu-hidden {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 1px solid #a0c3f1;
+  border-radius: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.index-menu-hidden::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  margin-left: -3.5px;
+  margin-top: -1px;
+  border-top: 2px solid;
+  background: #2a78d2;
+}
+.index-menu-show {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 1px solid #a0c3f1;
+  border-radius: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+//横
+.index-menu-show::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  margin-left: -3.5px;
+  margin-top: -1px;
+  border-top: 2px solid;
+  background: #2a78d2;
+}
+//竖
+.index-menu-show::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 8px;
+  margin-left: -0.5px;
+  margin-top: -4px;
+  border-left: 2px solid;
+  background: #2a78d2;
+}
+.index-manage-content {
+  background: #fff;
+  padding: 10px 0 10px 0;
+}
+.contenthidden{
+    display: none !important;
+}
+</style>>
+ 
