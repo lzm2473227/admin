@@ -1,136 +1,115 @@
 <template>
-  <div class="advertmentlist">
-    <!-- <NewBreadCrumb
-      ptitle="门店列表"
-    ></NewBreadCrumb> -->
-    <ListTile titlename="广告管理"></ListTile>
-    <div class="tools-btn">
-      <div class="tools-new">
-        <el-button type="primary" @click="addAdvert">新增广告</el-button>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="addAdvert()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增广告</span></div>
+        <div class="print" @click="editadvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑广告</span></div>
+        <div class="print" @click="deladvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除广告</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+      </div>
+      <div class="right">
+        <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div>
       </div>
     </div>
-    <div class="advertlist">
+    <div class="tab-body">
       <el-table
-        border
-        :data="tabledata"
-        stripe="true"
-        header-cell-style="background:#f6faff"
-        style="width: 100%"
-        :default-sort="{ prop: 'index', order: 'descending' }"
+      :row-class-name="tableRowClassName"
+    
+      ref="singleTable"
+      :data="tabledata"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="index" label="序号" align="center" width="50">
-        </el-table-column>
-        <el-table-column
-          prop="positionName"
-          label="广告位置"
-          align="center"
-          width="180"
-        >
-        </el-table-column>
-        <el-table-column align="center" label="广告图片">
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="meid" label="广告编码" align="center" sortable width="230"></el-table-column>
+        <el-table-column prop="machinecode" label="广告名称" align="center" width="150"></el-table-column>
+        <el-table-column prop="name" label="广告类型" align="center" width="160"></el-table-column>
+        <el-table-column label="广告描述" align="center" sortable width="250">
           <template #default="scope">
             <el-image
-              style="width: 200px; height: 100px"
+              style="width: 100%; height: 20px"
               :src="scope.row.linkPosition"
               :fit="cover"
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" align="center" label="开始时间">
-        </el-table-column>
-        <el-table-column prop="endTime" align="center" label="结束时间">
-        </el-table-column>
-        <el-table-column align="center" label="状态">
+        <el-table-column prop="positionName" label="广告位置" align="center" width="130" ></el-table-column>
+        <el-table-column prop="startTime" label="起始时间" align="center" sortable width="200" ></el-table-column>
+        <el-table-column prop="endTime" label="截止时间" align="center" sortable width="200" ></el-table-column>
+        <el-table-column label="状态" align="center"  sortable width="100" >
           <template #default="scope">
             <span v-if="scope.row.enableState == '0'">禁用</span>
             <span v-else>启用</span>
           </template>
         </el-table-column>
-
-        <el-table-column label="操作" align="center">
-          <template #default="scope">
-            <div class="operation">
-              <div
-                @click="editadvertment(scope.row.id)"
-                class="operation-title"
-              >
-                编辑
-              </div>
-
-              <div
-                @click="editstatus(1, scope.row.id)"
-                v-if="scope.row.enableState == '0'"
-                class="operation-title"
-              >
-                启用
-              </div>
-              <div
-                @click="editstatus(0, scope.row.id)"
-                v-else
-                class="operation-title delfont"
-              >
-                禁用
-              </div>
-              <div
-                @click="deladvertment(scope.row.id)"
-                class="operation-title delfont"
-              >
-                删除
-              </div>
-            </div>
-          </template>
-        </el-table-column>
       </el-table>
     </div>
-    <div class="com-bottom">
-      <div class="bot">
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :total="total"
-          :page-size="pageSize"
-          @current-change="currentchange"
-        >
-        </el-pagination>
-      </div>
+    <div class="bot">
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="广告名称:" prop="name" class="name-search">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="广告类型:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="广告位置:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="状态:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import ListTile from "../../layouts/IndexLayout/components/ListTitle";
-import httpreques from "../../utils/httpreques";
-import NewBreadCrumb from "../../layouts/IndexLayout/components/NewBreadCrumb";
-import _ from "lodash";
+import httpreques from '../../utils/httpreques';
 import moment from "moment";
+import _ from "lodash";
+
 export default {
-  name: "AdvertmentList",
-  components: { ListTile, NewBreadCrumb },
+  name: "tab",
   data() {
     return {
-      pageSize: 15,
-      pageIndex: 1,
       total: 0,
+      pageSize: 15,
+      pageNum: 1,
       tabledata: [],
-      idNumber: "",
+      totalNum: 0,
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
   },
   created() {
-    if (localStorage.getItem("loginuser"))
-      this.idNumber = JSON.parse(
-        localStorage.getItem("loginuser")
-      ).userDetails.idNumber;
-    this.getdata();
+    this.getdata(this.pageNum)
   },
   methods: {
-    addAdvert() {
-      let t = this;
-      t.$router.push({ path: "/setting/newadvertment" });
-    },
     getdata() {
       let t = this;
       let params = {
-        pageNum: t.pageIndex,
+        pageNum: t.pageNum,
         pageSize: t.pageSize,
       };
       httpreques(
@@ -145,38 +124,20 @@ export default {
             );
             item.endTime = moment(item.endTime).format("YYYY-MM-DD HH:mm:ss");
             item.index = key + 1;
+            console.log(item.enableState)
           });
           t.total = res.data.total;
           t.tabledata = res.data.data;
+          t.tabledata.reverse()
         } else {
           //接口错误处理
           t.$message.error(res.data.msg);
         }
       });
     },
-    //状态更改
-    editstatus(stu, id) {
+    addAdvert() {
       let t = this;
-      let params = {
-        enableState: stu,
-        id: id,
-      };
-      httpreques(
-        "post",
-        params,
-        "/realbrand-management-service/AdvertisementMgt/EnableAdvertisement"
-      ).then((res) => {
-        if (res.data.code == "SUCCESS") {
-          t.$message({
-            message: stu == 0 ? "广告已禁用" : "广告已启用",
-            type: "success",
-          });
-          t.getdata();
-        } else {
-          //接口错误处理
-          t.$message.error(res.data.msg);
-        }
-      });
+      t.$router.push({ path: "/setting/newadvertmenttwo" });
     },
     deladvertment(id) {
       let t = this;
@@ -207,53 +168,60 @@ export default {
         },
       });
     },
-    currentchange(index) {
+    //状态更改
+    editstatus(stu, id) {
       let t = this;
-      t.pageIndex = index;
-      t.getdata();
+      let params = {
+        enableState: stu,
+        id: id,
+      };
+      httpreques(
+        "post",
+        params,
+        "/realbrand-management-service/AdvertisementMgt/EnableAdvertisement"
+      ).then((res) => {
+        if (res.data.code == "SUCCESS") {
+          console.log(res);
+          t.$message({
+            message: stu == 0 ? "广告已禁用" : "广告已启用",
+            type: "success",
+          });
+          t.getdata();
+        } else {
+          //接口错误处理
+          t.$message.error(res.data.msg);
+        }
+      });
     },
+    currentchange(val){
+      this.pageNum = val
+      this.getdata()
+    },
+    handleCurrentChange(val){
+      // this.pageNum = val
+      // this.getdata()
+    },
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.advertmentlist {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100%;
+/deep/.el-table--small td{
+  padding: 0;
 }
-.tools-btn {
-  padding-left: 12px;
-}
-.tools-new {
-  padding-bottom: 30px;
-}
-.advertlist {
-  // padding-left: 12px;
-  padding: 20px;
-}
-.operation-title {
-  color: #3daeff;
-  cursor: pointer;
-  padding: 0 10px 0 10px;
-}
-.operation {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.delfont {
-  color: red;
-}
-.bot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-/deep/.el-table--striped .el-table__body tr.el-table__row--striped td {
-  background: #f6faff;
-}
+@import '../../assets/css/reset.scss'
 </style>

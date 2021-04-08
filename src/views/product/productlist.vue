@@ -1,281 +1,118 @@
 <template>
-  <div class="product">
-    <div class="product-tools">
-      <div class="tools-pagetitle" style="">商品资料</div>
-      <div class="tools-btns">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          size="medium"
-        >
-          <InpTop />
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="addProduct()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增商品</span></div>
+        <div class="print" @click="editproduct(scope.row.commodityCode)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑商品</span></div>
+        <div class="print" @click="delproduct()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除商品</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
       </div>
-      <Permission roles="md">
-        <div class="tools-new">
-          <el-button type="primary" @click="addProduct">新增商品</el-button>
-          <el-button type="primary">打印列表</el-button>
-          <el-button type="primary" @click="exportExcel">导出列表</el-button>
-          <el-button type="primary">导入列表</el-button>
+      <div class="right">
+        <!-- <el-radio-group v-model="radio1" size="mini">
+          <el-radio-button label="按商品69编码统计"></el-radio-button>
+          <el-radio-button label="按单品编码统计"></el-radio-button>
+        </el-radio-group> -->
+        <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
-        <template #otherwise>
-          <!-- 需要添加空的div 否则默认无权限 -->
-          <div></div>
-        </template>
-      </Permission>
-    </div>
-    <Permission roles="md">
-      <div class="product-list2">
-        <el-table
-          ref="multipleTable2"
-          :data="tabledata"
-          tooltip-effect="dark"
-          style="width: 100%"
-          border
-          stripe
-          header-cell-style="background:#f6faff"
-          @selection-change="handleSelectionChange"
-          :default-sort="{ prop: 'index', order: 'descending' }"
-        >
-          <el-table-column type="selection" width="55" fixed> </el-table-column>
-          <el-table-column
-            prop="index"
-            label="序号"
-            width="50"
-            fixed
-          ></el-table-column>
-          <el-table-column
-            prop="commodityCode"
-            label="单品编号"
-            width="120"
-            fixed
-          ></el-table-column>
-          <el-table-column
-            prop="barcode"
-            label="商品69码"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="commodityName"
-            label="商品名称"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="specname"
-            label="规格名称"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="specsParameter"
-            label="规格参数"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="productstandard"
-            label="产品标准号"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="productsize"
-            label="商品尺寸"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="productweight"
-            label="商品重量/质量"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="productvolume"
-            label="商品体积/容积"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="filePath"
-            label="商品图片"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="producteffect"
-            label="主要功能/功效"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="productsmall"
-            label="商品小类"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="productmid"
-            label="商品中类"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="productlarge"
-            label="商品大类"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="packingtype"
-            label="包装类型"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="packingsize"
-            label="包装尺寸"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="productdesc"
-            label="商品简介"
-          ></el-table-column>
-          <el-table-column
-            prop="price"
-            label="售价"
-            width="120"
-            fixed="right"
-          ></el-table-column>
-          <el-table-column label="操作" width="100" fixed="right">
-            <template #default="scope">
-              <div
-                @click="editproduct(scope.row.commodityCode)"
-                class="operation-title"
-              >
-                编辑
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div style="margin-top: 20px">
-          <el-checkbox
-            v-model="checkall"
-            @change="selectall()"
-            class="list-checkall"
-            >全选</el-checkbox
-          >
-          <el-button type="danger" @click="delproduct()" plain class="list-btndel">删除</el-button>
-        </div>
-      </div>
-
-      <template #otherwise>
-        <div class="product-list">
-          <el-table
-            ref="multipleTable"
-            :data="tabledata"
-            tooltip-effect="dark"
-            style="width: 100%"
-            stripe
-            border
-            fit="true"
-            header-cell-style="background:#f6faff"
-            :default-sort="{ prop: 'index', order: 'descending' }"
-          >
-            <el-table-column prop="index" width="50"  label="序号"> </el-table-column>
-            <el-table-column
-              prop="commodityCode"
-              label="单品编号"
-              width="250"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="barcode"
-              label="商品69码"
-              width="250"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="commodityName"
-              label="商品名称"
-              width="300"
-              align="center"
-            >
-            </el-table-column>
-
-            <el-table-column
-              prop="productstatus"
-              label="商品状态"
-              width="200"
-              align="center"
-            ></el-table-column>
-
-            <el-table-column
-              prop="endtime"
-              label="最新操作时间"
-               
-              align="center"
-            >
-            </el-table-column>
-            <!-- <el-table-column label="操作" align="center">
-              <div class="operation-title" @click="jumpproductinfo">
-                查看详情
-              </div>
-            </el-table-column> -->
-          </el-table>
-        </div>
-      </template>
-    </Permission>
-    <div class="com-bottom">
-      <div class="bot">
-        <el-pagination background layout="prev, pager, next" :total="total"
-          :page-size="pageSize" @current-change="currentchange">
-        </el-pagination>
       </div>
     </div>
+    <div class="tab-body">
+      <el-table
+      :row-class-name="tableRowClassName"
+    
+      ref="multipleTable2"
+      :data="tabledata"
+      style="width: 100%"
+      highlight-current-row
+      @selection-change="handleSelectionChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="280"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" align="center" sortable width="400"></el-table-column>
+        <el-table-column prop="time" label="规格" align="center" width="240" ></el-table-column>
+        <el-table-column align="center" label="商品单价" sortable width="120">
+          <template v-slot="scope">
+						￥{{ scope.row.price }}
+					</template>
+        </el-table-column>
+        <el-table-column prop="time" label="图片" align="center" width="240" ></el-table-column>
+      </el-table>
+    </div>
+    <div class="bot">
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="商品名称:" prop="name" class="name-search">
+          <el-input v-model="ruleForm.name"></el-input>
+          <img @click="scan" src="../../assets/images/ic-code.png" alt="">
+        </el-form-item>
+        <el-form-item label="商品单价:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <el-dialog title="" v-model="centerDialogVisible" width="30%" center :close-on-click-modal="false">
+        <el-input
+          type="textarea"
+          :rows="5"
+          placeholder="请扫描或输入单品编码"
+          v-model="textarea">
+        </el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+         </div>
+    </el-dialog>
   </div>
 </template>
+
 <script>
-import Permission from "@/components/Permission/index.vue";
-import httpreques from "../../utils/httpreques";
-import InpTop from "../../components/InpTop/index";
-import { export_json_to_excel } from "../../utils/Export2Excel.js";
-import _ from "lodash";
-import store from "../../store";
+import httpreques from '../../utils/httpreques';
+
 export default {
-  name: "Product",
+  name: "tab",
   data() {
     return {
-      pageSize:15,
-      pageIndex:1,
-      total:0,
-      formInline: {
-        commodityName: "",
-        commodityName: "",
-      },
-      barcode: "",
-      commodityCode: "",
-      commodityName: "",
-      checkall: false,
+      total: 0,
+      pageSize: 15,
+      pageNum: 1,
+      radio1: '按商品69编码统计',
+      centerDialogVisible: false,
+      textarea: '',
       tabledata: [],
+      totalNum: 0,
       multipleSelection: [],
-      idNumber: ''
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
   },
   created() {
-    this.getdata();
+    this.getdata()
   },
-  mounted() {},
   methods: {
-    addProduct() {
-      this.$router.replace("/newproduct");
-    },
-    jumpproductinfo() {
-      this.$router.replace("/productinfo");
-    },
-
     getdata() {
       let t = this;
       httpreques(
         "post",
         {
-          pageNum: t.pageIndex,
+          pageNum: t.pageNum,
           pageSize: t.pageSize,
         },
         "/realbrand-management-service/CommodityMgt/CommodityInfoList"
@@ -288,9 +125,12 @@ export default {
           t.total = res.data.total;
           t.tabledata = res.data.data;
         } else {
-          //接口错误处理
+          this.$message(res.data.msg)
         }
       });
+    },
+    addProduct() {
+      this.$router.replace("/newproducttwo");
     },
     editproduct(commodityCode) {
       let t = this;
@@ -300,18 +140,6 @@ export default {
           commodityCode: commodityCode,
         },
       });
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    selectall() {
-      let t = this;
-
-      t.$refs["multipleTable2"].toggleAllSelection(); //element 全选函数
-      t.checkall == true
-        ? (t.multipleSelection = JSON.parse(JSON.stringify(t.tabledata)))
-        : (t.multipleSelection = []);
-      t.checkall = t.checkall === true ? true : false;
     },
     delproduct(){
       let  t =this;
@@ -338,11 +166,12 @@ export default {
         });
      
     },
-    currentchange(index){
-    
-        let t = this;
-        t.pageIndex = index;
-        t.getdata();
+    jumpproductinfo() {
+      this.$router.replace("/productinfo");
+    },
+    handleCurrentChange(val){
+      this.pageNum = val
+      this.getdata()
     },
     exportExcel() {
       let t = this;
@@ -401,67 +230,39 @@ export default {
         });
       });
     },
-  },
-  components: {
-    InpTop,
-    Permission,
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+      handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleCurrentChange(val) {
+        this.currentRow = val;
+      },
+    scan(){
+      this.centerDialogVisible = true
+    }
   },
 };
 </script>
+
 <style lang="scss" scoped>
-.product {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100%;
-  
-}
-.product-tools {
-  padding: 20px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.tools-pagetitle {
-  color: #101010;
-  font-size: 20px;
-  font-family: SourceHanSansSC-regular;
-  font-weight: bold;
-  margin: 0 0 20px 0;
-}
-.demo-form-inline {
-  .el-input--medium .el-input__inner {
-    width: 250px;
-  }
-}
-.tools-new {
-  padding-bottom: 20px;
-}
-.list-btndel {
-  margin-left: 30px;
-}
-.list-checkall {
-  margin-left: 15px;
-}
-.product-list {
-  box-sizing: border-box;
-  padding: 10px 0 0 10px;
-}
 .product-list2 {
   // width:calc(100% - 200px);
   display: block;
   box-sizing: border-box;
   // width: 1200px;
 }
-.operation-title {
-  color: #3daeff;
-  cursor: pointer;
-}
-.bot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-/deep/ .el-table--striped .el-table__body tr.el-table__row--striped td {
-  background: #f6faff;
-}
+@import '../../assets/css/reset.scss'
 </style>

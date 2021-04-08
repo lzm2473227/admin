@@ -1,157 +1,97 @@
 <template>
-  <div class="clerklist">
-    <ListTile titlename="员工管理"></ListTile>
-    <div class="clerk-tools">
-      <div class="tools-btns">
-        <el-form :inline="true" size="medium">
-          <el-form-item label="员工姓名：">
-            <el-input placeholder="请输入店员姓名" v-model="storename" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSearch">查询</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="addclerk()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增人员</span></div>
+        <div class="print" @click="editclerk(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑人员</span></div>
+        <div class="print" @click="delclerk(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除人员</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
       </div>
-      <div class="tools-new">
-        <el-button type="primary" @click="addclerk()">新增员工</el-button>
-      </div>
-    </div>
-    <div class="clerk-list">
-      <el-table
-        ref="multipleTable"
-        :data="tabledata"
-        tooltip-effect="dark"
-        style="width: 100%"
-        stripe="true"
-        fit="true"
-        border
-        header-cell-style="background:#f6faff"
-      >
-        <el-table-column label="序号" width="50" align="center">
-          <template v-slot="scope">
-            {{ scope.row.index }}
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          align="center"
-          prop="idNumber"
-          label="身份证号"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column align="center" prop="name" label="姓名" width="200">
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="idcardImg"
-          label="证件照"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="storeName"
-          label="所属门店"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column align="center" prop="station" label="角色" width="200">
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template v-slot="scope">
-            <div class="operation">
-              <div
-                class="operation-title"
-                @click="addclerk(scope.row.idNumber)"
-              >
-                编辑
-              </div>
-              <div class="operation-title">重置密码</div>
-              <div
-                class="operation-title2"
-                @click="deldata(scope.$index, scope.row.idNumber)"
-              >
-                删除
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="com-bottom">
-        <div class="bot">
-          <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="pageSize"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
+      <div class="right">
+        <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
       </div>
     </div>
+    <div class="tab-body">
+      <el-table
+      :row-class-name="tableRowClassName"
+    
+      ref="singleTable"
+      :data="tabledata"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="idNumber" label="身份证号码" align="center" sortable width="230"></el-table-column>
+        <el-table-column prop="name" label="姓名" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="telNum" label="手机号码" align="center" sortable width="160"></el-table-column>
+        <el-table-column prop="frontId" label="证件照" align="center" sortable width="160"></el-table-column>
+        <el-table-column prop="storeName" label="所属门店" align="center"  sortable width="240" ></el-table-column>
+        <el-table-column prop="station" label="角色" align="center"  sortable width="150" ></el-table-column>
+        <el-table-column prop="storeName" label="市级经销商" align="center"  sortable width="200" ></el-table-column>
+        <el-table-column prop="storeName" label="省级经销商" align="center"  sortable width="200" ></el-table-column>
+      </el-table>
+    </div>
+    <div class="bot">
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="姓名:" prop="name" class="name-search">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号码:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="角色:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
+
 <script>
-import ListTile from "../../layouts/IndexLayout/components/ListTitle";
-import httpreques from "../../utils/httpreques";
+import httpreques from '../../utils/httpreques';
+
 export default {
-  name: "clerkList",
-  components: { ListTile },
+  name: "tab",
   data() {
     return {
-      clerkname: "",
-      tabledata: [],
-      pageNum: 1, //当前页码
-      pages: 0, //页码
-      total: 0, //员工总数
+      total: 0,
       pageSize: 15,
+      pageNum: 1,
+      tabs: ['当日', '当周', '当月'],
+      active: 0,
+      radio1: '按商品69编码统计',
+      textarea: '',
+      tabledata: [],
+      totalNum: 0,
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
   },
   created() {
-    this.getdata();
+    this.getdata(this.pageNum)
   },
   methods: {
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getdata();
-    },
-    //删除
-    deldata(index, idNumber) {
-      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        httpreques(
-          "post",
-          {
-            isDelete: 1
-          },
-          "/realbrand-management-service/StoreUserMgt/DeleteStoreUser"
-        ).then((result) => {
-          console.log(result);
-          if (result.data.code === "SUCCESS") {
-            this.$message.success("删除员工成功!");
-            this.tabledata.splice(index, 1);
-          } else {
-            this.$message.error("删除员工失败");
-          }
-        });
-      });
-    },
-    addclerk(idNumber) {
-      if (idNumber) {
-        this.$router.push({
-          path: "/setting/newclerk",
-          query: { idNumber: idNumber },
-        });
-      } else {
-        this.$router.push({
-          path: "/setting/newclerk",
-        });
-      }
-    },
     //店员列表
     getdata() {
       this.tabledata = [];
@@ -178,71 +118,79 @@ export default {
               name: data[i].name,
               telNum: data[i].telNum,
               station: data[i].station,
-              frontId: "-",
-              reverseId: "-",
+              frontId: data[i].frontId,
+              reverseId: data[i].reverseId,
               storeName: data[i].storeName,
             });
           }
           this.tabledata.reverse();
+        }else{
+          this.$message(res.data.msg)
         }
-        // console.log(this.tabledata);
       });
     },
+    //删除
+    delclerk(index, idNumber) {
+      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        httpreques(
+          "post",
+          {
+            isDelete: 1
+          },
+          "/realbrand-management-service/StoreUserMgt/DeleteStoreUser"
+        ).then((result) => {
+          console.log(result);
+          if (result.data.code === "SUCCESS") {
+            this.$message.success("删除员工成功!");
+            this.tabledata.splice(index, 1);
+          } else {
+            this.$message.error("删除员工失败");
+          }
+        });
+      });
+    },
+    addclerk(idNumber) {
+      if (idNumber) {
+        this.$router.push({
+          path: "/setting/newclerktwo",
+          query: { idNumber: idNumber },
+        });
+      } else {
+        this.$router.push({
+          path: "/setting/newclerktwo",
+        });
+      }
+    },
+    //编辑
+    editclerk(){
+
+    },
+   
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+    handleCurrentChange(val) {
+        this.currentRow = val;
+      },
   },
 };
 </script>
+
 <style lang="scss" scoped>
-.clerklist {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100%;
-}
-.clerk-tools {
-  padding: 0 0 0 10px;
-}
-.clerk-list {
-  padding: 20px;
-  .el-table--striped .el-table__body tr.el-table__row--striped td {
-    background: #f6faff;
-  }
-}
-.bot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-.tools-new {
-  padding-bottom: 20px;
-}
-.operation-title {
-  color: #3daeff;
-  cursor: pointer;
-  padding: 0 10px 0 10px;
-}
-.operation-title2 {
-  color: red;
-  cursor: pointer;
-  padding: 0 10px 0 10px;
-}
-.operation {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-/deep/.el-input__inner {
-  width: 328px;
-  margin-right: 50px;
-  height: 36px;
-  font-size: 14px;
-}
-/deep/.el-form-item--medium .el-form-item__label {
-  line-height: 36px;
-  font-size: 14px;
-}
-/deep/.el-button--medium {
-  width: 92px;
-  height: 38px;
-}
+@import '../../assets/css/reset.scss'
 </style>

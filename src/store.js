@@ -1,8 +1,6 @@
 import {createStore} from 'vuex'
-
- 
 import Vuex from 'vuex' 
-import { accountLogin } from './views/login/service';
+ 
 import { setToken } from '@/utils/localToken';
 import { removeToken } from "@/utils/localToken";
 const store = new Vuex.Store({

@@ -292,7 +292,7 @@ export default {
   flex-direction: column;
   background-color: #f6faff;
   padding-top: 30px;
-  height: 100%;
+  // height: 100%;
   box-sizing: border-box; 
 }
  

@@ -81,39 +81,39 @@ export default {
     },
     handleNodeClick(obj) {
       // if(this.nodekey)
-      //   switch(this.nodekey){
-      //     case 'clerk' :break;
-      //      case 'shopowner' :break;
-      //       case 'citydistributor' :break;
-      //        case 'provincedistributor' :break;
-      //         case 'countrydistributor' :break;
-      //        default  :break;
-      //   }
-      console.log(obj);
       let path = "";
+      let jumprouter = false;
+      path += "/"+this.nodekey;
+
       switch (obj.label) {
         case "待收货":
-          path = "/purchase/noreceive";
+          path += "/noreceive";
+          jumprouter = true;
           break;
         case "已收货":
-          path = "/purchase/receive";
+          path += "/receive";
+           jumprouter = true;
           break;
         case "待盘货":
-          path = "/inventory/nocheckproduct";
+          path += "/nocheckproduct";
+           jumprouter = true;
           break;
         case "已盘货":
-          path = "/inventory/checkproduct";
+          path += "/checkproduct";
+           jumprouter = true;
           break;
         case "待销售":
-          path = "/sale/nosale";
+          path += "/nosale";
+           jumprouter = true;
           break;
         case "已销售":
-          path = "/sale/sales";
+          path += "/sales";
+           jumprouter = true;
           break;
         default:
           break;
       }
-      if (path) {
+      if (jumprouter) {
         this.$router.push({
           path: path,
           query: {}, //后续传递当前级别
@@ -133,10 +133,10 @@ export default {
   border-top: 1px solid #b8d0f2;
   // padding-top: 16px;
 }
-.index-store:first-child{
+.index-store:first-child {
   border-top: 0;
 }
-.index-store:last-child{
+.index-store:last-child {
   border-bottom: 1px solid #b8d0f2;
 }
 .index-stroe-title {

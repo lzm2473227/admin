@@ -31,7 +31,7 @@
 
         </div> -->
 
-    <div class="indexlayout-newtop">
+    <!-- <div class="indexlayout-newtop">
       <div class="selectroles">
         <el-select v-model="rolename" @change="loginout" placeholder="请选择">
           <el-option
@@ -43,7 +43,7 @@
           </el-option>
         </el-select>
       </div>
-    </div>
+    </div> -->
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
         <div class="index-user">
@@ -69,11 +69,12 @@
           </div>
         </div> -->
         <div class="roles">
-        <RoleLv title="门店店员" nodekey='clerk'></RoleLv>
-        <RoleLv title="门店店长" nodekey="shopowner"></RoleLv>
-        <!-- <RoleLv title="市级经销商"  nodekey="citydistributor"></RoleLv>
-        <RoleLv title="省级经销商" nodekey="provincedistributor"></RoleLv>
-        <RoleLv title="全国经销商" nodekey="countrydistributor"></RoleLv> -->
+          
+        <RoleLv v-if="rolelv['clerk']" title="门店店员" nodekey='clerk'></RoleLv>
+        <RoleLv v-if="rolelv['shopowner']" title="门店店长" nodekey="shopowner"></RoleLv>
+        <RoleLv v-if="rolelv['citydistributor']" title="市级经销商"  nodekey="citydistributor"></RoleLv>
+        <RoleLv v-if="rolelv['provincedistributor']" title="省级经销商" nodekey="provincedistributor"></RoleLv>
+        <RoleLv v-if="rolelv['countrydistributor']" title="全国经销商" nodekey="countrydistributor"></RoleLv>
         <SystemManage title="内部管理"></SystemManage>
         </div>
       </div>
@@ -84,6 +85,11 @@
         </permission>
       
       </div>
+    </div>
+    <div class="indexlayout-newsup">
+        <span style="color:#333">技术支持单位：</span>
+         <span style="color:#2A78D2">深圳凯华技术有限公司&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span style="color:#333"> 技术支持电话：0755-83825745 </span>
     </div>
   </div>
 </template>
@@ -210,6 +216,7 @@ export default defineComponent({
           ],
         },
       ],
+      rolelv:{clerk:'clerk',shopowner:'shopowner',citydistributor:'citydistributor'},//角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
     };
   },
   mounted() {
@@ -259,7 +266,7 @@ export default defineComponent({
   methods:{
      async loginout() {
       let t = this;
-      await store.dispatch("user/logout");
+      await t.$store.dispatch("user/logout");
       t.$router.push({ path: "/user/login" });
     },
   },
@@ -388,7 +395,7 @@ export default defineComponent({
   padding-top: 20px;
   flex: 1;
   position: fixed;
-  top: 62px;
+  top: 0px;
   left: 0;
   width: 100vw;
 }
@@ -446,6 +453,18 @@ export default defineComponent({
   width: 1200px;
 }
 
+.indexlayout-newsup{
+  height: 46px;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background: #f2f6fb;
+}
 /deep/.el-input__inner {
   background-color: #0054b7;
   background-image: none;
@@ -459,7 +478,7 @@ export default defineComponent({
   border: none;
 }
 .roles{
-  height: 100vh;
+  height: calc(100% - 193px);
   border: 1px solid #b8d0f2;
 }
 </style>

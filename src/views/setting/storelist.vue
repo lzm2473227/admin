@@ -1,144 +1,96 @@
 <template>
-  <div class="storelist">
-    <ListTile titlename="门店列表"></ListTile>
-    <div class="store-tools">
-      <div class="tools-btns">
-        <el-form :inline="true" size="medium">
-          <el-form-item label="门店名称：">
-            <el-input placeholder="请输入门店名称" v-model="storename" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSearch">查询</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="addStore"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增门店</span></div>
+        <div class="print" @click="editstore(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑门店</span></div>
+        <div class="print" @click="delstore(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除门店</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
       </div>
-      <div class="tools-new">
-        <el-button type="primary" @click="addStore">新增门店</el-button>
+      <div class="right">
+        <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div>
       </div>
     </div>
-    <div class="store-list">
+    <div class="tab-body">
       <el-table
-        ref="multipleTable"
-        :data="tabledata"
-        tooltip-effect="dark"
-        style="width: 100%"
-        stripe="true"
-        fit="true"
-        border
-        header-cell-style="background:#f6faff"
-        :default-sort="{ prop: 'index', order: 'descending' }"
+      :row-class-name="tableRowClassName"
+    
+      ref="singleTable"
+      :data="tabledata"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="index" label="序号" width="80" align="center">
-        </el-table-column>
-
-        <el-table-column
-          align="center"
-          prop="orgCode"
-          label="门店机构代码"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="storeName"
-          label="门店名称"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="addresss"
-          label="门店地址"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="store_type"
-          label="门店类别"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="storeLicence"
-          label="门店许可证"
-          width="200"
-        >
-        </el-table-column>
-        <!-- <el-table-column
-          align="center"
-          prop="storeaccount"
-          label="门店账号"
-          width="200"
-        >
-        </el-table-column> -->
-        <el-table-column label="操作" align="center">
-          <template #default="scope">
-            <div class="operation">
-              <div
-                @click="editstore(scope.row.storeName)"
-                class="operation-title"
-              >
-                编辑
-              </div>
-              <div
-                @click="delstore(scope.row.storeName)"
-                class="operation-title"
-              >
-                删除
-              </div>
-              <!-- <div class="operation-title">重置密码</div> -->
-            </div>
-          </template>
-        </el-table-column>
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="orgCode" label="门店机构代码" align="center" sortable width="220"></el-table-column>
+        <el-table-column prop="storeName" label="门店名称" align="center" sortable width="280"></el-table-column>
+        <el-table-column prop="address" label="门店地址" align="center" sortable width="400"></el-table-column>
+        <el-table-column prop="store_type" label="门店类别" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="storeLicence" label="门店许可证" align="center"  sortable width="240" ></el-table-column>
       </el-table>
     </div>
-    <div class="com-bottom">
-      <div class="bot">
-        <el-pagination background layout="prev, pager, next" 
-        :total="total"
-        :page-size="pageSize"
-         @current-change="currentchange"
-        >
-        </el-pagination>
-      </div>
+    <div class="bot">
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="门店名称:" prop="name" class="name-search">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="门店类型:" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
+
 <script>
-import NewBreadCrumb from "../../layouts/IndexLayout/components/NewBreadCrumb";
-import ListTile from "../../layouts/IndexLayout/components/ListTitle";
-import httpreques from "../../utils/httpreques";
+import httpreques from '../../utils/httpreques';
+
 export default {
-  name: "StoreList",
-  components: {
-    ListTile,
-    NewBreadCrumb,
-  },
+  name: "tab",
   data() {
     return {
-      pageSize:15,
-      pageIndex:1,
-      total:0,
-      storename: "",
+      total: 0,
+      pageSize: 15,
+      pageNum: 1,
       tabledata: [],
+      totalNum: 0,
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
   },
   created() {
-    this.getdata();
+    this.getdata()
   },
   methods: {
-    onSearch() {
-      this.getdata();
-    },
-    getdata() {
+    getdata(){
       let t = this;
       let params = {
         "storeName": "",
-        "pageNum": this.pageIndex,
+        "pageNum": this.pageNum,
         "pageSize": this.pageSize,
       };
+      this.tabledata = []
       httpreques(
         "post",
         params,
@@ -149,19 +101,18 @@ export default {
           res.data.data.forEach((item,key) => {
              item.index = key + 1; //加入index
             let address = item.province + item.city + item.county;
-            item.addresss = address + item.addresss;
+            item.address = address + item.address;
           });
           t.tabledata = res.data.data;
           t.total= res.data.total;
         } else {
-          //接口错误处理
+          this.$message(res.data.msg)
         }
       });
     },
     addStore() {
       let t = this;
-
-      t.$router.push({ path: "/setting/newstore" });
+      t.$router.push({ path: "/setting/newstoretwo" });
     },
     delstore(storename) {
       let t = this;
@@ -194,64 +145,35 @@ export default {
         },
       });
     },
-    currentchange(index){
-      this.pageIndex = index;
-      this.getdata();
-    }
+    handleCurrentChange(val){
+      // this.pageNum = val
+      // this.getdata()
+    },
+    currentchange(val){
+      this.pageNum = val
+      this.getdata()
+    },
+    handleCurrentChange(val){
+      
+    },
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      }
   },
-  
-  
 };
 </script>
-<style lang="scss" scoped>
-.storelist {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100%;
-}
-.store-tools {
-  padding: 0 0 0 10px;
-}
-.store-list {
-  padding: 20px;
-  .el-table--striped .el-table__body tr.el-table__row--striped td {
-    background: #f6faff;
-  }
-}
 
-.tools-new {
-  padding-bottom: 20px;
-}
-.operation-title {
-  color: #3daeff;
-  cursor: pointer;
-  padding: 0 10px 0 10px;
-}
-.operation {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.bot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-/deep/.el-input__inner {
-  width: 328px;
-  margin-right: 50px;
-  height: 36px;
-  font-size: 14px;
-}
-/deep/.el-form-item--medium .el-form-item__label {
-    line-height: 36px;
-    font-size: 14px;
-}
-/deep/.el-button--medium {
-  width: 92px;
-  height: 38px;
-  // margin-top: 6px;
-}
+<style lang="scss" scoped>
+@import '../../assets/css/reset.scss'
 </style>

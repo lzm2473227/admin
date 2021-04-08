@@ -7,7 +7,8 @@ import { removeToken } from "@/utils/localToken";
 export interface CurrentUser {
   id: number;
   idNumber: string;
-  name: string;
+  name: string; 
+
   roles: string[];
   authList: string[],
 }
@@ -99,25 +100,50 @@ const StoreModel: ModuleType = {
             userDetails.roles =['productlist']
           };
           function store(){
-          
-                //门店管理员
+          //门店管理员基础权限
           userDetails.roles = ['md', 'productlist', 'purchase', 'product', 'inventory', 'sale', 'setting', 'user', 'noreceive', 'receive', 'checkproduct', 'nocheckproduct', 'sales', 'nosale', 'storelist', 'machine',
-        , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab']
+        , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew'
+        ]
+          let rolelv = ["clerk","shopowner",'citydistributor'];//角色多重身份 【与indexlayouts下的index组件菜单对应。否则有权限，无菜单。只能手动输入路由】
+
+          rolelv.forEach((item)=>{
+            if(item=="clerk"){
+              //店员身份权限
+              userDetails.roles.push('clerk','clerknoreceive','clerkreceive','clerknocheckproduct','clerknosale','clerksales','clerkcheckproduct');
+            }
+            if(item=="shopowner"){
+               //店长身份权限
+              userDetails.roles.push('shopowner','shopownernoreceive','shopownerreceive','shopownernocheckproduct','shopownernosale','shopownersales','shopownercheckproduct');
+            }
+            if(item=="citydistributor"){
+              //市级管理员权限
+              userDetails.roles.push('citydistributor','citydistributornoreceive','citydistributorreceive','citydistributornocheckproduct','citydistributornosale','citydistributorsales','citydistributorcheckproduct');
+            }
+            if(item=="provincedistributor"){
+              //省级管理员权限
+              userDetails.roles.push('provincedistributor','provincedistributornoreceive','provincedistributorreceive','provincedistributornocheckproduct','provincedistributornosale','provincedistributorsales','provincedistributorcheckproduct');
+            }
+            if(item=="countrydistributor"){
+              //全国经销商权限
+              userDetails.roles.push('countrydistributor','countrydistributornoreceive','countrydistributorreceive','countrydistributornocheckproduct','countrydistributornosale','countrydistributorsales','countrydistributorcheckproduct');
+            }
+          })
+
           };
           function logistics(){
-            userDetails.roles =['productlist']
+            userDetails.roles =['productlist','userlv']
           };
           function warehouse(){
-            userDetails.roles =['productlist']
+            userDetails.roles =['productlist','userlv']
           };
           function factory(){
-            userDetails.roles =['productlist']
+            userDetails.roles =['productlist','userlv']
           };
           function insurance(){
-            userDetails.roles =['productlist']
+            userDetails.roles =['productlist','userlv']
           };
           function bank(){
-            userDetails.roles =['productlist']
+            userDetails.roles =['productlist','userlv']
           };
           function kaihua(){
              //凯华管理员
