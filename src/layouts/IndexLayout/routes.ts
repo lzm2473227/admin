@@ -52,9 +52,9 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
       {
         // icon: "detail",
         title: "新增门店",
-        path: "/setting/newstoretwo",
-        roles: ["newstoretwo"],
-        component: () => import("@/views/setting/newstoretwo.vue"),
+        path: "/setting/newstore",
+        roles: ["newstore"],
+        component: () => import("@/views/setting/newstore.vue"),
         hidden: true,
         selectLeftMenu: "/setting/storelist",
       },

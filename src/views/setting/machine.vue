@@ -3,7 +3,7 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="addMachine()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增机具</span></div>
-        <div class="print" @click="editMachine(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑机具</span></div>
+        <div class="print" @click="addMachine('1')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑机具</span></div>
         <div class="print" @click="delMachine(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除机具</span></div>
         <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
@@ -17,12 +17,11 @@
     <div class="tab-body">
       <el-table
       :row-class-name="tableRowClassName"
-    
       ref="singleTable"
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -86,6 +85,7 @@ export default {
           resource: '',
           desc: ''
       },
+      multipleSelection : [],
     };
   },
   created() {
@@ -93,10 +93,6 @@ export default {
     this.getdata();
   },
   methods: {
-    currentchange(val) {
-      this.pageNum = val
-      this.getdata();
-    },
     //机具列表
     getdata() {
       this.tabledata = [];
@@ -158,85 +154,29 @@ export default {
           });
         })
     },
-    //点击触发新增机具
-    addMachine() {
-      if (this.index === "1") {
-        // 新增机具
-        httpreques(
-          "post",
-          {
-            meid: this.ruleForm.name,
-            storeName: this.ruleForm.affiliation,
-          },
-          "/realbrand-management-service/EquipmentMgt/BindingEquipment"
-        ).then((result) => {
-          console.log(result);
-          if (result.status && result.data.data === 1) {
-            this.centerDialogVisible = false;
-            this.$message.success("新增机具成功");
-            this.getdata();
-          } else {
-            this.$message.error("新增机具失败");
-          }
-        });
+    // 新增机具
+    addMachine(val) {
+      let storeId = ''
+      if(val === '1'){
+        if(this.multipleSelection.length != 1) return this.$message.error('请选择要编辑的机具')
+        storeId = this.multipleSelection[0].storeId
+      } else{
+        storeId = ''
       }
-      if (this.index === "2") {
-        // 编辑机具
-        httpreques(
-          "post",
-          {
-            meid: this.ruleForm.name,
-            storeName: this.ruleForm.affiliation,
-          },
-          "/realbrand-management-service/EquipmentMgt/UpdateEquipment"
-        ).then((result) => {
-          if (result.status && result.data.data === 1) {
-            this.centerDialogVisible = false;
-            this.getdata(); //更新后刷新页面
-            this.$message.success("更新机具成功");
-            // console.log(result);
-          } else {
-            this.$message.error("更新机具失败");
-          }
-        });
-      }
-    },
-    editMachine(index, val) {
-      this.index = index; // 判断是新增还是编辑机具
-      this.centerDialogVisible = true;
-      this.StoreNameList(); //点击新增获取门店名称列表
-      if (index === "1") {
-        this.ruleForm = {
-          name: "",
-        };
-      } else {
-        this.ruleForm = {
-          name: val.meid,
-          machinecode: val.machinecode,
-          affiliation: val.storeName,
-        };
-      }
-    },
-    //获取店名列表
-    StoreNameList() {
-      httpreques(
-        "post",
-        {
-          idNumber: this.idNumber,
+      this.$router.push({
+        path: "/setting/machinenew",
+        query: {
+          storeId: storeId,
         },
-        "/realbrand-management-service/StoreMgt/StoreNameList"
-      ).then((result) => {
-        console.log(result);
-        if (result.data.code == "SUCCESS") {
-          this.storeNameItemList = result.data.data.storeNameItemList;
-        } else {
-          this.$message.error(result.data.msg);
-        }
       });
     },
-    handleCurrentChange(val){
-      // this.pageNum = val
-      // this.getdata()
+    handleSelectionChange(val){
+      console.log(val)
+      this.multipleSelection = val
+    },
+    currentchange(val) {
+      this.pageNum = val
+      this.getdata();
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){

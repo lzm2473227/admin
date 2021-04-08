@@ -10,10 +10,10 @@
         <div class="print" @click="exportExcel"><img class="icon" src="../../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
-        <el-radio-group v-model="radio1" size="mini">
+        <!-- <el-radio-group v-model="radio1" size="mini">
           <el-radio-button label="按商品69编码统计"></el-radio-button>
           <el-radio-button label="按单品编码统计"></el-radio-button>
-        </el-radio-group>
+        </el-radio-group> -->
         <div class="setup">
           <img class="set" src="../../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
@@ -47,11 +47,7 @@
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination layout=" prev, pager, next ,total" :total="total"
-        :page-size="pageSize" @current-change="currentchange">
-        
-      </el-pagination>
-      <!-- <div><span>第一页</span>共10页</div> -->
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
     </div>
     <div class="total">
       <div>待收货单品编码数量：<span>3565</span></div>
@@ -112,44 +108,13 @@ export default {
   name: "tab",
   data() {
     return {
-      total:100,
+      total:0,
+      pageNum: 1,
+      pageSize: 15,
       tabs: ['当日', '当周', '当月'],
       active: 0,
       radio1: '按商品69编码统计',
-      tableData: [
-        {
-          index: "1",
-          name: "6920210331001",
-          address: "星鲨  维生素AD软胶囊  100粒  国药控股星鲨 ",
-          receiving: "300",
-          price: "23.8",
-          time: "-",
-        },
-        {
-          index: "2",
-          name: "6920210331001",
-          address: "星鲨  维生素AD软胶囊  100粒  国药控股星鲨 ",
-          receiving: "300",
-          price: "23.8",
-          time: "-",
-        },
-        {
-          index: "3",
-          name: "6920210331001",
-          address: "星鲨  维生素AD软胶囊  100粒  国药控股星鲨 ",
-          receiving: "300",
-          price: "23.8",
-          time: "-",
-        },
-        {
-          index: "4",
-          name: "6920210331001",
-          address: "星鲨  维生素AD软胶囊  100粒  国药控股星鲨 ",
-          receiving: "300",
-          price: "23.8",
-          time: "-",
-        },
-      ],
+      tableData: [],
       ruleForm: {
           name: '',
           region: '',
@@ -163,8 +128,8 @@ export default {
     };
   },
   methods: {
-    num(){
-      console.log(2222)
+    currentchange(val){
+      this.pageNum = val
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){

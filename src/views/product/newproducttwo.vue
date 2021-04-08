@@ -51,7 +51,7 @@
             </td>
             <td class="table-left">商品69编码</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入商品69编码" />
+              <input type="text" v-model="form.barcode" placeholder="请输入商品69编码" />
             </td>
           </tr>
           <tr>
@@ -182,11 +182,6 @@
           </tr>
         </table>
       </div>
-      <Btn
-        :btntext="$route.query.commodityCode ? '编辑' : '新增'"
-        @addbtn="addcomm"
-        @cancelbtn="cancelbtn"
-      />
     </div>
   </form>
 </template>
@@ -210,6 +205,7 @@ export default {
         relationTime: "2021-04-07T07:27:47.467Z", //添加时间
         specsParameter: "", // 规格参数
         commodityCode: "", // 单品编码
+        storeId:""
       },
       dialogImageUrl:""
     };
@@ -233,9 +229,10 @@ export default {
         ).then((res) => {
           if (res.data.code == "SUCCESS") {
             //对象数据处理
+            console.log(res);
             let commobj = res.data.data;
 
-            t.ruleForm = commobj;
+            t.form = commobj;
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
@@ -260,12 +257,13 @@ export default {
     addcomm() {
       let params = {
         barcode: this.form.barcode, //条形码
+        storeId: this.form.storeId, //条形码
         brandName: this.form.brandName, //品牌名称
         commodityName: this.form.commodityName, //商品名称
-        filePath: this.dialogImageUrl, //商品图片路径
-        idNumber: this.form.idNumber, //登录ID
+        // filePath: this.dialogImageUrl, //商品图片路径
+        // idNumber: this.form.idNumber, //登录ID
         manufacturer: this.form.manufacturer, //厂商
-        policyNo: this.form.policyNo, //保险单号/默认为0
+        // policyNo: this.form.policyNo, //保险单号/默认为0
         price: this.form.price, //销售价格/默认为0
         relationTime: "2021-04-07T07:27:47.467Z", //添加时间
         specsParameter: this.form.specsParameter, // 规格参数
@@ -302,5 +300,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
 @import "../../assets/css/reset.scss";
 </style>

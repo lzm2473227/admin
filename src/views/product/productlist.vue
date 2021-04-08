@@ -2,11 +2,41 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addProduct()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增商品</span></div>
-        <div class="print" @click="editproduct(scope.row.commodityCode)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑商品</span></div>
-        <div class="print" @click="delproduct()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除商品</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="addProduct()">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">新增商品</span>
+        </div>
+        <div class="print" @click="editproduct(scope.row.commodityCode)">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">编辑商品</span>
+        </div>
+        <div class="print" @click="delproduct()">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">删除商品</span>
+        </div>
+        <div class="print">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">打印列表</span>
+        </div>
+        <div class="print" @click="exportExcel">
+          <img
+            class="icon"
+            src="../../assets/images/ic-导出表格.png"
+            alt=""
+          /><span class="axis">导出表格</span>
+        </div>
       </div>
       <div class="right">
         <!-- <el-radio-group v-model="radio1" size="mini">
@@ -14,69 +44,128 @@
           <el-radio-button label="按单品编码统计"></el-radio-button>
         </el-radio-group> -->
         <div class="setup">
-          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+          <img
+            class="set"
+            src="../../assets/images/ic-设置.png"
+            alt="系统设置"
+            @click="setup"
+          />
         </div>
       </div>
     </div>
     <div class="tab-body">
       <el-table
-      :row-class-name="tableRowClassName"
-    
-      ref="multipleTable2"
-      :data="tabledata"
-      style="width: 100%"
-      highlight-current-row
-      @selection-change="handleSelectionChange"
-      :default-sort="{ prop: 'date', order: 'descending' }"
+        :row-class-name="tableRowClassName"
+        ref="multipleTable2"
+        :data="tabledata"
+        style="width: 100%"
+        highlight-current-row
+        @selection-change="handleSelectionChange"
+        :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" align="center" sortable width="400"></el-table-column>
-        <el-table-column prop="time" label="规格" align="center" width="240" ></el-table-column>
+        <el-table-column
+          type="selection"
+          width="55"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="index"
+          label="序号"
+          align="center"
+          sortable
+          width="80"
+        ></el-table-column>
+        <el-table-column
+          prop="barcode"
+          label="商品69编码"
+          align="center"
+          sortable
+          width="280"
+        ></el-table-column>
+        <el-table-column
+          prop="commodityName"
+          label="商品名称"
+          align="center"
+          sortable
+          width="400"
+        ></el-table-column>
+        <el-table-column
+          prop="time"
+          label="规格"
+          align="center"
+          width="240"
+        ></el-table-column>
         <el-table-column align="center" label="商品单价" sortable width="120">
-          <template v-slot="scope">
-						￥{{ scope.row.price }}
-					</template>
+          <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
-        <el-table-column prop="time" label="图片" align="center" width="240" ></el-table-column>
+        <el-table-column
+          prop="time"
+          label="图片"
+          align="center"
+          width="240"
+        ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+      <el-pagination
+        layout=" prev, pager, next ,total"
+        :total="total"
+        :page-size="pageSize"
+        @current-change="currentchange"
+      ></el-pagination>
     </div>
     <div class="inp-bot">
-      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+      <el-form
+        :inline="true"
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="input-with-select"
+      >
         <el-form-item label="商品名称:" prop="name" class="name-search">
           <el-input v-model="ruleForm.name"></el-input>
-          <img @click="scan" src="../../assets/images/ic-code.png" alt="">
+          <img @click="scan" src="../../assets/images/ic-code.png" alt="" />
         </el-form-item>
         <el-form-item label="商品单价:" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')"
+            >查询</el-button
+          >
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')"
+            >重置</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="" v-model="centerDialogVisible" width="30%" center :close-on-click-modal="false">
-        <el-input
-          type="textarea"
-          :rows="5"
-          placeholder="请扫描或输入单品编码"
-          v-model="textarea">
-        </el-input>
+    <el-dialog
+      title=""
+      v-model="centerDialogVisible"
+      width="30%"
+      center
+      :close-on-click-modal="false"
+    >
+      <el-input
+        type="textarea"
+        :rows="5"
+        placeholder="请扫描或输入单品编码"
+        v-model="textarea"
+      >
+      </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false"
+          >确 定</el-button
+        >
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-         </div>
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import httpreques from '../../utils/httpreques';
+import httpreques from "../../utils/httpreques";
 
 export default {
   name: "tab",
@@ -85,26 +174,29 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      radio1: '按商品69编码统计',
+      barcode: "",
+      commodityName: "",
+      commodityCode: "",
+      radio1: "按商品69编码统计",
       centerDialogVisible: false,
-      textarea: '',
+      textarea: "",
       tabledata: [],
       totalNum: 0,
       multipleSelection: [],
       ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
+        delivery: false,
+        type: [],
+        resource: "",
+        desc: "",
       },
     };
   },
   created() {
-    this.getdata()
+    this.getdata();
   },
   methods: {
     getdata() {
@@ -112,20 +204,24 @@ export default {
       httpreques(
         "post",
         {
-          pageNum: t.pageNum,
+          barcode: t.barcode,
+          commodityCode: t.commodityCode,
+          commodityName: t.commodityName,
+          pageSize: t.pageSize,
           pageSize: t.pageSize,
         },
         "/realbrand-management-service/CommodityMgt/CommodityInfoList"
       ).then((res) => {
+        // console.log(res.data.code);
         if (res.data.code == "SUCCESS") {
           _.forEach(res.data.data, function (item, key) {
             item.index = key + 1; //加入index
           });
-          console.log(res.data)
+          // console.log(res.data)
           t.total = res.data.total;
           t.tabledata = res.data.data;
         } else {
-          this.$message(res.data.msg)
+          this.$message(res.data.msg);
         }
       });
     },
@@ -141,37 +237,39 @@ export default {
         },
       });
     },
-    delproduct(){
-      let  t =this;
-      //抽取commoditycode 
+    delproduct() {
+      let t = this;
+      //抽取commoditycode
       let codearr = [];
-       _.forEach(JSON.parse(JSON.stringify(t.multipleSelection)),function(item,key){
-           codearr.push(item.commodityCode);
-       })
-       let params = {
-          commodityCode : codearr
-        };
-        let url = "/realbrand-management-service/CommodityMgt/DeleteCommodity";
-        httpreques("post", params, url).then((res) => {
-          if (res.data.code == "SUCCESS") {
-            t.$message({
-              message:  "删除成功",
-              type: "success",
-            });
-            t.getdata();
-          } else {
-            //接口错误处理
-            t.$message.error(res.data.msg);
-          }
-        });
-     
+      _.forEach(
+        JSON.parse(JSON.stringify(t.multipleSelection)),
+        function (item, key) {
+          codearr.push(item.commodityCode);
+        }
+      );
+      let params = {
+        commodityCode: codearr,
+      };
+      let url = "/realbrand-management-service/CommodityMgt/DeleteCommodity";
+      httpreques("post", params, url).then((res) => {
+        if (res.data.code == "SUCCESS") {
+          t.$message({
+            message: "删除成功",
+            type: "success",
+          });
+          t.getdata();
+        } else {
+          //接口错误处理
+          t.$message.error(res.data.msg);
+        }
+      });
     },
     jumpproductinfo() {
       this.$router.replace("/productinfo");
     },
-    handleCurrentChange(val){
-      this.pageNum = val
-      this.getdata()
+    handleCurrentChange(val) {
+      this.pageNum = val;
+      this.getdata();
     },
     exportExcel() {
       let t = this;
@@ -231,38 +329,32 @@ export default {
       });
     },
     //添加class样式
-    tableRowClassName({row, rowIndex}){
+    tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 0) {
-        return 'warning-row';
+        return "warning-row";
       }
-      return '';
+      return "";
     },
     formatter(row, column) {
       return row.address;
     },
     //选中你选择的条件列表
     setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      },
-      handleSelectionChange(val) {
+      this.$refs.singleTable.setCurrentRow(row);
+    },
+    handleSelectionChange(val) {
       this.multipleSelection = val;
     },
     handleCurrentChange(val) {
-        this.currentRow = val;
-      },
-    scan(){
-      this.centerDialogVisible = true
-    }
+      this.currentRow = val;
+    },
+    scan() {
+      this.centerDialogVisible = true;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.product-list2 {
-  // width:calc(100% - 200px);
-  display: block;
-  box-sizing: border-box;
-  // width: 1200px;
-}
-@import '../../assets/css/reset.scss'
+@import "../../assets/css/reset.scss";
 </style>

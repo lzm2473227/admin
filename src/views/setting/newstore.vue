@@ -1,147 +1,74 @@
 <template>
-  <div class="newstore">
-    <NewBreadCrumb
-      ptitle="门店列表"
-      ctitle="新增门店"
-      path="/setting/storelist"
-    ></NewBreadCrumb>
-    <div class="newstore-content">
-<div class="newstore-from">
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-        label-position="left"
-      >
-        <el-form-item
-          label="门店机构代码"
-          prop="orgCode"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.orgCode"
-            placeholder="请输入门店机构代码"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="门店名称"
-          prop="storeName"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storeName"
-            placeholder="请输入门店名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="门店地址" prop="address" class="from-item-padding">
-          <div class="select-province">
-            <el-cascader
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">返回列表</span></div>
+        <div class="print" @click="addstore()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">保存内容</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+      </div>
+      <div class="right">
+        <!-- <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div> -->
+      </div>
+    </div>
+    <div class="table-main">
+      <form action="">
+      <table border="1" class="">
+        <tr>
+          <td class="table-left">门店机构代码</td>
+          <td class="table-right"><input type="text" placeholder="请输入门店机构代码" v-model="form.orgCode"></td>
+          <td class="table-left">门店类型</td>
+          <td class="table-right">
+            <select placeholder="请选择门店类型" v-model="form.storetype">
+              <option value="直营">直营</option>
+              <option value="加盟">加盟</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+            <td class="table-left">法人代表姓名</td>
+            <td class="table-right"><input type="text" placeholder="请输入法人代表姓名" v-model="form.name"></td>
+            <td class="table-left">电话号码</td>
+            <td class="table-right"><input type="text" placeholder="请输入电话号码" v-model="form.tel"></td>
+        </tr>
+        <tr>
+            <td class="table-left">法人身份证号</td>
+            <td class="table-right"><input type="text" placeholder="请输入法人身份证号" v-model="form.code"></td>
+            <td class="table-left">门店名称</td>
+            <td class="table-right"><input type="text" placeholder="请输入门店名称" v-model="form.storeName"></td>
+        </tr>
+        <tr>
+            <td class="table-left">门店地址</td>
+            <td class="table-right" colspan="3">
+              <el-cascader
               :options="options"
               v-model="selectedOptions"
               @change="handleChange"
+              style="width: 100%"
+              placeholder="请选择门店地址"
             >
             </el-cascader>
-          </div>
-          <el-input
-            v-model="ruleForm.address"
-            placeholder="请输入门店详细地址"
-            style="padding-top: 15px"
-          ></el-input>
-        </el-form-item>
-
-        <el-form-item
-          label="门店类别"
-          prop="storetype"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storetype"
-            placeholder="请输入门店类别"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="门店许可证"
-          prop="businessLicense"
-          class="from-item-padding"
-        >
-          <el-input v-model="ruleForm.businessLicense"></el-input>
-        </el-form-item>
-        <el-form-item
-          label="证件照"
-          prop="businessLicense"
-          class="from-item-padding"
-        >
-          <div class="clerk-imgs">
-            <el-upload action="#" list-type="picture-card" :auto-upload="false">
-              <template #default>
-                <div class="imgs-title">
-                  <i class="el-icon-plus"></i>
-                  <sapn class="cardfront">请上传营业执照</sapn>
-                </div>
-              </template>
-              <template #file="{ file }">
-                <div>
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
-              </template>
-            </el-upload>
-          </div>
-        </el-form-item>
-        <!-- <el-form-item
-          label="门店账号"
-          prop="storeaccount"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storeaccount"
-            placeholder="请输入门店账号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="初始密码"
-          prop="storepsw"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storepsw"
-            placeholder="请输入初始密码"
-          ></el-input>
-        </el-form-item> -->
-      </el-form>
+              <!-- <input type="text" placeholder="请输入商品售价" style="width: 100%"> -->
+              <br>
+              <input type="text" placeholder="请输入门店详细地址" style="margin-top: 6px; width: 100%" v-model="form.address">
+            </td>
+        </tr>
+        <tr>
+            <td class="table-left">门店简介</td>
+            <td class="table-right" colspan="3"><textarea class="table-item" placeholder="请输入门店简介" v-model="form.jianjie"></textarea></td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td class="table-left" style="padding-top: 12px;">证件照</td>
+            <td class="table-right" colspan="3" style="height: 550px"></td>
+        </tr>
+      </table>
+      </form>
     </div>
-    </div>
-    <Btn
-      :btntext="$route.query.storename ? '编辑' : '新增'"
-      @addbtn="addstore"
-      @cancelbtn="cancelbtn"
-    />
   </div>
 </template>
 <script>
-import Btn from "../../components/Btn";
-import NewBreadCrumb from "../../layouts/IndexLayout/components/NewBreadCrumb";
 import httpreques from "../../utils/httpreques";
 import {
   provinceAndCityData,
@@ -151,15 +78,13 @@ import {
   CodeToText,
   TextToCode,
 } from "element-china-area-data";
-import _ from "lodash";
-import { v4 as uuidv4 } from "uuid";
 export default {
-  name: "NewStore",
+  name: "Newproduct",
   data() {
     return {
       options: regionData,
       selectedOptions: [],
-      ruleForm: {
+      form: {
         orgCode: "",
         businessLicense: "",
         storeName: "",
@@ -168,30 +93,15 @@ export default {
         county: "",
         city: "",
         province: "",
+        name: "",
+        tel: "",
+        code: "",
+        jianjie: ""
       },
-      idNumber: '',
-      rules: {
-        orgCode: [
-          { required: true, message: "请输入门店机构代码", trigger: "blur" },
-        ],
-        storeName: [
-          { required: true, message: "请输入门店名称", trigger: "blur" },
-        ],
-        address: [
-          { required: true, message: "请输入门店地址", trigger: "blur" },
-        ],
-        storetype: [
-          { required: true, message: "请输入门店类别", trigger: "blur" },
-        ],
-        businessLicense: [
-          { required: true, message: "请输入门店许可证", trigger: "blur" },
-        ],
-      },
+      dialogImageUrl: ""
     };
   },
   mounted() {
-    // let t = this;
-    // t.selectedOptions = TextToCode[province][city][county].code;
     if(localStorage.getItem("loginuser")) this.idNumber = JSON.parse(localStorage.getItem("loginuser")).userDetails.idNumber
     this.getdata();
   },
@@ -230,15 +140,14 @@ export default {
     },
     addstore() {
       let t = this;
-      t.$refs["ruleForm"].validate((valid) => {
-        if (!valid) {
-          return;
-        }
-        let params = t.ruleForm;
-
+      // t.$refs["ruleForm"].validate((valid) => {
+      //   if (!valid) {
+      //     return;
+      //   }
+        let params = t.form;
         // params.storeName = uuidv4().substring(0, 8);
-        params.id = this.ruleForm.id;
-        params.idNumber = this.idNumber;
+        params.id = this.form.id;
+        // params.idNumber = this.idNumber;
 
         params.storeLicence = "1";
         delete params.storeaccount;
@@ -259,97 +168,51 @@ export default {
               message: t.$route.query.storename ? "修改成功" : "添加成功",
               type: "success",
             });
-            t.cancelbtn();
+            t.toBackList();
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
           }
         });
-      });
+      // });
     },
     //选择省市区
     handleChange(value) {
       let t = this;
-      t.ruleForm.province = CodeToText[value[0]];
-      t.ruleForm.city = CodeToText[value[1]];
-      t.ruleForm.county = CodeToText[value[2]];
+      t.form.province = CodeToText[value[0]];
+      t.form.city = CodeToText[value[1]];
+      t.form.county = CodeToText[value[2]];
+    },
+    toBackList(){
+      this.$router.go(-1)
     },
     cancelbtn() {
       let t = this;
-      t.$router.push({ path: "/setting/storelist" });
+      t.$router.push({ path: "/product" });
     },
-  },
-  components: {
-    Btn,
-    NewBreadCrumb,
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
-.newstore {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: #f6faff;
-  padding-top: 30px;
-  // height: 100%;
-  box-sizing: border-box; 
-}
- 
-.newstore-content{
-  background-color: #fff;
-  flex: 1;
-}
-.newstore-from {
-  width: 500px;
-  padding: 24px 0 0 15px;
-  margin-bottom: 20px;
-}
-.select-province {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-.imgs-title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-.cardfront {
-  font-size: 14px;
-  color: rgb(51, 51, 51);
-  line-height: 20px;
-  font-family: SourceHanSansSC;
-}
-/deep/.el-form-item--small.el-form-item {
-  margin-bottom: 24px;
-}
-/deep/.el-upload--picture-card {
-  width: 280px;
-  height: 160px;
-}
-
-/deep/.el-input__inner {
-  box-sizing: border-box;
-  height: 38px;
-  font-size: 14px;
-}
-/deep/.el-form-item--medium .el-form-item__label {
-  line-height: 36px;
-  font-size: 14px;
-}
-/deep/.el-cascader--small {
+/deep/.el-cascader .el-input__inner{
   width: 100%;
+  height: 28px;
+  font-size: 12px;
+  padding: 6px;
+  color: #333;
+  outline: none;
 }
-
-/deep/.el-button--medium {
-  width: 92px;
-  height: 38px;
-  // margin-top: 6px;
+/deep/.el-cascader .el-input .el-input__inner:focus{
+  border: 1px solid #ddd;
 }
-/deep/.el-form-item--small.el-form-item {
-    margin-bottom: 24px;
+/deep/.el-cascader .el-input__inner::-webkit-input-placeholder {
+  color: #ddd;
 }
+/deep/.el-cascader .el-input__inner::-moz-input-placeholder {
+  color: #ddd;
+}
+/deep/.el-cascader .el-input__inner::-ms-input-placeholder {
+  color: #ddd;
+}
+@import '../../assets/css/reset.scss'
 </style>

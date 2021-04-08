@@ -392,7 +392,7 @@ export default defineComponent({
 .indexlayout-newbot {
   display: flex;
   flex-direction: row;
-  padding-top: 20px;
+  padding-top: 10px;
   flex: 1;
   position: fixed;
   top: 0px;
@@ -401,7 +401,7 @@ export default defineComponent({
 }
 .indexlayout-bot-left {
   position: relative;
-  width: 220px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -411,7 +411,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   border: 1px solid #b8d0f2;
 }
 .index-user-title {
@@ -449,12 +449,12 @@ export default defineComponent({
 .indexlayout-bot-right {
   flex: 1;
   box-sizing: border-box;
-  padding: 0 20px 20px 0;
+  padding: 0 10px 10px 0;
   width: 1200px;
 }
 
 .indexlayout-newsup{
-  height: 46px;
+  height: 38px;
   width: 100vw;
   position: fixed;
   left: 0;
@@ -464,6 +464,7 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   background: #f2f6fb;
+  font-size: 12px;
 }
 /deep/.el-input__inner {
   background-color: #0054b7;

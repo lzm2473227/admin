@@ -103,7 +103,7 @@ export default {
     };
   },
   created() {
-    this.getdata(this.pageNum)
+    this.getdata()
   },
   methods: {
     getdata() {
@@ -117,6 +117,7 @@ export default {
         params,
         "/realbrand-management-service/AdvertisementMgt/AdvertisementInfoList"
       ).then((res) => {
+        console.log(res);
         if (res.data.code == "SUCCESS") {
           _.forEach(res.data.data, function (item, key) {
             item.startTime = moment(item.startTime).format(
@@ -124,7 +125,7 @@ export default {
             );
             item.endTime = moment(item.endTime).format("YYYY-MM-DD HH:mm:ss");
             item.index = key + 1;
-            console.log(item.enableState)
+            // console.log(item.enableState)
           });
           t.total = res.data.total;
           t.tabledata = res.data.data;

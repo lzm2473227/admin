@@ -3,8 +3,8 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="addStore"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增门店</span></div>
-        <div class="print" @click="editstore(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑门店</span></div>
-        <div class="print" @click="delstore(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除门店</span></div>
+        <div class="print" @click="addStore('1')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑门店</span></div>
+        <div class="print" @click="delstore"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除门店</span></div>
         <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -97,7 +97,6 @@ export default {
         "/realbrand-management-service/StoreMgt/StoreInfoList"
       ).then((res) => {
         if (res.data.code == "SUCCESS") {
-       
           res.data.data.forEach((item,key) => {
              item.index = key + 1; //加入index
             let address = item.province + item.city + item.county;
@@ -105,6 +104,7 @@ export default {
           });
           t.tabledata = res.data.data;
           t.total= res.data.total;
+          t.tabledata.reverse()
         } else {
           this.$message(res.data.msg)
         }
@@ -112,7 +112,7 @@ export default {
     },
     addStore() {
       let t = this;
-      t.$router.push({ path: "/setting/newstoretwo" });
+      t.$router.push({ path: "/setting/newstore" });
     },
     delstore(storename) {
       let t = this;

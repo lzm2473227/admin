@@ -44,7 +44,7 @@
 .tab-body {
     height: 644px;
     background: #fff;
-    border: 1px solid #D0DDE5;
+    border-top: 1px solid #D0DDE5;
     border-bottom: 0;
 }
 
@@ -74,12 +74,22 @@
     }
 }
 
-/deep/.el-table thead {
-    background-color: #B8D0F2;
+/deep/.el-table__body {
+    border-collapse: collapse;
+    border-top: 1px solid #D0DDE5;
+    border-left: 1px solid #D0DDE5;
+    border-spacing: 0;
+    td {
+        // padding: 10px 30px;
+        // height: 36px;
+        // line-height: 36px;
+        border-bottom: 1px solid #D0DDE5;
+        border-right: 1px solid #D0DDE5;
+    }
 }
 
 /deep/.el-button+.el-button {
-    margin-left: 0;
+    // margin-left: 0;
 }
 
 /deep/.el-table_1_column_5 .cell {
@@ -89,10 +99,10 @@
 
 /deep/.el-pagination {
     padding: 0;
-    height: 42px;
+    height: 40px;
     display: flex;
     align-items: center;
-    border: 1px solid #D0DDE5;
+    // border: 1px solid #D0DDE5;
     background-image: linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
@@ -101,8 +111,8 @@
 }
 
 /deep/.el-pagination button {
-    height: 42px;
-    line-height: 42px;
+    height: 40px;
+    line-height: 40px;
     background-image: linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
@@ -111,8 +121,8 @@
 }
 
 /deep/.el-pager li {
-    height: 42px;
-    line-height: 42px;
+    height: 40px;
+    line-height: 40px;
     background-image: linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
@@ -206,6 +216,7 @@
 }
 
 /deep/.el-button--primary {
+    width: 80px;
     background-color: #146ED6;
     border-color: #146ED6;
 }
@@ -223,7 +234,7 @@
 }
 
 /deep/.el-table--small td {
-    padding: 8px 0;
+    padding: 7px 0;
 }
 
 /deep/.el-table .cell {
@@ -238,9 +249,13 @@
     background-image: -mos-linear-gradient(#F5FAFD, #E0EDF6);
 }
 
+/deep/.el-form-item--small .el-form-item__content {
+    margin-left: 10px;
+}
+
 .inp-bot {
     background: #fff;
-    padding: 40px 0;
+    padding: 25px 0;
     border: 1px solid#D0DDE5;
     border-top: none;
 }
@@ -374,6 +389,12 @@
             }
             .table-item::-ms-input-placeholder {
                 color: #ddd;
+            }
+            select {
+                width: 100%;
+                height: 24px;
+                border: 1px solid #ddd;
+                outline: none;
             }
         }
     }

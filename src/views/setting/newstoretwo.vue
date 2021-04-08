@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <ul>
-      <li><img src="../../assets/iconsvg/Print_list.png" alt="" />返回列表</li>
+      <li @click="$router.push('/setting/storelist')"><img src="../../assets/iconsvg/Print_list.png" alt="" />返回列表</li>
       <li>
         <img src="../../assets/iconsvg/Save_content.png" alt="" />保存内容
       </li>
@@ -96,11 +96,6 @@
         </tr>
       </table>
     </el-form>
-    <Btn
-      :btntext="$route.query.commodityCode ? '编辑' : '新增'"
-      @addbtn="addcomm"
-      @cancelbtn="cancelbtn"
-    />
   </div>
 </template>
 <script>

@@ -346,6 +346,7 @@ export default {
   border-radius: 0;
 }
 /deep/.el-button--primary{
+  width: 80px;
   background-color: #146ED6;
   border-color: #146ED6;
 }

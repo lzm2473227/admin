@@ -1,27 +1,51 @@
 <template>
-<div class="tab">  
-  <div class="tab-title">
-      <div class="left">
-        <div class="print" @click="$router.push('/setting/advertmentlist')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">返回列表</span></div>
-        <div class="print" @click="addadv()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">保存内容</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
-      </div>
+  <div class="header">
+    <ul>
+      <li @click="$router.push('/setting/advertmentlist')"><img src="../../assets/iconsvg/Print_list.png" alt="" />返回列表</li>
+      <li @click="addadv()">
+        <img src="../../assets/iconsvg/Save_content.png" alt="" />保存内容
+      </li>
+      <li><img src="../../assets/iconsvg/Print_list.png" alt="" />打印预览</li>
+      <li><img src="../../assets/iconsvg/Print_list.png" alt="" />导出表格</li>
+    </ul>
   </div>
-  <div class="table-main">
-    <el-form>
-      <table border="1">
-        <tr>
-          <td class="table-left">广告编码</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="a"></td>
-          <td class="table-left">广告名称</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="b"></td>
+  <div class="main">
+    <el-form
+      :model="ruleForm"
+      :rules="rules"
+      ref="ruleForm"
+      class="demo-ruleForm"
+      label-position="left"
+    >
+      <table width="596" height="842" border="1" cellspacing="0">
+        <tr height="50">
+          <td width="88" class="bg">广告编码</td>
+          <td width="508">
+            <el-input v-model="a"></el-input>
+          </td>
         </tr>
-        <tr>
-          <td class="table-left">广告类型</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="c"></td>
-          <td class="table-left">广告位置</td>
-          <td class="table-right">     
+        <tr height="120">
+          <td width="88" class="bg">广告名称</td>
+          <td width="508">
+            <el-input v-model="b"></el-input>
+          </td>
+        </tr>
+        <tr height="50">
+          <td width="88" class="bg">广告类型</td>
+          <td width="508">
+            <el-input v-model="c"></el-input>
+          </td>
+        </tr>
+        <tr height="120">
+          <td width="88" class="bg">广告描述</td>
+          <td width="508">
+            <el-input v-model="d"></el-input>
+          </td>
+        </tr>
+        <tr height="50">
+          <td width="88" class="bg">广告位置</td>
+          <td width="508">
+            <el-form-item prop="positionName" class="from-item-padding">
               <el-select
                 v-model="ruleForm.positionName"
                 placeholder="请选择广告位置"
@@ -35,11 +59,13 @@
                 >
                 </el-option>
               </el-select>
+            </el-form-item>
           </td>
         </tr>
-        <tr>
-          <td class="table-left">起始时间</td>
-          <td class="table-right">
+        <tr height="50">
+          <td width="88" class="bg">起始时间</td>
+          <td width="508">
+            <el-form-item prop="startTime" class="from-item-padding">
               <el-date-picker
                 v-model="ruleForm.startTime"
                 type="datetime"
@@ -47,9 +73,13 @@
                 placeholder="选择日期"
               >
               </el-date-picker>
+            </el-form-item>
           </td>
-          <td class="table-left">截止时间</td>
-          <td class="table-right">
+        </tr>
+        <tr height="50">
+          <td width="88" class="bg">截止时间</td>
+          <td width="508">
+            <el-form-item prop="endTime" class="from-item-padding">
               <el-date-picker
                 v-model="ruleForm.endTime"
                 type="datetime"
@@ -57,11 +87,12 @@
                 placeholder="选择日期"
               >
               </el-date-picker>
+            </el-form-item>
           </td>
         </tr>
-        <tr>
-          <td class="table-left">广告状态</td>
-          <td class="table-right">
+        <tr height="50">
+          <td width="88" class="bg">广告状态</td>
+          <td width="508">
             <el-radio v-model="ruleForm.enableState" label="1">启用</el-radio>
             <el-radio
               v-model="ruleForm.enableState"
@@ -70,13 +101,11 @@
               >禁用</el-radio
             >
           </td>
-          <td class="table-left">广告描述</td>
-          <td class="table-right"><input type="text" v-model="d"></td>
         </tr>
-        <tr>
-          <td class="table-left">广告图片</td>
-          <td class="table-right">
-           <el-upload
+        <tr height="294">
+          <td width="88" class="bg"></td>
+          <td width="508">
+            <el-upload
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"
               :on-success="handleAvatarSuccess"
@@ -93,7 +122,6 @@
       </table>
     </el-form>
   </div>
-</div>
 </template>
 <script>
 import NewBreadCrumb from "../../layouts/IndexLayout/components/NewBreadCrumb";
@@ -105,10 +133,10 @@ export default {
   components: { NewBreadCrumb, Btn },
   data() {
     return {
-      a: "",
-      b: "",
-      c: "",
-      d: "",
+      a:"",
+      b:"",
+      c:"",
+      d:"",
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -122,6 +150,20 @@ export default {
       linkPosition: "", //默认选中显示
       positions: [],
       idNumber: "",
+      rules: {
+        positionName: [
+          { required: true, message: "请选中广告位置", trigger: "blur" },
+        ],
+        // linkPosition: [
+        //   { required: true, message: "请输入广告图片", trigger: "blur" },
+        // ],
+        startTime: [
+          { required: true, message: "请输入开始时间", trigger: "blur" },
+        ],
+        endTime: [
+          { required: true, message: "请输入结束时间", trigger: "blur" },
+        ],
+      },
     };
   },
   mounted() {
@@ -132,6 +174,7 @@ export default {
     this.getdata();
   },
   methods: {
+
     handleAvatarSuccess(res, file) {
       console.log(file);
       console.log(res);
@@ -191,8 +234,12 @@ export default {
       });
     },
     addadv() {
-        let t = this
-        // console.log(t.ruleForm.enableState);
+      let t = this;
+      t.$refs["ruleForm"].validate((valid) => {
+        if (!valid) {
+          return;
+        }
+         console.log(t.ruleForm.enableState);
         this.ruleForm.enableState = parseInt(this.ruleForm.enableState);
         let params = t.ruleForm;
         params.id = t.$route.query.advertmentid;
@@ -208,7 +255,8 @@ export default {
         //接口参数格式处理
         params.startTime = moment(params.startTime);
         params.endTime = moment(params.endTime);
-
+       
+        
         httpreques("post", params, url).then((res) => {
           if (res.data.code == "SUCCESS") {
             t.$message({
@@ -221,6 +269,7 @@ export default {
             t.$message.error(res.data.msg);
           }
         });
+      });
     },
     selectpositionName(val) {
       let t = this;
@@ -234,8 +283,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/deep/.el-input__inner{
-  width: 196px!important;
-}
 @import "../../assets/css/reset.scss";
 </style>
