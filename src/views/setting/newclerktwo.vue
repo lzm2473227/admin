@@ -2,10 +2,34 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">返回列表</span></div>
-        <div class="print" @click="addstore()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">保存内容</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="$router.push('/setting/clerklist')">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">返回列表</span>
+        </div>
+        <div class="print" @click="addstore()">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">保存内容</span>
+        </div>
+        <div class="print">
+          <img
+            class="icon"
+            src="../../assets/images/ic-打印列表.png"
+            alt=""
+          /><span class="axis">打印列表</span>
+        </div>
+        <div class="print" @click="exportExcel">
+          <img
+            class="icon"
+            src="../../assets/images/ic-导出表格.png"
+            alt=""
+          /><span class="axis">导出表格</span>
+        </div>
       </div>
       <div class="right">
         <!-- <div class="setup">
@@ -14,40 +38,281 @@
       </div>
     </div>
     <div class="table-main">
-      <form action="">
-      <table border="1" class="">
-        <tr>
-          <td class="table-left">机具编码</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.meid"></td>
-          <td class="table-left">机具型号</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.type"></td>
-        </tr>
-        <tr>
-            <td class="table-left">机具名称</td>
-            <td class="table-right"><input type="text" placeholder="请输入机具名称" v-model="form.name"></td>
-            <td class="table-left">机具供应商</td>
-            <td class="table-right"><input type="text" placeholder="请输入机具供应商" v-model="form.supplier"></td>
-        </tr>
-        <tr>
+      <form action="#">
+        <table border="1" class="">
+          <tr>
+            <td class="table-left">姓名</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入姓名"
+                v-model="ruleForm.name"
+              />
+            </td>
+            <td class="table-left">性别</td>
+            <td class="table-right">
+              <el-radio-group v-model="ruleForm.sex">
+                <el-radio label="1">男</el-radio>
+                <el-radio label="2">女</el-radio>
+              </el-radio-group>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">出生年月</td>
+            <td class="table-right">
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="请选择出生日期"
+              >
+              </el-date-picker>
+            </td>
+            <td class="table-left">身高</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入身高"
+                v-model="ruleForm.a"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">体重</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入体重"
+                v-model="ruleForm.b"
+              />
+            </td>
+            <td class="table-left">民族</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入民族"
+                v-model="ruleForm.c"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">籍贯</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入籍贯"
+                v-model="ruleForm.d"
+              />
+            </td>
+            <td class="table-left">健康状态</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入健康状态"
+                v-model="ruleForm.e"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">婚姻状况</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入婚姻状况"
+                v-model="ruleForm.f"
+              />
+            </td>
+            <td class="table-left">身份证号</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入身份证号"
+                v-model="ruleForm.idNumber"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">户口所在地</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入户口所在地"
+                v-model="ruleForm.g"
+              />
+            </td>
+            <td class="table-left">学历</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入学历"
+                v-model="ruleForm.h"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">专业</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入专业"
+                v-model="ruleForm.i"
+              />
+            </td>
+            <td class="table-left">毕业院校</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入毕业院校"
+                v-model="ruleForm.j"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">政治面貌</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入政治面貌"
+                v-model="ruleForm.k"
+              />
+            </td>
+            <td class="table-left">职称等级</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入职称等级"
+                v-model="ruleForm.l"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">手机号码</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入手机号码"
+                v-model="ruleForm.telNum"
+              />
+            </td>
             <td class="table-left">所属门店</td>
             <td class="table-right">
-              <select placeholder="请选择所属门店" v-model="form.storeName">
-                <option value="直营">直营</option>
-                <option value="加盟">加盟</option>
-              </select>
+              <el-select
+                v-model="ruleForm.storeName"
+                placeholder="请选择所属门店"
+              >
+                <el-option
+                  v-for="item in storeNameItemList"
+                  :key="item.value"
+                  :label="item.storeName"
+                  :value="item.storeName"
+                ></el-option>
+              </el-select>
             </td>
-            <td class="table-left">机具生产商</td>
-            <td class="table-right"><input type="text" placeholder="请输入机具生产商" v-model="form.producer"></td>
-        </tr>
-        <tr>
-            <td class="table-left">门店地址</td>
-            <td class="table-right" colspan="3"><input type="text" placeholder="请输入门店详细地址" v-model="form.address" style="width: 100%;"></td>
-        </tr>
-        <tr style="vertical-align: top;">
-            <td class="table-left" style="padding-top: 12px;">机具功能</td>
-            <td class="table-right" colspan="3" style="height: 694px;"><textarea class="table-item" placeholder="请输入机具功能" v-model="form.gongneng"></textarea></td>
-        </tr>
-      </table>
+          </tr>
+
+          <tr>
+            <td class="table-left">所属岗位</td>
+            <td class="table-right" colspan="3">
+              <el-checkbox-group v-model="radio">
+                <el-checkbox
+                  style="margin-right: 6px"
+                  v-for="item in clerkroles"
+                  :label="item.label"
+                  :key="item.value"
+                  @change="station1(item.label)"
+                  >{{ item.label }}</el-checkbox
+                >
+              </el-checkbox-group>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">证件照</td>
+            <td class="table-right" colspan="3">
+              <el-upload
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+              >
+                <template #default>
+                  <div class="imgs-title">
+                    <i class="el-icon-plus"></i>
+                    <sapn class="cardfront">请上传身份证正面</sapn>
+                  </div>
+                </template>
+                <template #file="{ file }">
+                  <div>
+                    <img
+                      class="el-upload-list__item-thumbnail"
+                      :src="file.url"
+                      alt=""
+                    />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                      >
+                        <i class="el-icon-zoom-in"></i>
+                      </span>
+
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
+              <el-upload
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+              >
+                <template #default>
+                  <div class="imgs-title">
+                    <i class="el-icon-plus"></i>
+                    <sapn class="cardfront">请上传身份证反面</sapn>
+                  </div>
+                </template>
+                <template #file="{ file }">
+                  <div>
+                    <img
+                      class="el-upload-list__item-thumbnail"
+                      :src="file.url"
+                      alt=""
+                    />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                      >
+                        <i class="el-icon-zoom-in"></i>
+                      </span>
+
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
+            </td>
+          </tr>
+        </table>
       </form>
     </div>
   </div>
@@ -58,24 +323,47 @@ export default {
   name: "Newproduct",
   data() {
     return {
-      form: {
-        orgCode: "",
-        businessLicense: "",
-        storeName: "",
-        address: "",
-        storetype: "",
-        county: "",
-        city: "",
-        province: "",
+      ruleForm: {
         name: "",
-        tel: "",
-        code: "",
-        jianjie: ""
-      }
+        idNumber: "",
+        telNum: "",
+        password: "",
+        reverseId: "",
+        station: "1111",
+        storeName: "",
+        reverseId: "",
+        sex: "1",
+      },
+      radio: [
+        {
+          label: "店长",
+          value: "1",
+        },
+      ],
+      clerkroles: [
+        {
+          label: "店长",
+          value: "1",
+        },
+        {
+          label: "进货员",
+          value: "2",
+        },
+        {
+          label: "销售员",
+          value: "3",
+        },
+        {
+          label: "盘货员",
+          value: "4",
+        },
+      ],
+      storeNameItemList: [],
     };
   },
   mounted() {
     this.getdata();
+    this.StoreNameList();
   },
   methods: {
     getdata() {
@@ -111,36 +399,44 @@ export default {
       }
     },
     addstore() {
-      let t = this;
-        let params = t.form;
-        // params.storeName = uuidv4().substring(0, 8);
-        params.id = this.form.id;
-        params.storeLicence = "1";
-        delete params.storeaccount;
-        delete params.storepsw;
-
-        if (params.registertime) {
-          delete params.registertime;
-        }
-        console.log(JSON.stringify(params));
-        //判断url
-        let url = t.$route.query.storename
-          ? "/realbrand-management-service/StoreMgt/UpdateStoreInfo"
-          : "/realbrand-management-service/StoreMgt/InsertStoreInfo";
-
-        httpreques("post", params, url).then((res) => {
-          if (res.data.code == "SUCCESS") {
-            t.$message({
-              message: t.$route.query.storename ? "修改成功" : "添加成功",
-              type: "success",
-            });
-            t.toBackList();
+      let params = {
+        idNumber: this.ruleForm.idNumber, // 身份证号
+        name: this.ruleForm.name,
+        password: "123456",
+        frontId: "1", // 身份证正面照
+        reverseId: "2", // 身份证反面照
+        station: this.station, // 岗位名称
+        storeName: this.ruleForm.storeName, // 店铺名称
+        telNum: this.ruleForm.telNum,
+      };
+      console.log(params);
+      if (this.isIdNumber) {
+        httpreques(
+          "post",
+          params,
+          "/realbrand-management-service/StoreUserMgt/UpdateUserInfo"
+        ).then((res) => {
+          if ((res.data.code = "SUCCESS")) {
+            this.$message.success("编辑员工成功");
+            this.$router.replace("/setting/clerklist");
           } else {
-            //接口错误处理
-            t.$message.error(res.data.msg);
+            this.$message.error("编辑员工失败");
           }
         });
-      // });
+      } else {
+        httpreques(
+          "post",
+          params,
+          "/realbrand-management-service/StoreUserMgt/InserUseraccount"
+        ).then((res) => {
+          if ((res.data.code = "SUCCESS")) {
+            this.$message.success("新增员工成功");
+            this.$router.replace("/setting/clerklist");
+          } else {
+            this.$message.error("新增员工失败");
+          }
+        });
+      }
     },
     // 门店名称列表
     StoreNameList() {
@@ -149,8 +445,7 @@ export default {
         {
           pageNum: 1,
           pageSize: 15,
-          storeName: "",
-          // idNumber: this.idNumber,
+          storeName: this.ruleForm.storeName,
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"
       ).then((result) => {
@@ -167,11 +462,14 @@ export default {
     },
     cancelbtn() {
       let t = this;
-      t.$router.push({ path: "/product" });
+      this.$router.replace("/setting/clerklist");
     },
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import '../../assets/css/reset.scss'
+@import "../../assets/css/reset.scss";
+/deep/.el-input__inner {
+  width: 196px;
+}
 </style>

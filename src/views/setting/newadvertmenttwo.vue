@@ -74,8 +74,8 @@
           <td class="table-right"><input type="text" v-model="d"></td>
         </tr>
         <tr>
-          <td class="table-left">广告图片</td>
-          <td class="table-right">
+          <td class="table-left" >广告图片</td>
+          <td class="table-right" colspan="3">
            <el-upload
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"

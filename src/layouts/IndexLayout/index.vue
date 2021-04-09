@@ -49,7 +49,11 @@
         <div class="index-user">
           <div class="index-user-title">{{ systitle }}</div>
           <div class="index-user-content">
-            <el-avatar :size="50" :src="circleUrl"></el-avatar>
+            <el-avatar
+              :size="50"
+              @click="edituser"
+              :src="circleUrl"
+            ></el-avatar>
             <span class="index-user-lvname">{{ lvname }}</span>
           </div>
         </div>
@@ -69,27 +73,119 @@
           </div>
         </div> -->
         <div class="roles">
-          
-        <RoleLv v-if="rolelv['clerk']" title="门店店员" nodekey='clerk'></RoleLv>
-        <RoleLv v-if="rolelv['shopowner']" title="门店店长" nodekey="shopowner"></RoleLv>
-        <RoleLv v-if="rolelv['citydistributor']" title="市级经销商"  nodekey="citydistributor"></RoleLv>
-        <RoleLv v-if="rolelv['provincedistributor']" title="省级经销商" nodekey="provincedistributor"></RoleLv>
-        <RoleLv v-if="rolelv['countrydistributor']" title="全国经销商" nodekey="countrydistributor"></RoleLv>
-        <SystemManage title="内部管理"></SystemManage>
+          <RoleLv
+            v-if="rolelv['clerk']"
+            title="门店店员"
+            nodekey="clerk"
+          ></RoleLv>
+          <RoleLv
+            v-if="rolelv['shopowner']"
+            title="门店店长"
+            nodekey="shopowner"
+          ></RoleLv>
+          <RoleLv
+            v-if="rolelv['citydistributor']"
+            title="市级经销商"
+            nodekey="citydistributor"
+          ></RoleLv>
+          <RoleLv
+            v-if="rolelv['provincedistributor']"
+            title="省级经销商"
+            nodekey="provincedistributor"
+          ></RoleLv>
+          <RoleLv
+            v-if="rolelv['countrydistributor']"
+            title="全国经销商"
+            nodekey="countrydistributor"
+          ></RoleLv>
+          <SystemManage title="内部管理"></SystemManage>
         </div>
       </div>
-     
+
       <div class="indexlayout-bot-right">
         <permission :roles="routeItem.roles">
           <router-view></router-view>
         </permission>
-      
       </div>
     </div>
     <div class="indexlayout-newsup">
-        <span style="color:#333">技术支持单位：</span>
-         <span style="color:#2A78D2">深圳凯华技术有限公司&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <span style="color:#333"> 技术支持电话：0755-83825745 </span>
+      <span style="color: #333">技术支持单位：</span>
+      <span style="color: #2a78d2"
+        >深圳凯华技术有限公司&nbsp;&nbsp;&nbsp;&nbsp;</span
+      >
+      <span style="color: #333"> 技术支持电话：0755-83825745 </span>
+    </div>
+
+    <!-- 个人设置弹窗 -->
+
+    <div v-if="dialogVisible" class="edituser-modal">
+      <div class="modal-userinfo">
+      <div class="modal-top">
+        <div class="modal-title">个人设置</div>
+        <div class="modalbtns">
+          <div class="modalbtn" @click="saveuser">
+            <img src="../../assets/images/ic-save.png" class="modalben-img" />
+            <span>应用</span>
+          </div>
+          <div class="modalbtn" style="margin-left:20px" @click="escclick">
+            <img src="../../assets/images/ic-esc.png" class="modalben-img" />
+            <span>退出</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-bot">
+        <div class="modalbot-left">
+          <div class="modalbot-menu" :class="selectmenu=='baseinfo'?'modalmunebg':''"   @click="changemenu('baseinfo')">基本信息</div>
+          <div class="modalbot-menu" :class="selectmenu=='userseting'?'modalmunebg':''" @click="changemenu('userseting')">个人设置</div>
+        </div>
+        <div class="modalbot-right">
+          <div v-if="selectmenu=='baseinfo'" class="modal-baseinfo">
+            <div class="baseinfo-left">
+              <div class="baseinfo-info">
+                  <div class="baseinfo-title">用户名称：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.name" />
+                  </div>
+              </div>
+            <div class="baseinfo-info">
+                  <div class="baseinfo-title">所属门店：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.storeName" />
+                  </div>
+              </div>
+              <div class="baseinfo-info">
+                  <div class="baseinfo-title">联系号码：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.telNum" />
+                  </div>
+              </div>
+            </div>
+            <div class="baseinfo-right">
+                <div class="baseinfo-info">
+                  <div class="baseinfo-title">用户账号：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.idNumber" />
+                  </div>
+              </div>
+                <div class="baseinfo-info">
+                  <div class="baseinfo-title">用户角色：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.station" />
+                  </div>
+              </div>
+                <div class="baseinfo-info">
+                  <div class="baseinfo-title">用户密码：</div>
+                  <div class="baseinfo-content">
+                    <input class="baseinfo-input" type="password" />
+                  </div>
+              </div>
+              
+            </div>
+          </div>
+          <div v-else class="modal-userseting"></div>
+        </div>
+      </div>
+      </div>
     </div>
   </div>
 </template>
@@ -118,7 +214,8 @@ import Permission from "@/components/Permission/index.vue";
 import Left from "./components/Left.vue";
 import RightTop from "./components/RightTop.vue";
 import RoleLv from "./components/RoleLv.vue";
-import SystemManage from './components/SystemManage.vue';
+import SystemManage from "./components/SystemManage.vue";
+import httpreques from "../../utils/httpreques";
 interface IndexLayoutSetupData {
   collapsed: boolean;
   toggleCollapsed: () => void;
@@ -138,7 +235,7 @@ export default defineComponent({
     Left,
     RightTop,
     RoleLv,
-    SystemManage
+    SystemManage,
   },
   data() {
     return {
@@ -216,7 +313,14 @@ export default defineComponent({
           ],
         },
       ],
-      rolelv:{clerk:'clerk',shopowner:'shopowner',citydistributor:'citydistributor'},//角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
+      rolelv: {
+        clerk: "clerk",
+        shopowner: "shopowner",
+        citydistributor: "citydistributor",
+      }, //角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
+      dialogVisible: false,
+      selectmenu:'baseinfo',
+      userinfo:{},
     };
   },
   mounted() {
@@ -263,12 +367,53 @@ export default defineComponent({
     this.systitle = "用户：   " + systitle;
     this.lvname = this.$store.state.user.currentUser.name;
   },
-  methods:{
-     async loginout() {
+  methods: {
+    async loginout() {
       let t = this;
       await t.$store.dispatch("user/logout");
       t.$router.push({ path: "/user/login" });
     },
+    getdata(){
+         let t = this;
+         const loginuser = JSON.parse(localStorage.getItem('loginuser'));
+        
+         let params ={
+           idCard:loginuser.userDetails.idNumber
+         };
+         httpreques(
+          "post",
+           params,
+          "/realbrand-management-service/StoreUserMgt/StoreUser"
+        ).then((res) => {
+          if (res.data.code == "SUCCESS") {
+            //对象数据处理
+            t.userinfo = res.data.data;
+          } else {
+            //接口错误处理
+            t.$message.error(res.data.msg);
+          }
+        });
+    },
+    //个人设置
+    edituser() {
+      let t = this;
+      t.dialogVisible = true;
+      t.getdata();
+    },
+    //菜单切换
+    changemenu(menu){
+      let t =this;
+      t.selectmenu = menu;
+    },
+    //保存设置
+    saveuser(){
+          
+    },
+    //退出
+    escclick(){
+        let t = this;
+      t.dialogVisible = false;
+    }
   },
   setup(): IndexLayoutSetupData {
     const store = useStore<{
@@ -466,6 +611,122 @@ export default defineComponent({
   background: #f2f6fb;
   font-size: 12px;
 }
+.edituser-modal {
+  position: fixed;
+  z-index: 2002;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal-userinfo{
+  width: 924px;
+  height: 580px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+ 
+}
+.modal-title{
+  font-size: 16px;
+font-family: Source Han Sans CN;
+ 
+ font-weight: bold;
+color: #333333;
+}
+.modal-top {
+  height: 48px;
+  width: 100%;
+  background: #ebebeb;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 20px 0 20px;
+}
+.modalbtns{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.modalbtn{
+  font-size: 16px;
+font-family: Source Han Sans CN;
+ 
+color: #333333;
+display: flex;
+align-items: center;
+width: 68px;
+height: 30px;
+border: 1px solid #C0C0C0;
+background: linear-gradient(180deg, #F9F9F9 0%, #E3E3E3 100%);
+border-radius: 2px;
+justify-content: space-evenly;
+box-sizing: border-box;
+ cursor: pointer;
+}
+.modal-bot{
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+.modalbot-left{
+  width: 124px;
+  height: 100%;
+  background: #F3F3F3;
+  box-sizing: border-box;
+  padding-top: 20px ;
+}
+.modalbot-menu{
+  height: 38px;
+  width: 124px;
+  
+  font-size: 14px;
+  font-family: Source Han Sans CN;
+   text-align: center;
+line-height: 38px;
+color: #3F4551;
+cursor: pointer;
+}
+.modalmunebg{
+background: #fff;
+}
+.modal-baseinfo{
+  display: flex;
+  flex-direction: row;
+}
+.baseinfo-info{
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 20px 0 0 30px;
+  font-size: 14px;
+font-family: Source Han Sans CN;
+ 
+ 
+color: #666666;
+align-items: center;
+
+}
+.baseinfo-right{
+  padding-left: 100px;
+}
+.baseinfo-input{
+  width: 180px;
+ height: 26px;
+ background: #F5F5F5;
+ border: 1px solid #DDDDDD; 
+  outline: none;
+}
 /deep/.el-input__inner {
   background-color: #0054b7;
   background-image: none;
@@ -478,7 +739,7 @@ export default defineComponent({
 /deep/.el-input__inner:hover {
   border: none;
 }
-.roles{
+.roles {
   height: calc(100% - 193px);
   border: 1px solid #b8d0f2;
 }
