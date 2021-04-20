@@ -31,8 +31,8 @@
 
         </div> -->
 
-    <!-- <div class="indexlayout-newtop">
-      <div class="selectroles">
+    <div class="indexlayout-newtop">
+      <!-- <div class="selectroles">
         <el-select v-model="rolename" @change="loginout" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -42,19 +42,19 @@
           >
           </el-option>
         </el-select>
-      </div>
-    </div> -->
+      </div> -->
+      <span class="systemtitle">海王集团门店管理系统</span>
+    </div>
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
         <div class="index-user">
-          <div class="index-user-title">{{ systitle }}</div>
+          <span class="index-user-title">{{ systitle }}</span>
           <div class="index-user-content">
             <el-avatar
               :size="50"
-              @click="edituser"
               :src="circleUrl"
             ></el-avatar>
-            <span class="index-user-lvname">{{ lvname }}</span>
+            <span class="index-user-lvname"><img @click="edituser()" src="../../assets/images/edit.png" alt="">{{ lvname }}</span>
           </div>
         </div>
         <!-- <div class="index-store">
@@ -72,31 +72,42 @@
             ></el-tree>
           </div>
         </div> -->
-        <div class="roles">
+        <div class="roles" :key='indexkey'>
+          <div class="a"></div>
           <RoleLv
             v-if="rolelv['clerk']"
             title="门店店员"
             nodekey="clerk"
+            @jumpurl='jumpurl'
+           
           ></RoleLv>
           <RoleLv
             v-if="rolelv['shopowner']"
             title="门店店长"
             nodekey="shopowner"
+              @jumpurl='jumpurl'
+              
           ></RoleLv>
           <RoleLv
             v-if="rolelv['citydistributor']"
             title="市级经销商"
             nodekey="citydistributor"
+              @jumpurl='jumpurl'
+              
           ></RoleLv>
           <RoleLv
             v-if="rolelv['provincedistributor']"
             title="省级经销商"
             nodekey="provincedistributor"
+              @jumpurl='jumpurl'
+             
           ></RoleLv>
           <RoleLv
             v-if="rolelv['countrydistributor']"
             title="全国经销商"
             nodekey="countrydistributor"
+            @jumpurl='jumpurl'
+             
           ></RoleLv>
           <SystemManage title="内部管理"></SystemManage>
         </div>
@@ -108,13 +119,13 @@
         </permission>
       </div>
     </div>
-    <div class="indexlayout-newsup">
+    <!-- <div class="indexlayout-newsup">
       <span style="color: #333">技术支持单位：</span>
       <span style="color: #2a78d2"
         >深圳凯华技术有限公司&nbsp;&nbsp;&nbsp;&nbsp;</span
       >
       <span style="color: #333"> 技术支持电话：0755-83825745 </span>
-    </div>
+    </div> -->
 
     <!-- 个人设置弹窗 -->
 
@@ -129,7 +140,7 @@
           </div>
           <div class="modalbtn" style="margin-left:20px" @click="escclick">
             <img src="../../assets/images/ic-esc.png" class="modalben-img" />
-            <span>退出</span>
+            <span @click="remove">退出</span>
           </div>
         </div>
       </div>
@@ -176,7 +187,7 @@
                 <div class="baseinfo-info">
                   <div class="baseinfo-title">用户密码：</div>
                   <div class="baseinfo-content">
-                    <input class="baseinfo-input" type="password" />
+                    <input class="baseinfo-input" v-model="userpsw" type="password" />
                   </div>
               </div>
               
@@ -312,6 +323,28 @@ export default defineComponent({
             },
           ],
         },
+        {
+          label: "银行开户",
+          children: [
+            {
+              label: "银行开户",
+            },
+            // {
+            //   label: "已盘货",
+            // },
+          ],
+        },
+        {
+          label: "保单推送",
+          children: [
+            {
+              label: "保单推送",
+            },
+            // {
+            //   label: "已盘货",
+            // },
+          ],
+        },
       ],
       rolelv: {
         clerk: "clerk",
@@ -321,6 +354,9 @@ export default defineComponent({
       dialogVisible: false,
       selectmenu:'baseinfo',
       userinfo:{},
+      userpsw:"",
+      childmenu:'',
+      indexkey:1
     };
   },
   mounted() {
@@ -368,10 +404,16 @@ export default defineComponent({
     this.lvname = this.$store.state.user.currentUser.name;
   },
   methods: {
+    remove(){
+      localStorage.removeItem('loginuser')
+      localStorage.removeItem('roleEnum')
+      // localStorage.removeItem('loglevel:webpack-dev-server')
+      this.$router.replace('/user/login')
+    },
     async loginout() {
       let t = this;
       await t.$store.dispatch("user/logout");
-      t.$router.push({ path: "/user/login" });
+      t.$router.replace({ path: "/user/login" });
     },
     getdata(){
          let t = this;
@@ -382,7 +424,7 @@ export default defineComponent({
          };
          httpreques(
           "post",
-           params,
+          params,
           "/realbrand-management-service/StoreUserMgt/StoreUser"
         ).then((res) => {
           if (res.data.code == "SUCCESS") {
@@ -407,14 +449,53 @@ export default defineComponent({
     },
     //保存设置
     saveuser(){
-          
+            let t = this;
+         const loginuser = JSON.parse(localStorage.getItem('loginuser'));
+         if(!t.userpsw){
+
+             t.$message.error("密码不能为空");
+             return;
+         }
+         let params ={
+           idNumber:loginuser.userDetails.idNumber,
+           password:t.userpsw
+         };
+         httpreques(
+          "post",
+          params,
+          "/realbrand-management-service/StoreUserMgt/UpdatePassword"
+        ).then((res) => {
+          if (res.data.code == "SUCCESS") {
+            //对象数据处理
+             t.$message({
+               type:'success',
+               message:"修改成功"
+             })
+            t.dialogVisible = false;
+          } else {
+            //接口错误处理
+            t.$message.error(res.data.msg);
+          }
+        });
     },
     //退出
     escclick(){
         let t = this;
       t.dialogVisible = false;
+    },
+    //
+    jumpurl(params){
+     
+      this.childmenu = params.nodekey;
+        this.$router.push({
+          path: params.path,
+          query: {}, //后续传递当前级别
+        });
+      
+      // this.indexkey ++;    //强制渲染；
     }
   },
+ 
   setup(): IndexLayoutSetupData {
     const store = useStore<{
       global: GlobalStateType;
@@ -484,6 +565,7 @@ export default defineComponent({
       routeItem: (routeItem as unknown) as RoutesDataItem,
     };
   },
+     
 });
 </script>
 <style lang="scss" scoped>
@@ -524,15 +606,23 @@ export default defineComponent({
 }
 
 .indexlayout-newtop {
-  height: 62px;
-  background: #146ed6;
+  height: 42px;
+  background: #288DFF;
   opacity: 1;
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
+}
+.systemtitle{
+  font-size: 24px;
+font-family: STHeiti;
+font-weight: 400;
+ line-height: 42px;
+color: #FFFFFF;
 }
 .indexlayout-newbot {
   display: flex;
@@ -540,18 +630,19 @@ export default defineComponent({
   padding-top: 10px;
   flex: 1;
   position: fixed;
-  top: 0px;
+  top: 42px;
   left: 0;
   width: 100vw;
 }
 .indexlayout-bot-left {
   position: relative;
-  width: 200px;
+  margin: 0 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .index-user {
+  width: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -560,22 +651,22 @@ export default defineComponent({
   border: 1px solid #b8d0f2;
 }
 .index-user-title {
-  width: 180px;
+  width: 100%;
   height: 38px;
+  line-height: 38px;
   background: #ecf3fb;
   font-size: 14px;
   border-bottom: 1px solid #b8d0f2;
   font-family: Source Han Sans CN;
   font-weight: 500;
   color: #333333;
-  line-height: 38px;
-  padding-left: 10px;
+  text-align: center;
   box-sizing: border-box;
   font-weight: bold;
 }
 .index-user-content {
-  width: 180px;
-  height: 116px;
+  width: 100%;
+  padding: 20px 0;
   background: #ffffff;
   box-sizing: border-box;
   display: flex;
@@ -584,18 +675,22 @@ export default defineComponent({
   justify-content: center;
 }
 .index-user-lvname {
+  display: flex;
   font-size: 14px;
   font-family: Source Han Sans CN;
-
   color: #222222;
   font-weight: bold;
   padding-top: 10px;
+  img{
+    width: 14px;
+    margin-right: 6px;
+    cursor: pointer;
+  }
 }
 .indexlayout-bot-right {
   flex: 1;
   box-sizing: border-box;
   padding: 0 10px 10px 0;
-  width: 1200px;
 }
 
 .indexlayout-newsup{
@@ -739,8 +834,9 @@ align-items: center;
 /deep/.el-input__inner:hover {
   border: none;
 }
-.roles {
-  height: calc(100% - 193px);
-  border: 1px solid #b8d0f2;
+.roles{
+    height: 700px;
+    overflow: auto;
+    border: 1px solid #b8d0f2;
 }
 </style>

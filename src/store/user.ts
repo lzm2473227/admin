@@ -102,22 +102,23 @@ const StoreModel: ModuleType = {
           function store(){
           //门店管理员基础权限
           userDetails.roles = ['md', 'productlist', 'purchase', 'product', 'inventory', 'sale', 'setting', 'user', 'noreceive', 'receive', 'checkproduct', 'nocheckproduct', 'sales', 'nosale', 'storelist', 'machine',
-        , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew'
+        , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew',
+        'clerkbank','clerkguarantee',
         ]
           let rolelv = ["clerk","shopowner",'citydistributor'];//角色多重身份 【与indexlayouts下的index组件菜单对应。否则有权限，无菜单。只能手动输入路由】
 
           rolelv.forEach((item)=>{
             if(item=="clerk"){
               //店员身份权限
-              userDetails.roles.push('clerk','clerknoreceive','clerkreceive','clerknocheckproduct','clerknosale','clerksales','clerkcheckproduct');
+              userDetails.roles.push('clerk','clerknoreceive','clerkreceive','clerknocheckproduct','clerknosale','clerksales','clerkcheckproduct','clerkbank','clerkguarantee',);
             }
             if(item=="shopowner"){
                //店长身份权限
-              userDetails.roles.push('shopowner','shopownernoreceive','shopownerreceive','shopownernocheckproduct','shopownernosale','shopownersales','shopownercheckproduct');
+              userDetails.roles.push('shopowner','shopownernoreceive','shopownerreceive','shopownernocheckproduct','shopownernosale','shopownersales','shopownercheckproduct','shopownerbank','shopownerguarantee',);
             }
             if(item=="citydistributor"){
               //市级管理员权限
-              userDetails.roles.push('citydistributor','citydistributornoreceive','citydistributorreceive','citydistributornocheckproduct','citydistributornosale','citydistributorsales','citydistributorcheckproduct');
+              userDetails.roles.push('citydistributor','citydistributornoreceive','citydistributorreceive','citydistributornocheckproduct','citydistributornosale','citydistributorsales','citydistributorcheckproduct','citydistributorbank','citydistributorguarantee',);
             }
             if(item=="provincedistributor"){
               //省级管理员权限

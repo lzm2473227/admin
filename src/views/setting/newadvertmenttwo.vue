@@ -1,15 +1,38 @@
 <template>
-<div class="tab">  
-  <div class="tab-title">
+  <div class="tab">
+    <div class="tab-title">
       <div class="left">
-        <div class="print" @click="$router.push('/setting/advertmentlist')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">返回列表</span></div>
-        <div class="print" @click="addadv()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">保存内容</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="$router.push('/setting/advertmentlist')">
+          <img class="icon" src="../../assets/images/back.png" alt="" /><span
+            class="axis"
+            >返回列表</span
+          >
+        </div>
+        <div class="print" @click="addadv()">
+          <img class="icon" src="../../assets/images/save.png" alt="" /><span
+            class="axis"
+            >保存内容</span
+          >
+        </div>
+        <div class="print">
+          <img class="icon" src="../../assets/images/print.png" alt="" /><span
+            class="axis"
+            >打印列表</span
+          >
+        </div>
+        <div class="print" @click="exportExcel">
+          <img class="icon" src="../../assets/images/derive.png" alt="" /><span
+            class="axis"
+            >导出表格</span
+          >
+        </div>
       </div>
   </div>
   <div class="table-main">
-    <el-form>
+    <div class="table-title">
+          <p>新增广告</p>
+        </div>
+    <form>
       <table border="1">
         <tr>
           <td class="table-left">广告编码</td>
@@ -22,19 +45,19 @@
           <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="c"></td>
           <td class="table-left">广告位置</td>
           <td class="table-right">     
-              <el-select
+              <select
                 v-model="ruleForm.positionName"
                 placeholder="请选择广告位置"
                 @change="selectpositionName"
               >
-                <el-option
+                <option
                   v-for="(item, key) in positions"
                   :key="key"
                   :label="item.positionName"
                   :value="item.positionName"
                 >
-                </el-option>
-              </el-select>
+                </option>
+              </select>
           </td>
         </tr>
         <tr>
@@ -44,23 +67,25 @@
                 v-model="ruleForm.startTime"
                 type="datetime"
                 format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期"
+                prefix-icon=none
+                placeholder="请选择时间"
               >
               </el-date-picker>
-          </td>
-          <td class="table-left">截止时间</td>
-          <td class="table-right">
+            </td>
+            <td class="table-left">截止时间</td>
+            <td class="table-right">
               <el-date-picker
                 v-model="ruleForm.endTime"
                 type="datetime"
                 format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期"
+                prefix-icon=none
+                placeholder="请选择时间"
               >
               </el-date-picker>
           </td>
         </tr>
         <tr>
-          <td class="table-left">广告状态</td>
+          <!-- <td class="table-left">广告状态</td>
           <td class="table-right">
             <el-radio v-model="ruleForm.enableState" label="1">启用</el-radio>
             <el-radio
@@ -69,18 +94,18 @@
               label="0"
               >禁用</el-radio
             >
-          </td>
+          </td> -->
           <td class="table-left">广告描述</td>
-          <td class="table-right"><input type="text" v-model="d"></td>
+          <td class="table-right" colspan="3"><textarea class="table-item" placeholder="请输入广告描述" v-model="d"></textarea></td>
         </tr>
-        <tr>
-          <td class="table-left" >广告图片</td>
-          <td class="table-right" colspan="3">
+        <tr style="vertical-align: top;">
+          <td class="table-left" style="padding-top: 12px;">广告图片</td>
+          <td class="table-right" colspan="3" style="height: 580px; padding-top: 6px;">
            <el-upload
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"
               :on-success="handleAvatarSuccess"
-              :limit = 1  
+              :on-preview="handlePictureCardPreview" 
             >
               <template #default >
                 <div  class="imgs-title">
@@ -88,12 +113,15 @@
                 </div>
               </template>         
             </el-upload>
+            <el-dialog v-model="dialogVisible">
+              <img style="width:100%" :src='ruleForm.linkPosition' alt="">
+            </el-dialog>
           </td>
         </tr>
       </table>
-    </el-form>
+    </form>
   </div>
-</div>
+  </div>
 </template>
 <script>
 import NewBreadCrumb from "../../layouts/IndexLayout/components/NewBreadCrumb";
@@ -132,14 +160,21 @@ export default {
     this.getdata();
   },
   methods: {
+    //图片
     handleAvatarSuccess(res, file) {
-      console.log(file);
-      console.log(res);
-      // return
+      // console.log(file);
+      // console.log(res);
       if (res.code === "Success") {
         this.dialogImageUrl = res.data;
         this.ruleForm.linkPosition = res.data;
       }
+    },
+    //预览图片
+    handlePictureCardPreview(res, file) {
+      // console.log(file);
+      console.log(res);
+      this.dialogVisible = true;
+      this.ruleForm.linkPosition = res.response.data;
     },
     getdata() {
       let t = this;
@@ -191,36 +226,36 @@ export default {
       });
     },
     addadv() {
-        let t = this
-        // console.log(t.ruleForm.enableState);
-        this.ruleForm.enableState = parseInt(this.ruleForm.enableState);
-        let params = t.ruleForm;
-        params.id = t.$route.query.advertmentid;
+      let t = this;
+      // console.log(t.ruleForm.enableState);
+      this.ruleForm.enableState = parseInt(this.ruleForm.enableState);
+      let params = t.ruleForm;
+      params.id = t.$route.query.advertmentid;
 
-        let url = t.$route.query.advertmentid
-          ? "/realbrand-management-service/AdvertisementMgt/UpdateAdvertisement"
-          : "/realbrand-management-service/AdvertisementMgt/InsertAdvertisement";
-        console.log(params);
-        if (!params.id) {
-          params.id = 0;
-          params.applyTime = moment(params.startTime);
+      let url = t.$route.query.advertmentid
+        ? "/realbrand-management-service/AdvertisementMgt/UpdateAdvertisement"
+        : "/realbrand-management-service/AdvertisementMgt/InsertAdvertisement";
+      console.log(params);
+      if (!params.id) {
+        params.id = 0;
+        params.applyTime = moment(params.startTime);
+      }
+      //接口参数格式处理
+      params.startTime = moment(params.startTime);
+      params.endTime = moment(params.endTime);
+
+      httpreques("post", params, url).then((res) => {
+        if (res.data.code == "SUCCESS") {
+          t.$message({
+            message: t.$route.query.storename ? "修改成功" : "添加成功",
+            type: "success",
+          });
+          t.cancelbtn();
+        } else {
+          //接口错误处理
+          t.$message.error(res.data.msg);
         }
-        //接口参数格式处理
-        params.startTime = moment(params.startTime);
-        params.endTime = moment(params.endTime);
-
-        httpreques("post", params, url).then((res) => {
-          if (res.data.code == "SUCCESS") {
-            t.$message({
-              message: t.$route.query.storename ? "修改成功" : "添加成功",
-              type: "success",
-            });
-            t.cancelbtn();
-          } else {
-            //接口错误处理
-            t.$message.error(res.data.msg);
-          }
-        });
+      });
     },
     selectpositionName(val) {
       let t = this;
@@ -234,8 +269,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/deep/.el-input__inner{
-  width: 196px!important;
-}
 @import "../../assets/css/reset.scss";
+/deep/.el-date-editor.el-input, .el-date-editor.el-input__inner, .table-right .el-input__inner{
+  width: 196px;
+  height: 24px;
+}
+/deep/.el-input__inner{
+  width: 196px;
+  height: 24px;
+}
 </style>

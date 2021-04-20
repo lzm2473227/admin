@@ -2,10 +2,10 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">返回列表</span></div>
-        <div class="print" @click="addMachine()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">保存内容</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/back.png" alt=""><span class="axis">返回列表</span></div>
+        <div class="print" @click="addMachine()"><img class="icon" src="../../assets/images/save.png" alt=""><span class="axis">保存内容</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <!-- <div class="setup">
@@ -14,13 +14,16 @@
       </div>
     </div>
     <div class="table-main">
+      <div class="table-title">
+          <p>新增机具</p>
+        </div>
       <form action="">
       <table border="1" class="">
         <tr>
           <td class="table-left">机具编码</td>
           <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.meid"></td>
           <td class="table-left">机具型号</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.type"></td>
+          <td class="table-right"><input type="text" placeholder="请输入机具型号" v-model="form.type"></td>
         </tr>
         <tr>
             <td class="table-left">机具名称</td>
@@ -44,7 +47,27 @@
         </tr>
         <tr style="vertical-align: top;">
             <td class="table-left" style="padding-top: 12px;">机具功能</td>
-            <td class="table-right" colspan="3" style="height: 694px;"><textarea class="table-item" placeholder="请输入机具功能" v-model="form.gongneng"></textarea></td>
+            <td class="table-right" colspan="3"><textarea class="table-item" placeholder="请输入机具功能" v-model="form.gongneng"></textarea></td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td class="table-left" style="padding-top: 12px;">机具图片</td>
+            <td class="table-right" colspan="3" style="height: 600px; padding-top: 6px;">
+              <el-upload
+                action="http://14.29.162.130:6602/image/imageUpload"
+                list-type="picture-card"
+                :on-success="handleAvatarSuccess" 
+                :on-preview="handlePictureCardPreview"
+              >
+                <template #default >
+                  <div  class="imgs-title">
+                    <i class="el-icon-plus"></i>
+                  </div>
+                </template>         
+              </el-upload>
+              <el-dialog v-model="dialogVisible">
+                <img style="width:100%" :src='form.filePath' alt="">
+              </el-dialog>
+            </td>
         </tr>
       </table>
       </form>
@@ -57,6 +80,8 @@ export default {
   name: "Newproduct",
   data() {
     return {
+      dialogImageUrl: "", //图片服务器的图片的地址
+      dialogVisible:false,
       form: {
         meid: "",
         type: "",
@@ -65,7 +90,8 @@ export default {
         storeName: "",
         producer: "",
         address: "",
-        gongneng: ""
+        gongneng: "",
+        filePath:""
       },
       storeName: []
     };
@@ -77,29 +103,31 @@ export default {
   methods: {
     getdata() {
       let t = this;
-      let storename = "";
-      if (t.$route.query.storename) {
-        storename = t.$route.query.storename;
+      let meid = "";
+      if (t.$route.query.meid) {
+        meid = t.$route.query.meid;
       }
-      if (storename) {
+      if (meid) {
         let params = {
-          storeName: storename,
+          meid: meid,
         };
         httpreques(
           "post",
           params,
-          "/realbrand-management-service/StoreMgt/StoreInfo"
+          "/realbrand-management-service/EquipmentMgt/EquipmentInfo"
         ).then((res) => {
+          console.log(res)
           if (res.data.code == "SUCCESS") {
             //对象数据处理
             let storeobj = res.data.data;
             storeobj.storetype = storeobj.storeType;
             delete storeobj.storeType;
-            t.selectedOptions =
-              TextToCode[storeobj.province][storeobj.city][
-                storeobj.county
-              ].code;
-            t.ruleForm = storeobj;
+            // t.selectedOptions =
+            //   TextToCode[storeobj.province][storeobj.city][
+            //     storeobj.county
+            //   ].code;
+            t.form = storeobj;
+            this.dialogImageUrl = storeobj.filePath
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
@@ -107,46 +135,61 @@ export default {
         });
       }
     },
+    //预览图片
+    handlePictureCardPreview(res, file){
+      // console.log(file);
+      console.log(res);
+      this.dialogVisible = true;
+      this.filePath = res.response.data;
+    },
+    // 图片
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      console.log(res);
+      if (res.code === "Success") {
+        this.dialogImageUrl = res.data;
+        this.form.filePath = res.data;
+      }
+    },
     addMachine() {
-      // if (this.index === "1") {
+      if (this.$route.query.meid) {
+        // 编辑机具
+        httpreques(
+          "post",
+          {
+            meid: this.form.meid,
+            storeName: this.form.storeName,
+          },
+          "/realbrand-management-service/EquipmentMgt/UpdateEquipment"
+        ).then((result) => {
+          if (result.data.code === 'SUCCESS') {
+            this.$message.success("更新机具成功");
+            this.$router.push({path: "/setting/machine"});
+            // console.log(result);
+          } else {
+            this.$message.error("更新机具失败");
+          }
+        });
+      }else{
         // 新增机具
         httpreques(
           "post",
           {
             meid: this.form.name,
             storeName: this.form.storeName,
+            filePath: this.form.filePath
           },
           "/realbrand-management-service/EquipmentMgt/BindingEquipment"
         ).then((result) => {
           console.log(result);
-          if (result.status && result.data.data === 1) {
+          if (result.data.code === 'SUCCESS') {
             this.$message.success("新增机具成功");
             this.$router.push({path: "/setting/machine"});
           } else {
             this.$message.error("新增机具失败");
           }
         });
-      // }
-      // if (this.index === "2") {
-      //   // 编辑机具
-      //   httpreques(
-      //     "post",
-      //     {
-      //       meid: this.ruleForm.name,
-      //       storeName: this.ruleForm.affiliation,
-      //     },
-      //     "/realbrand-management-service/EquipmentMgt/UpdateEquipment"
-      //   ).then((result) => {
-      //     if (result.status && result.data.data === 1) {
-      //       this.centerDialogVisible = false;
-      //       this.getdata(); //更新后刷新页面
-      //       this.$message.success("更新机具成功");
-      //       // console.log(result);
-      //     } else {
-      //       this.$message.error("更新机具失败");
-      //     }
-      //   });
-      // }
+      }
     },
     // 获取店铺列表
     StoreNameList() {
@@ -208,5 +251,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import '../../assets/css/reset.scss'
+@import '../../assets/css/reset.scss';
 </style>

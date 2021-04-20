@@ -2,11 +2,11 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addStore"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增门店</span></div>
-        <div class="print" @click="addStore('1')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑门店</span></div>
-        <div class="print" @click="delstore"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除门店</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="addStore"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增门店</span></div>
+        <div class="print" @click="editstore"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑门店</span></div>
+        <div class="print" @click="delstore"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除门店</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <div class="setup">
@@ -17,38 +17,44 @@
     <div class="tab-body">
       <el-table
       :row-class-name="tableRowClassName"
-    
       ref="singleTable"
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="门店机构代码" align="center" sortable width="220"></el-table-column>
-        <el-table-column prop="storeName" label="门店名称" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="address" label="门店地址" align="center" sortable width="400"></el-table-column>
-        <el-table-column prop="store_type" label="门店类别" align="center" sortable width="150"></el-table-column>
-        <el-table-column prop="storeLicence" label="门店许可证" align="center"  sortable width="240" ></el-table-column>
+        <el-table-column prop="orgCode" label="门店机构代码" align="center" sortable width="330"></el-table-column>
+        <el-table-column prop="storeName" label="门店名称" sortable width="350"></el-table-column>
+        <el-table-column prop="address" label="门店地址" sortable width="480"></el-table-column>
+        <el-table-column prop="storeType" label="门店类别" align="center" sortable width="190"></el-table-column>
+        <el-table-column label="门店许可证" align="center" width="243" >
+          <template v-slot="scope">
+            <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
+      <!-- <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination> -->
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="门店名称:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="门店名称:" prop="storeName" class="name-search">
+          <el-input v-model="ruleForm.storeName" placeholder="请输入门店名称"></el-input>
         </el-form-item>
-        <el-form-item label="门店类型:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="门店类别:" prop="name">
+          <el-select v-model="ruleForm.storeType" placeholder="请选择门店类别">
+            <el-option label="直营" value="直营">直营</el-option>
+            <el-option label="加盟" value="加盟">加盟</el-option>
+          </el-select>
         </el-form-item>
-        
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+          <el-button class="a" type="primary" @click="submitForm">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -56,10 +62,13 @@
 </template>
 
 <script>
+import Page from '@/components/Pagination/page.vue'
 import httpreques from '../../utils/httpreques';
-
 export default {
   name: "tab",
+  components: {
+    Page
+  },
   data() {
     return {
       total: 0,
@@ -67,16 +76,12 @@ export default {
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
+      dialogImageUrl:"",
       ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          storeName: '',
+          storeType: ''
       },
+      multipleSelection: []
     };
   },
   created() {
@@ -86,7 +91,7 @@ export default {
     getdata(){
       let t = this;
       let params = {
-        "storeName": "",
+        "storeName": this.ruleForm.storeName,
         "pageNum": this.pageNum,
         "pageSize": this.pageSize,
       };
@@ -96,6 +101,7 @@ export default {
         params,
         "/realbrand-management-service/StoreMgt/StoreInfoList"
       ).then((res) => {
+        console.log(res);
         if (res.data.code == "SUCCESS") {
           res.data.data.forEach((item,key) => {
              item.index = key + 1; //加入index
@@ -110,14 +116,29 @@ export default {
         }
       });
     },
-    addStore() {
-      let t = this;
-      t.$router.push({ path: "/setting/newstore" });
+    // 搜索
+    submitForm(){
+      this.getdata()
     },
-    delstore(storename) {
+    // 重置
+    resetForm(){
+      this.ruleForm = {}
+    },
+    addStore() {
+      this.$router.push({ path: "/setting/newstore" });
+    },
+    delstore() {
+      if(this.multipleSelection.length <= 0) return this.$message.error({message: '请选择需要删除的门店'})
       let t = this;
+      let storeName = []
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          storeName.push(item.storeName);
+        }
+      )
       let params = {
-        storeName: storename,
+        storeName: storeName,
       };
       httpreques(
         "post",
@@ -136,25 +157,22 @@ export default {
         }
       });
     },
-    editstore(storename) {
-      let t = this;
-      t.$router.push({
+    editstore() {
+      if(this.multipleSelection.length !== 1) return this.$message('请选择一个需要编辑的门店')
+      let storename = this.multipleSelection[0].storeName
+      this.$router.push({
         path: "/setting/newstore",
         query: {
           storename: storename,
         },
       });
     },
-    handleCurrentChange(val){
-      // this.pageNum = val
-      // this.getdata()
-    },
-    currentchange(val){
+    changeCurrentPage(val){
       this.pageNum = val
       this.getdata()
     },
-    handleCurrentChange(val){
-      
+    handleSelectionChange(val){
+      this.multipleSelection = val
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){
@@ -165,11 +183,7 @@ export default {
     },
     formatter(row, column) {
       return row.address;
-    },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      }
+    }
   },
 };
 </script>

@@ -5,35 +5,35 @@
         <div class="print" @click="addclerk()">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/add.png"
             alt=""
           /><span class="axis">新增人员</span>
         </div>
-        <div class="print" @click="editclerk(scope.row.storeName)">
+        <div class="print" @click="editclerk">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/edit.png"
             alt=""
           /><span class="axis">编辑人员</span>
         </div>
-        <div class="print" @click="delclerk(scope.row.storeName)">
+        <div class="print" @click="delclerk">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/delete.png"
             alt=""
           /><span class="axis">删除人员</span>
         </div>
         <div class="print">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/print.png"
             alt=""
           /><span class="axis">打印列表</span>
         </div>
         <div class="print" @click="exportExcel">
           <img
             class="icon"
-            src="../../assets/images/ic-导出表格.png"
+            src="../../assets/images/derive.png"
             alt=""
           /><span class="axis">导出表格</span>
         </div>
@@ -56,7 +56,7 @@
         :data="tabledata"
         style="width: 100%"
         highlight-current-row
-        @current-change="handleCurrentChange"
+        @selection-change="handleSelectionChange"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column
@@ -64,27 +64,9 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column
-          prop="index"
-          label="序号"
-          align="center"
-          sortable
-          width="80"
-        ></el-table-column>
-        <el-table-column
-          prop="idNumber"
-          label="身份证号码"
-          align="center"
-          sortable
-          width="230"
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名"
-          align="center"
-          sortable
-          width="150"
-        ></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="idNumber" label="身份证号码" align="center" sortable width="230"></el-table-column>
+        <el-table-column prop="name" label="姓名" align="center" sortable width="150"></el-table-column>
         <el-table-column
           prop="telNum"
           label="手机号码"
@@ -93,18 +75,21 @@
           width="160"
         ></el-table-column>
         <el-table-column
-          prop="frontId"
           label="证件照"
           align="center"
           sortable
           width="160"
-        ></el-table-column>
+        >
+        <template v-slot="scope">
+            <img :src="scope.row.frontId" alt="" style="height: 20px;">
+            <img :src="scope.row.reverseId" alt="" style="height: 20px;">
+          </template>
+        </el-table-column>
         <el-table-column
           prop="storeName"
           label="所属门店"
-          align="center"
           sortable
-          width="240"
+          width="320"
         ></el-table-column>
         <el-table-column
           prop="station"
@@ -118,24 +103,19 @@
           label="市级经销商"
           align="center"
           sortable
-          width="200"
+          width="210"
         ></el-table-column>
         <el-table-column
           prop="storeName"
           label="省级经销商"
           align="center"
           sortable
-          width="200"
+          width="213"
         ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination
-        layout=" prev, pager, next ,total"
-        :total="total"
-        :page-size="pageSize"
-        @current-change="currentchange"
-      ></el-pagination>
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="inp-bot">
       <el-form
@@ -147,19 +127,19 @@
         class="input-with-select"
       >
         <el-form-item label="姓名:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="手机号码:" prop="tel">
+          <el-input v-model="ruleForm.tel" placeholder="请输入手机号码"></el-input>
         </el-form-item>
-        <el-form-item label="角色:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="角色:" prop="station">
+          <el-input v-model="ruleForm.station" placeholder="请输入角色"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')"
+          <el-button class="a" type="primary" @click="submitForm"
             >查询</el-button
           >
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')"
+          <el-button class="a" type="primary" @click="resetForm"
             >重置</el-button
           >
         </el-form-item>
@@ -169,10 +149,14 @@
 </template>
 
 <script>
+import Page from '@/components/Pagination/page'
 import httpreques from "../../utils/httpreques";
 
 export default {
   name: "tab",
+  components: {
+    Page
+  },
   data() {
     return {
       total: 0,
@@ -184,20 +168,16 @@ export default {
       textarea: "",
       tabledata: [],
       totalNum: 0,
+      multipleSelection: [],
       ruleForm: {
         name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
+        tel: "",
+        station: ""
       },
     };
   },
   created() {
-    this.getdata(this.pageNum);
+    this.getdata();
   },
   methods: {
     //店员列表
@@ -206,7 +186,7 @@ export default {
       httpreques(
         "post",
         {
-          name: "",
+          name: this.ruleForm.name,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
         },
@@ -216,7 +196,7 @@ export default {
         if ((res.data.code = "SUCCESS")) {
           let { data } = res.data;
           this.total = res.data.total;
-          this.pages = res.data.pages;
+          // this.pages = res.data.pages;
           // this.tabledata = res.data.data;
           console.log(data);
           for (let i = 0; i < data.length; i++) {
@@ -237,45 +217,63 @@ export default {
         }
       });
     },
+    // 查询
+    submitForm(){
+      this.getdata()
+    },
+    // 重置
+    resetForm(){
+      this.ruleForm = {}
+    },
     //删除
-    delclerk(index, idNumber) {
-      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
+    delclerk() {
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的机具')
+      let idNumber = []
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          idNumber.push(item.idNumber);
+        }
+      )
         httpreques(
           "post",
           {
-            isDelete: 1,
+            idNumber: idNumber,
           },
           "/realbrand-management-service/StoreUserMgt/DeleteStoreUser"
         ).then((result) => {
           console.log(result);
           if (result.data.code === "SUCCESS") {
             this.$message.success("删除员工成功!");
-            this.tabledata.splice(index, 1);
+            this.getdata()
+            // this.tabledata.splice(index, 1);
           } else {
             this.$message.error("删除员工失败");
           }
-        });
-      });
+        })
     },
-    addclerk(idNumber) {
-      if (idNumber) {
+    addclerk() {
+      this.$router.push({path: "/setting/newclerktwo",})
+    },
+    //编辑
+    editclerk() {
+      if(this.multipleSelection.length === 1){
+        let idNumber = this.multipleSelection[0].idNumber
         this.$router.push({
           path: "/setting/newclerktwo",
           query: { idNumber: idNumber },
-        });
-      } else {
-        this.$router.push({
-          path: "/setting/newclerktwo",
-        });
+        })
+      }else{
+        this.$message('请选择一项数据进行编辑')
       }
     },
-    //编辑
-    editclerk() {},
-
+    changeCurrentPage(val) {
+      this.pageNum = val;
+      this.getdata();
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     //添加class样式
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 0) {
@@ -286,10 +284,6 @@ export default {
     formatter(row, column) {
       return row.address;
     },
-    //选中你选择的条件列表
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
     handleCurrentChange(val) {
       this.currentRow = val;
     },
@@ -298,6 +292,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 @import "../../assets/css/reset.scss";
 </style>

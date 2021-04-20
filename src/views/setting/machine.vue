@@ -2,11 +2,11 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addMachine()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增机具</span></div>
-        <div class="print" @click="addMachine('1')"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑机具</span></div>
-        <div class="print" @click="delMachine(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除机具</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="addMachine"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增机具</span></div>
+        <div class="print" @click="addMachine('1')"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑机具</span></div>
+        <div class="print" @click="delMachine"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除机具</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <div class="setup">
@@ -26,36 +26,41 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="meid" label="机具编码（MEID）" align="center" sortable width="230"></el-table-column>
+        <el-table-column prop="meid" label="机具编码（MEID）" align="center" sortable width="200"></el-table-column>
         <el-table-column prop="machinecode" label="机具型号" align="center" sortable width="150"></el-table-column>
         <el-table-column prop="name" label="机具名称" align="center" sortable width="160"></el-table-column>
-        <el-table-column prop="frontId" label="机具供应商" align="center" sortable width="160"></el-table-column>
-        <el-table-column prop="storeName" label="所属门店" align="center"  sortable width="240" ></el-table-column>
-        <el-table-column prop="station" label="门店地址" align="center" width="150" ></el-table-column>
+        <el-table-column prop="frontId" label="机具供应商" sortable width="150"></el-table-column>
+        <el-table-column prop="storeName" label="所属门店"  sortable width="160" ></el-table-column>
+        <el-table-column prop="address" label="门店地址" width="300"></el-table-column>
+        <el-table-column prop="imgs" label="机具图片" width="150">
+          <template v-slot="scope">
+            <img :src="scope.row.filePath" alt="" style="height: 20px;">
+          </template>
+        </el-table-column>
         <el-table-column prop="bindingTime" label="启用时间" align="center"  sortable width="200" ></el-table-column>
-        <el-table-column prop="status" label="状态" align="center"  sortable width="200" ></el-table-column>
+        <el-table-column prop="status" label="状态" align="center"  sortable width="123" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="机具编号:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="机具编号:" prop="meid" class="name-search">
+          <el-input v-model="ruleForm.meid" placeholder="请输入机具编号"></el-input>
         </el-form-item>
-        <el-form-item label="机具型号:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="机具型号:" prop="type">
+          <el-input v-model="ruleForm.type" placeholder="请输入机具型号"></el-input>
         </el-form-item>
         <el-form-item label="机具名称:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入机具名称"></el-input>
         </el-form-item>
-        <el-form-item label="机具供应商:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="机具供应商:" prop="gongying">
+          <el-input v-model="ruleForm.gongying" placeholder="请输入机具供应商"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+          <el-button class="a" type="primary" @click="submitForm">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -63,11 +68,15 @@
 </template>
 
 <script>
+import Page from '@/components/Pagination/page.vue'
 import httpreques from '../../utils/httpreques';
 import moment from "moment";
 
 export default {
   name: "tab",
+  components: {
+    Page
+  },
   data() {
     return {
       total: 0,
@@ -75,15 +84,13 @@ export default {
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
+      filePath:"",
       ruleForm: {
+          meid: '',
+          storeName: '',
           name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          type: '',
+          gongying: ''
       },
       multipleSelection : [],
     };
@@ -99,8 +106,8 @@ export default {
       httpreques(
         "post",
         {
-          meid: "",
-          storeName: "",
+          meid: this.ruleForm.meid,
+          storeName: this.ruleForm.storeName,
           pageNum: this.pageNum,
           pageSize: this.pageSize,
         },
@@ -115,29 +122,25 @@ export default {
             "YYYY-MM-DD HH:mm:ss"
           );
         });
-        for (let i = 0; i < data.length; i++) {
-          this.tabledata.push({
-            index: i+1,
-            meid: data[i].meid,
-            machinecode: "-",
-            name: "-",
-            storeName: data[i].storeName,
-            idNumber: data[i].idNumber,
-            status: "-",
-            bindingTime: data[i].bindingTime,
-          });
-        }
+        res.data.data.forEach((item,key) => {
+          item.index = key + 1; //加入index
+          let address = item.province + item.city + item.county;
+          item.address = address + item.address;
+        })
+        this.tabledata = res.data.data
         this.tabledata.reverse();
       });
     },
     //删除单个机具
-    delMachine(index, meid) {
-      this.$confirm("此操作将永久删除该条数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
+    delMachine() {
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的机具')
+      let meid = []
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          meid.push(item.meid);
+        }
+      )
           httpreques(
             "post",
             {
@@ -148,33 +151,37 @@ export default {
             console.log(result);
             if (result.status && result.data.data === 1) {
               this.$message.success("删除机具成功!");
-              this.tabledata.splice(index, 1);
-              console.log(index);
+              this.getdata()
+              // this.tabledata.splice(index, 1);
             }
-          });
-        })
+          })
     },
     // 新增机具
     addMachine(val) {
-      let storeId = ''
       if(val === '1'){
-        if(this.multipleSelection.length != 1) return this.$message.error('请选择要编辑的机具')
-        storeId = this.multipleSelection[0].storeId
+        if(this.multipleSelection.length != 1) return this.$message('请选择一项需要编辑的机具')
+        let meid = this.multipleSelection[0].meid
+        this.$router.push({
+          path: "/setting/machinenew",
+          query: {
+            meid: meid,
+          },
+        });
       } else{
-        storeId = ''
+        this.$router.push({path: "/setting/machinenew"});
       }
-      this.$router.push({
-        path: "/setting/machinenew",
-        query: {
-          storeId: storeId,
-        },
-      });
+    },
+    submitForm(){
+      this.getdata()
+    },
+    resetForm(){
+      this.ruleForm = {}
     },
     handleSelectionChange(val){
       console.log(val)
       this.multipleSelection = val
     },
-    currentchange(val) {
+    changeCurrentPage(val) {
       this.pageNum = val
       this.getdata();
     },
@@ -187,11 +194,7 @@ export default {
     },
     formatter(row, column) {
       return row.address;
-    },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      }
+    }
   },
 };
 </script>

@@ -1,143 +1,194 @@
 <template>
-  <div class="newproduct">
-     
-    <NewBreadCrumb ptitle="商品" ctitle="新增商品" path="product"></NewBreadCrumb>
-    <div class="newproduct-content">
-       <div class="newproduct-from">
-      <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-        label-position="left"
-      >
-        <el-form-item
-          label="商品单码："
-          prop="commodityCode"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.commodityCode"
-            placeholder="请输入单品编码"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="商品69编码："
-          prop="barcode"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.barcode"
-            placeholder="请输入商品69编码"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="商品名称："
-          prop="commodityName"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.commodityName"
-            placeholder="请输入商品名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="规格名称："
-          prop="storecard"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storecard"
-            placeholder="请输入规格名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="规格参数："
-          prop="storeaccount"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.specsParameter"
-            placeholder="请输入规格参数"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="产品标准号：" class="from-item-padding">
-          <el-input
-            v-model="ruleForm.storepsw"
-            placeholder="请输入产品标准号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="商品重量/质量：" class="from-item-padding">
-          <el-input
-            v-model="ruleForm.storecard"
-            placeholder="商品名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="商品尺寸："
-          prop="storecard1"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storecard1"
-            placeholder="请输入商品尺寸"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="商品体积/容积："
-          prop="storecard2"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storecard2"
-            placeholder="请输入商品体积／容积"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="商品图片："
-          prop="storecard3"
-          class="from-item-padding"
-        >
-          <el-upload
-            action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-          >
-            <i class="el-icon-plus"></i>
-          </el-upload>
-          <el-dialog v-model="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog>
-        </el-form-item>
-        <el-form-item
-          label="主要功能/功效："
-          prop="storecard3"
-          class="from-item-padding"
-        >
-          <el-input
-            v-model="ruleForm.storecard4"
-            placeholder="请输入商品主要功能／功效"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="售价：" prop="price" class="from-item-padding">
-          <el-input
-            v-model="ruleForm.price"
-            placeholder="请输入售价"
-          ></el-input>
-        </el-form-item>
-      </el-form>
+  <form ref="form">
+    <div class="tab">
+      <div class="tab-title">
+        <div class="left">
+          <div class="print" @click="$router.replace('/product')">
+            <img
+              class="icon"
+              src="../../assets/images/back.png"
+              alt=""
+            /><span class="axis">返回列表</span>
+          </div>
+          <div class="print" @click="addcomm()">
+            <img
+              class="icon"
+              src="../../assets/images/save.png"
+              alt=""
+            /><span class="axis">保存内容</span>
+          </div>
+          <div class="print">
+            <img
+              class="icon"
+              src="../../assets/images/print.png"
+              alt=""
+            /><span class="axis">打印列表</span>
+          </div>
+          <div class="print" @click="exportExcel">
+            <img
+              class="icon"
+              src="../../assets/images/derive.png"
+              alt=""
+            /><span class="axis">导出表格</span>
+          </div>
+        </div>
+        <div class="right">
+          <!-- <div class="setup">
+          <img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div> -->
+        </div>
+      </div>
+      <div class="table-main">
+        <div class="table-title">
+          <p>商品基本信息</p>
+        </div>
+        <table border="1" class="">
+          <tr>
+            <td class="table-left">单品编码</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.commodityCode"
+                placeholder="请输入单品编码"
+              />
+            </td>
+            <td class="table-left">商品69编码</td>
+            <td class="table-right">
+              <input type="text" v-model="form.barcode" placeholder="请输入商品69编码" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品名称</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.commodityName"
+                placeholder="请输入商品名称"
+              />
+            </td>
+            <td class="table-left">商品规格</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.specsParameter"
+                placeholder="请输入商品规格"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">生产厂家</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.manufacturer"
+                placeholder="请输入生产厂家"
+              />
+            </td>
+            <td class="table-left">商品品牌</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.brandName"
+                placeholder="请输入商品品牌"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品售价</td>
+            <td class="table-right">
+              <input
+                type="text"
+                v-model="form.price"
+                placeholder="请输入商品售价"
+              />
+            </td>
+            <td class="table-left">商品尺寸</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品尺寸" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品小类</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品小类" />
+            </td>
+            <td class="table-left">批准文号</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入批准文号" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品中类</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品中类" />
+            </td>
+            <td class="table-left">包装类型</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入包装类型" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品大类</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品大类" />
+            </td>
+            <td class="table-left">包装尺寸</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入包装尺寸" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品体积/容积</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品体积/容积" />
+            </td>
+            <td class="table-left">商品重量/质量</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入商品重量/质量" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">主要功能/功效</td>
+            <td class="table-right" colspan="3">
+              <textarea
+                class="table-item"
+                placeholder="请输入主要功能/功效"
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">商品简介</td>
+            <td class="table-right" colspan="3">
+              <textarea
+                class="table-item"
+                placeholder="请输入商品简介"
+              ></textarea>
+            </td>
+          </tr>
+          <tr style="vertical-align: top;">
+            <td class="table-left" style="padding-top: 16px;">商品图片</td>
+            <td class="table-right" colspan="3" style="height: 320px; padding-top: 6px;">
+            <el-upload
+              action="http://14.29.162.130:6602/image/imageUpload"
+              list-type="picture-card"
+              :on-success="handleAvatarSuccess"
+              :file-list="imgArr" 
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+            >
+              <template #default >
+                <div  class="imgs-title">
+                  <i class="el-icon-plus"></i>
+                </div>
+              </template>         
+            </el-upload>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-    </div>
-       <Btn
-      :btntext="$route.query.commodityCode ? '编辑' : '新增'"
-      @addbtn="addcomm"
-      @cancelbtn="cancelbtn"
-    />
-  </div>
+  </form>
 </template>
-
 <script>
 import Btn from "../../components/Btn";
 import httpreques from "../../utils/httpreques";
@@ -146,50 +197,47 @@ export default {
   name: "Newproduct",
   data() {
     return {
-      ruleForm: {
-        storecode: "",
-        specsParameter: "",
-        commodityName: "",
-        filePath: "",
-        price: "",
-        commodityCode:"",
+      form: {
+        barcode: "", //条形码
+        brandName: "", //品牌名称
+        commodityName: "", //商品名称
+        filePath: "", //商品图片路径
+        manufacturer: "", //厂商
+        policyNo: "", //保险单号/默认为0
+        price: "", //销售价格/默认为0
+        specsParameter: "", // 规格参数
+        commodityCode: "", // 单品编码
+        storeId:""
       },
-      dialogImageUrl: "",
-      rules: {
-        commodityCode:[
-             { required: true, message: "请输入商品单码", trigger: "blur" },
-        ],
-        storecode: [
-          { required: true, message: "请输入条形码", trigger: "blur" },
-        ],
-        commodityName: [
-          { required: true, message: "请输入商品名称", trigger: "blur" },
-        ],
-      },
+      dialogImageUrl:"",
+      linkPosition: "", //默认选中显示
+      imgArr: []
     };
   },
   mounted() {
-    //
     this.getdata();
   },
   methods: {
     getdata() {
       let t = this;
-       let commodityCode = t.$route.query.commodityCode;
-      if (commodityCode) {
+      let barcode = t.$route.query.barcode;
+      if (barcode) {
         let params = {
-          commodityCode: commodityCode,
+          barcode: barcode,
         };
         httpreques(
           "post",
           params,
-          "/realbrand-management-service/CommodityMgt/CommodityInfo"
+          "/realbrand-management-service/CommodityMgt/BarcodeInfo"
         ).then((res) => {
+          console.log(res);
           if (res.data.code == "SUCCESS") {
             //对象数据处理
+            console.log(res);
             let commobj = res.data.data;
-           
-            t.ruleForm = commobj;
+            this.imgArr.push({url: commobj.filePath})
+            this.dialogImageUrl = commobj.filePath;
+            t.form = commobj;
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
@@ -197,55 +245,55 @@ export default {
         });
       }
     },
-    addNewProduct() {
-      this.$router.replace("/product");
-      this.$message.success("新增商品成功");
-      //manufacturer  brandName  policyNo
-    },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      console.log(file.url);
+      // console.log(file.url);
       this.dialogImageUrl = file.url;
       // this.dialogVisible = true;
     },
     //提交
     addcomm() {
-      let t = this;
-      t.$refs["ruleForm"].validate((valid) => {
-        if (!valid) {
-          return;
+      let params = {
+        barcode: this.form.barcode, //条形码
+        brandName: this.form.brandName, //品牌名称
+        commodityName: this.form.commodityName, //商品名称
+        filePath: this.form.filePath, //商品图片路径
+        manufacturer: this.form.manufacturer, //厂商
+        policyNo: '0', //保险单号/默认为0
+        price: this.form.price, //销售价格/默认为0
+        specsParameter: this.form.specsParameter, // 规格参数
+        commodityCode: this.form.commodityCode, // 单品编码
+      };
+
+      let url = this.$route.query.barcode
+        ? "/realbrand-management-service/CommodityMgt/UpdateBarcode"
+        : "/realbrand-management-service/CommodityMgt/InsertCommodity";
+      console.log(params);
+
+      httpreques("post", params, url).then((res) => {
+        if (res.data.code == "SUCCESS") {
+          this.$message({
+            message: this.$route.query.barcode ? "修改成功" : "添加成功",
+            type: "success",
+          });
+          console.log(res.data);
+          this.cancelbtn();
+        } else {
+          //接口错误处理
+          this.$message.error(res.data.msg);
         }
-        let params = {
-          barcode: t.ruleForm.barcode,
-          brandName: "品牌名称",
-          commodityName: t.ruleForm.commodityName,
-          filePath: "string",
-          manufacturer: "厂商",
-          policyNo: 0, //保单号
-          price: t.ruleForm.price,
-          specsParameter: t.ruleForm.specsParameter,
-        };
-
-        let url = t.$route.query.commodityCode
-          ? "/realbrand-management-service/CommodityMgt/UpdateCommodity"
-          : "/realbrand-management-service/CommodityMgt/InsertCommodity";
-        console.log(params);
-
-        httpreques("post", params, url).then((res) => {
-          if (res.data.code == "SUCCESS") {
-            t.$message({
-              message: t.$route.query.commodityCode ? "修改成功" : "添加成功",
-              type: "success",
-            });
-            t.cancelbtn();
-          } else {
-            //接口错误处理
-            t.$message.error(res.data.msg);
-          }
-        });
       });
+    },
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      console.log(res);
+      // return
+      if (res.code === "Success") {
+        this.dialogImageUrl = res.data;
+        this.form.filePath = res.data;
+      }
     },
     cancelbtn() {
       let t = this;
@@ -253,82 +301,12 @@ export default {
     },
   },
   components: {
-    Btn,NewBreadCrumb
+    Btn,
+    NewBreadCrumb,
   },
 };
 </script>
-
 <style lang="scss" scoped>
-.newproduct {
-  display: flex;
-  flex-direction: column;
-    position: relative;
-   background-color: #f6faff;
-  padding-top: 30px;
-  
-  box-sizing: border-box; 
-}
-.newproduct-content{
-  background-color: #fff;
-  flex: 1;
-}
- 
-.newproduct-from {
-  /deep/.el-input__inner {
-    width: 360px;
-    border-radius: 3px;
-    height: 42px;
-    box-sizing: border-box;
-  }
-}
-/deep/.el-form-item__label {
-  height: 42px;
-  line-height: 42px;
-}
-/deep/.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
 
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-/deep/.el-breadcrumb__inner.is-link,
-.el-breadcrumb__inner a {
-  color: #3b90f4;
-}
-.el-form-item--small.el-form-item {
-  margin: 24px 20px;
-}
-/deep/.newproduct-from[data-v-2dcd26ee] .el-input__inner {
-    width: 328px;
-    border-radius: 3px;
-    height: 36px;
-    box-sizing: border-box;
-    line-height: 36px;
-}
-/deep/[data-v-2dcd26ee] .el-form-item__label {
-    height: 36px;
-    line-height: 36px;
-}
-/deep/.el-upload--picture-card {
-    background-color: #fbfdff;
-    border: 1px dashed #c0ccda;
-    border-radius: 6px;
-    box-sizing: border-box;
-    width: 100px;
-    height: 100px;
-    cursor: pointer;
-    line-height: 102px;
-    vertical-align: top;
-}
- 
+@import "../../assets/css/reset.scss";
 </style>

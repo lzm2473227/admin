@@ -2,38 +2,38 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addProduct()">
+        <div class="print" @click="addProduct">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/add.png"
             alt=""
           /><span class="axis">新增商品</span>
         </div>
-        <div class="print" @click="editproduct(scope.row.commodityCode)">
+        <div class="print" @click="editproduct">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/edit.png"
             alt=""
           /><span class="axis">编辑商品</span>
         </div>
         <div class="print" @click="delproduct()">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/delete.png"
             alt=""
           /><span class="axis">删除商品</span>
         </div>
         <div class="print">
           <img
             class="icon"
-            src="../../assets/images/ic-打印列表.png"
+            src="../../assets/images/print.png"
             alt=""
           /><span class="axis">打印列表</span>
         </div>
         <div class="print" @click="exportExcel">
           <img
             class="icon"
-            src="../../assets/images/ic-导出表格.png"
+            src="../../assets/images/derive.png"
             alt=""
           /><span class="axis">导出表格</span>
         </div>
@@ -85,34 +85,26 @@
         <el-table-column
           prop="commodityName"
           label="商品名称"
-          align="center"
           sortable
-          width="400"
+          width="650"
         ></el-table-column>
         <el-table-column
-          prop="time"
+          prop="specsParameter"
           label="规格"
-          align="center"
-          width="240"
+          width="300"
         ></el-table-column>
-        <el-table-column align="center" label="商品单价" sortable width="120">
+        <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
-        <el-table-column
-          prop="time"
-          label="图片"
-          align="center"
-          width="240"
-        ></el-table-column>
+        <el-table-column prop="time" label="图片" align="center" width="240">
+          <template v-slot="scope">
+            <img :src="scope.row.filePath" alt="" style="height: 20px;">
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination
-        layout=" prev, pager, next ,total"
-        :total="total"
-        :page-size="pageSize"
-        @current-change="currentchange"
-      ></el-pagination>
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="inp-bot">
       <el-form
@@ -123,20 +115,16 @@
         label-width="100px"
         class="input-with-select"
       >
-        <el-form-item label="商品名称:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="商品名称:" prop="commodityName" class="name-search">
+          <el-input v-model="ruleForm.commodityName" placeholder="请输入商品名称或扫描69码"></el-input>
           <img @click="scan" src="../../assets/images/ic-code.png" alt="" />
         </el-form-item>
-        <el-form-item label="商品单价:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="商品单价:" prop="price">
+          <el-input v-model="ruleForm.price" placeholder="请输入商品单价"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')"
-            >查询</el-button
-          >
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')"
-            >重置</el-button
-          >
+          <el-button class="a" type="primary" @click="submitForm">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -165,18 +153,19 @@
 </template>
 
 <script>
+import Page from '@/components/Pagination/page'
 import httpreques from "../../utils/httpreques";
 
 export default {
   name: "tab",
+  components: {
+    Page
+  },
   data() {
     return {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      barcode: "",
-      commodityName: "",
-      commodityCode: "",
       radio1: "按商品69编码统计",
       centerDialogVisible: false,
       textarea: "",
@@ -184,14 +173,8 @@ export default {
       totalNum: 0,
       multipleSelection: [],
       ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
+        commodityName: "",
+        price: ""
       },
     };
   },
@@ -204,13 +187,12 @@ export default {
       httpreques(
         "post",
         {
-          barcode: t.barcode,
-          commodityCode: t.commodityCode,
-          commodityName: t.commodityName,
-          pageSize: t.pageSize,
+          price: this.ruleForm.price,
+          commodityName: this.ruleForm.commodityName,
+          pageNum: t.pageNum,
           pageSize: t.pageSize,
         },
-        "/realbrand-management-service/CommodityMgt/CommodityInfoList"
+        "/realbrand-management-service/CommodityMgt/BarcodeList"
       ).then((res) => {
         // console.log(res.data.code);
         if (res.data.code == "SUCCESS") {
@@ -219,39 +201,44 @@ export default {
           });
           // console.log(res.data)
           t.total = res.data.total;
+          t.pages = res.data.pages;
           t.tabledata = res.data.data;
+          t.tabledata.reverse()
         } else {
           this.$message(res.data.msg);
         }
       });
     },
     addProduct() {
-      this.$router.replace("/newproducttwo");
+      this.$router.replace("/newproduct");
     },
-    editproduct(commodityCode) {
-      let t = this;
-      t.$router.push({
+    editproduct() {
+      if(this.multipleSelection.length !== 1) return this.$message('请选择一项需要编辑的商品')
+      let barcode = this.multipleSelection[0].barcode
+      this.$router.push({
         path: "/newproduct",
         query: {
-          commodityCode: commodityCode,
+          barcode: barcode,
         },
       });
     },
     delproduct() {
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的商品')
       let t = this;
       //抽取commoditycode
       let codearr = [];
       _.forEach(
         JSON.parse(JSON.stringify(t.multipleSelection)),
         function (item, key) {
-          codearr.push(item.commodityCode);
+          codearr.push(item.barcode);
         }
       );
       let params = {
-        commodityCode: codearr,
+        barcode: codearr
       };
-      let url = "/realbrand-management-service/CommodityMgt/DeleteCommodity";
+      let url = "/realbrand-management-service/CommodityMgt/DeleteBarcode";
       httpreques("post", params, url).then((res) => {
+        // console.log(res)
         if (res.data.code == "SUCCESS") {
           t.$message({
             message: "删除成功",
@@ -264,12 +251,16 @@ export default {
         }
       });
     },
-    jumpproductinfo() {
-      this.$router.replace("/productinfo");
-    },
-    handleCurrentChange(val) {
+    //分页
+    changeCurrentPage(val) {
       this.pageNum = val;
       this.getdata();
+    },
+    submitForm(){
+      this.getdata()
+    },
+    resetForm(){
+      this.ruleForm = {}
     },
     exportExcel() {
       let t = this;
@@ -338,16 +329,13 @@ export default {
     formatter(row, column) {
       return row.address;
     },
-    //选中你选择的条件列表
-    setCurrent(row) {
-      this.$refs.singleTable.setCurrentRow(row);
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    handleCurrentChange(val) {
-      this.currentRow = val;
-    },
+  
+    // handleCurrentChange(val) {
+    //   this.currentRow = val;
+    // },
     scan() {
       this.centerDialogVisible = true;
     },

@@ -2,11 +2,11 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addAdvert()"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">新增广告</span></div>
-        <div class="print" @click="editadvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">编辑广告</span></div>
-        <div class="print" @click="deladvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">删除广告</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/ic-打印列表.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/ic-导出表格.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="addAdvert()"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增广告</span></div>
+        <div class="print" @click="editadvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑广告</span></div>
+        <div class="print" @click="deladvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除广告</span></div>
+        <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <div class="setup">
@@ -28,21 +28,24 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="meid" label="广告编码" align="center" sortable width="230"></el-table-column>
-        <el-table-column prop="machinecode" label="广告名称" align="center" width="150"></el-table-column>
-        <el-table-column prop="name" label="广告类型" align="center" width="160"></el-table-column>
+        <el-table-column prop="machinecode" label="广告名称" align="center" width="200"></el-table-column>
+        <el-table-column prop="name" label="广告类型" align="center" width="200"></el-table-column>
         <el-table-column label="广告描述" align="center" sortable width="250">
-          <template #default="scope">
+          <template v-slot="scope">
+            <img :src="scope.row.linkPosition" alt="" style="height: 20px;">
+          </template>
+          <!-- <template #default="scope">
             <el-image
               style="width: 100%; height: 20px"
               :src="scope.row.linkPosition"
               :fit="cover"
             ></el-image>
-          </template>
+          </template> -->
         </el-table-column>
-        <el-table-column prop="positionName" label="广告位置" align="center" width="130" ></el-table-column>
-        <el-table-column prop="startTime" label="起始时间" align="center" sortable width="200" ></el-table-column>
-        <el-table-column prop="endTime" label="截止时间" align="center" sortable width="200" ></el-table-column>
-        <el-table-column label="状态" align="center"  sortable width="100" >
+        <el-table-column prop="positionName" label="广告位置" align="center" width="170" ></el-table-column>
+        <el-table-column prop="startTime" label="起始时间" align="center" sortable width="210" ></el-table-column>
+        <el-table-column prop="endTime" label="截止时间" align="center" sortable width="210" ></el-table-column>
+        <el-table-column label="状态" align="center"  sortable width="123" >
           <template #default="scope">
             <span v-if="scope.row.enableState == '0'">禁用</span>
             <span v-else>启用</span>
@@ -51,21 +54,21 @@
       </el-table>
     </div>
     <div class="bot">
-      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="广告名称:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入广告名称"></el-input>
         </el-form-item>
         <el-form-item label="广告类型:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入广告类型"></el-input>
         </el-form-item>
         <el-form-item label="广告位置:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入广告位置"></el-input>
         </el-form-item>
         <el-form-item label="状态:" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+          <el-input v-model="ruleForm.name" placeholder="请输入状态"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
@@ -77,12 +80,16 @@
 </template>
 
 <script>
+import Page from '@/components/Pagination/page'
 import httpreques from '../../utils/httpreques';
 import moment from "moment";
 import _ from "lodash";
 
 export default {
   name: "tab",
+  components: {
+    Page
+  },
   data() {
     return {
       total: 0,
@@ -194,13 +201,9 @@ export default {
         }
       });
     },
-    currentchange(val){
+    changeCurrentPage(val){
       this.pageNum = val
       this.getdata()
-    },
-    handleCurrentChange(val){
-      // this.pageNum = val
-      // this.getdata()
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){

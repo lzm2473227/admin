@@ -29,6 +29,7 @@
     "moment": "^2.29.1",
     "normalize.css": "^8.0.1",
     "script-loader": "^0.7.2",
+    "three": "^0.127.0",
     "uuid": "^8.3.2",
     "vue": "^3.0.5",
     "vue-charts": "^0.2.1",

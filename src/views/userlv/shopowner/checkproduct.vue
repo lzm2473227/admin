@@ -1,148 +1,146 @@
 <template>
-  <div class="checkproduct">
-    <div class="checkproduct-child">
-      <div class="nosale-title">已盘点</div>
-      <div class="tools-btns">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          size="medium"
-        >
-          <InpTop />
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
-        </el-form>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="scan"><img class="icon" src="../../../assets/images/again.png" alt=""><span class="axis">重新盘货</span></div>
+        <div class="print"><img class="icon" src="../../../assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
+        <div class="print"><img class="icon" src="../../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
-      <!-- <div class="total">
-        <div class="check-total">
-          <div class="check-total-child">
-            <p class="check-time">本次盘点时间：2021.03.15 09:00</p>
-            <p>本次盘点数：202</p>
-          </div>
-          <div class="check-total-child">
-            <p class="check-name">本次盘点人：王海</p>
-            <p>本次账存数：2021</p>
-          </div>
-        </div>
-        <div class="check-total">
-          <div class="check-total-child">
-            <p class="check-time">上次盘点时间：2021.03.15 09:00</p>
-            <p>上次盘点数：202</p>
-          </div>
-          <div class="check-total-child">
-            <p class="check-name">上次盘点人：王海</p>
-            <p>上次账存数：2021</p>
-          </div>
-        </div>
-      </div> -->
-      <div class="product-list">
-        <el-table
-          ref="multipleTable"
-          :data="tabledata"
-          tooltip-effect="dark"
-          style="width: 100%"
-          stripe="true"
-          fit="true"
-          border
-          header-cell-style="background:#F6FAFF"
-        >
-          <el-table-column align="center" label="序号" width="50" fixed>
-            <template v-slot="scope">
-							{{ scope.row.index+1 }}
-						</template>
-          </el-table-column>
-          <el-table-column align="center" prop="commodityCode" label="单品编码" fixed width="200"></el-table-column>
-          <el-table-column align="center" prop="barcode" label="商品69码" width="200"></el-table-column>
-          <el-table-column align="center" prop="commodityName" label="商品名称" min-width="250"></el-table-column>
-          <el-table-column align="center" prop="specname" label="规格名称" width="200"></el-table-column>
-          <el-table-column align="center" prop="specsParameter" label="规格参数" width="200"></el-table-column>
-          <el-table-column align="center" prop="productstandard" label="产品标准号" width="200"></el-table-column>
-          <el-table-column align="center" prop="productsize" label="商品尺寸"></el-table-column>
-          <el-table-column align="center" prop="productweight" label="商品重量/质量" width="200"></el-table-column>
-          <el-table-column align="center" prop="productvolume" label="商品体积/容积" width="200"></el-table-column>
-          <el-table-column align="center" prop="productimg" label="商品图片" width="200"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="主要功能/功效" width="200"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="商品小类"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="商品中类"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="商品大类"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="包装类型"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="包装尺寸"></el-table-column>
-          <el-table-column align="center" prop="producteffect" label="商品简介" width="250"></el-table-column>
-          <el-table-column align="center" prop="productprice" label="盘货员"></el-table-column>
-          <el-table-column align="center" prop="scanTime" label="盘货时间" width="200"></el-table-column>
-          <el-table-column align="center" label="售价" fixed="right">
-            <template v-slot="scope">
-							￥{{ scope.row.price }}
-						</template>
-          </el-table-column>
-        </el-table>
-        <div class="com-bottom">
-          <div class="bot">
-            <el-pagination background layout="prev, pager, next" :total="pageTotal" :page-size="pageSize" @current-change="handleCurrentChange">
-            </el-pagination>
-          </div>
+      <div class="right">
+        <!-- <el-radio-group v-model="radio1" size="mini">
+          <el-radio-button label="按商品69编码统计"></el-radio-button>
+          <el-radio-button label="按单品编码统计"></el-radio-button>
+        </el-radio-group> -->
+        <div class="setup">
+          <img class="set" src="../../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
       </div>
     </div>
+    <div class="tab-body">
+      <el-table
+      :row-class-name="tableRowClassName"
+    
+      ref="singleTable"
+      :data="tableData"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200"></el-table-column>
+        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
+        <el-table-column prop="price" label="商品单价" sortable width="120">
+          <template v-slot="scope">
+						￥{{ scope.row.price }}
+					</template>
+        </el-table-column>
+        <el-table-column prop="scanTime" label="盘货时间" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="people" label="盘货员" sortable width="180"></el-table-column>
+      </el-table>
+    </div>
+    <div class="bot">
+      <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination>
+    </div>
+    <div class="total">
+      <div>已盘货单品编码数量：<span>{{totalNum}}</span></div>
+      <div>已盘货商品种类：<span>{{totalNum}}</span></div>
+      <div>已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="商品名称:" prop="name" class="name-search">
+          <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
+          <img @click="scan" src="../../../assets/images/ic-code.png" alt="">
+        </el-form-item>
+        <el-form-item label="统计时间:">
+          <div class="date-status">
+            <span
+              v-for="(item, index) in tabs"
+              :key="index"
+              :class="{active: active === index}"
+              @click="active = index"
+            >{{item}}</span>
+          </div>
+          <el-date-picker
+            v-model="value1"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <el-dialog title="" v-model="centerDialogVisible" width="30%" center :close-on-click-modal="false">
+        <el-input
+          type="textarea"
+          :rows="5"
+          placeholder="请扫描或输入单品编码"
+          v-model="textarea">
+        </el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+         </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import InpTop from "../../../components/InpTop";
 import httpreques from '../../../utils/httpreques';
-import moment from 'moment';
+import moment from "moment";
+
 export default {
-  name: "Checkproduct",
+  name: "tab",
   data() {
     return {
-      formInline: {
-        productname: "",
-        brandname: "",
-      },
-      tabledata: [],
-      options: [],
-      time: '',
       pageNum: 1,
-      pageTotal: 0,
-      pageSize: 15
+      total: 0,
+      pageSize: 15,
+      price: 0,
+      totalNum: 0,
+      tabs: ['当日', '当周', '当月'],
+      active: 0,
+      radio1: '按商品69编码统计',
+      centerDialogVisible: false,
+      textarea: '',
+      tableData: [],
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
-  },
-  computed: {
-    filterTime(){
-      return function(val){
-        let date = new Date(val)
-        var y = date.getFullYear();
-        var m = date.getMonth() + 1;
-        m = m < 10 ? ('0' + m) : m;
-        var d = date.getDate();
-        d = d < 10 ? ('0' + d) : d;
-        var h = date.getHours();
-        h = h < 10 ? ('0' + h) : h;
-        var minute = date.getMinutes();
-        minute = minute < 10 ? ('0' + minute) : minute;
-        let time = y + '-' + m + '-' + d +' '+ h + ':' + minute
-        return time
-      }
-    }
-  },
-  components: {
-    InpTop,
   },
   created() {
     this.getdata(this.pageNum)
   },
   methods: {
-    getdata(pageNum){
+    getdata(){
       let param = {
         "barCode": "",
         "commodityCode": "",
         "commodityName": "",
-        "pageNum": pageNum,
+        "pageNum": this.pageNum,
         "pageSize": this.pageSize
       }
-      this.tabledata = []
+      this.tableData = []
       httpreques('post', param, '/realbrand-management-service/Inventory/InventoryList').then(res => {
         console.log(res)
         if(res.data.code === 'SUCCESS'){
@@ -152,10 +150,11 @@ export default {
               "YYYY-MM-DD HH:mm:ss"
             );
           })
-          this.pageTotal = res.data.total
+          this.total = res.data.total
+          this.totalNum = res.data.total
           for(let i = 0; i < data.length; i++){
-            this.tabledata.push({
-              index: i,
+            this.tableData.push({
+              index: i+1,
               barcode: data[i].barcode,
               brandName: data[i].brandName,
               commodityCode: data[i].commodityCode,
@@ -181,22 +180,44 @@ export default {
               selltime: '-',
               selltype: '-',
               sellstatus: '-',
-              scanTime: data[i].scanTime
+              scanTime: data[i].scanTime,
+              people:"-"
             })
           }
-          this.tabledata.reverse()
+          this.tableData.reverse()
         }else{
           this.$message(res.data.msg)
         }
       })
     },
-    handleCurrentChange(val){
-      this.getdata(val)
+    currentchange(val){
+      this.pageNum = val
+      this.getdata()
+    },
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+    handleCurrentChange(val) {
+        this.currentRow = val;
+      },
+    scan(){
+      this.centerDialogVisible = true
     }
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/css/reset"
+@import '../../../assets/css/reset.scss'
 </style>

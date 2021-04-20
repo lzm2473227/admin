@@ -2,13 +2,22 @@
   <div class="index-manage">
     <div class="index-stroe-title">
       {{ title }}
-      <div @click="changestatus()" :class="showstatus==false ? 'index-menu-show' : 'index-menu-hidden'"></div>
+      <div
+        @click="changestatus()"
+        :class="showstatus == false ? 'index-menu-show' : 'index-menu-hidden'"
+      ></div>
     </div>
-    <div class="index-manage-content" :class="showstatus==false?'contenthidden':''">
+    <div
+      class="index-manage-content"
+      :class="showstatus == false ? 'contenthidden' : ''"
+    >
       <el-tree
         :data="data"
         :props="defaultProps"
         @node-click="handleNodeClick"
+        highlight-current
+        node-key="id"
+        ref="vueTree2"
       ></el-tree>
     </div>
   </div>
@@ -20,48 +29,107 @@ export default {
   data() {
     return {
       showstatus: false,
+      nodekey: "systemmanage",
       data: [
         {
+          id: 1,
           label: "门店配置",
-          key:'store'
+          key: "store",
         },
         {
+          id: 2,
           label: "人员配置",
-         key:'user'
+          key: "user",
         },
         {
+          id: 3,
           label: "机具配置",
-           key:'machines'
-        }, 
+          key: "machines",
+        },
         {
+          id: 4,
           label: "商品配置",
-            key:'commodity'
+          key: "commodity",
         },
         {
+          id: 5,
           label: "广告管理",
-           key:'advertment'
+          key: "advertment",
         },
         {
+          id: 5,
           label: "文件管理",
-           key:'file'
+          key: "file",
         },
       ],
-       defaultProps: {
-          children: 'children',
-          label: 'label'
-        }
+      defaultProps: {
+        children: "children",
+        label: "label",
+      },
     };
   },
-  methods:{
-      //显示隐藏
-      changestatus(){
-          let t= this;
-          if(t.showstatus===true) t.showstatus = false; else t.showstatus = true;
-          
-      },
-      handleNodeClick(obj){
-          console.log(obj)
-           let path = "";
+  mounted() {
+    //是否展开状态判断。
+    let stu = true;
+    let stuobj = JSON.parse(localStorage.getItem(this.nodekey));
+    if (stuobj) {
+      stu = stuobj[this.nodekey];
+    }
+    this.showstatus = stu;
+    let selectmenu = JSON.parse(localStorage.getItem("selectmenu"));
+    //判断组件选中高亮
+    if (selectmenu) {
+      if (selectmenu.nodekey == this.nodekey) {
+        this.$nextTick(() => {
+          let key = 0;
+          switch (selectmenu.pathname) {
+            case "store":
+              key = 1;
+              break;
+            case "user":
+              key = 2;
+              break;
+            case "machines":
+              key = 3;
+              break;
+            case "commodity":
+              key = 4;
+              break;
+            case "advertment":
+              key = 5;
+              break;
+            case "file":
+              key = 6; //预留文件管理
+              break;
+            default:
+              key = 4;
+              break;
+          }
+          this.$refs.vueTree2.setCurrentKey(key);
+        });
+      }
+    } else {
+      this.$nextTick(() => {
+        this.$refs.vueTree2.setCurrentKey(4);
+      });
+    }
+  },
+  methods: {
+    //显示隐藏
+    changestatus() {
+      let t = this;
+
+      t.showstatus = !t.showstatus;
+      //存储展开状态
+      let nodekey = t.nodekey;
+      let menuobj = {};
+      menuobj[nodekey] = t.showstatus;
+      localStorage.setItem(nodekey, JSON.stringify(menuobj));
+    },
+    handleNodeClick(obj) {
+     
+      let path = "";
+      let pathname = "";
       switch (obj.key) {
         case "store":
           path = "/setting/storelist";
@@ -85,13 +153,18 @@ export default {
           break;
       }
       if (path) {
+        let selectmenu = {
+          nodekey: this.nodekey,
+          pathname: obj.key,
+        };
+        localStorage.setItem("selectmenu", JSON.stringify(selectmenu)); //需要在此处判断，路由跳转才缓存
         this.$router.push({
           path: path,
           query: {}, //后续传递当前级别
         });
       }
-      }
-  }
+    },
+  },
 };
 </script>
 
@@ -100,7 +173,7 @@ export default {
 店长组件样式
 */
 .index-manage {
-  width: 180px;
+  width: 160px;
   border-top: 1px solid #b8d0f2;
   border-bottom: 1px solid #b8d0f2;
   // padding-top: 16px;
@@ -183,8 +256,11 @@ export default {
   background: #fff;
   padding: 10px 0 10px 0;
 }
-.contenthidden{
-    display: none !important;
+.contenthidden {
+  display: none !important;
+}
+/deep/.el-tree-node__content > .el-tree-node__expand-icon{
+  padding-left: 20px;
 }
 </style>>
  

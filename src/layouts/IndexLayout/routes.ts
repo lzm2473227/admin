@@ -16,21 +16,21 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
   {
     icon: "home",
     title: "新增商品",
-    path: "/newproducttwo",
-    roles: ["newproducttwo"],
-    component: () => import("@/views/product/newproducttwo.vue"),
-    hidden: true,
-    selectLeftMenu: "/product",
-  },
-  {
-    icon: "home",
-    title: "新增商品",
     path: "/newproduct",
     roles: ["newproduct"],
     component: () => import("@/views/product/newproduct.vue"),
     hidden: true,
     selectLeftMenu: "/product",
   },
+  // {
+  //   icon: "home",
+  //   title: "新增商品",
+  //   path: "/newproduct",
+  //   roles: ["newproduct"],
+  //   component: () => import("@/views/product/newproduct.vue"),
+  //   hidden: true,
+  //   selectLeftMenu: "/product",
+  // },
  
   
   
@@ -320,6 +320,21 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             roles: ["clerksales"],
             component: () => import("@/views/userlv/clerk/sales.vue"),
           },
+          {
+            // icon: "detail",
+            title: "银行开户",
+            path: "/clerk/bank",
+            roles: ["clerkbank"],
+            component: () => import("@/views/userlv/clerk/bank.vue"),
+          },
+          {
+            // icon: "detail",
+            title: "保单推送",
+            path: "/clerk/guarantee",
+            roles: ["clerkguarantee"],
+            component: () => import("@/views/userlv/clerk/guarantee.vue"),
+          },
+
         ],
       },
       {
@@ -368,6 +383,20 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             roles: ["shopownersales"],
             component: () => import("@/views/userlv/shopowner/sales.vue"),
           },
+          {
+            // icon: "detail",
+            title: "银行开户",
+            path: "/shopowner/bank",
+            roles: ["shopownerbank"],
+            component: () => import("@/views/userlv/shopowner/bank.vue"),
+          },
+          {
+            // icon: "detail",
+            title: "保单推送",
+            path: "/shopowner/guarantee",
+            roles: ["shopownerguarantee"],
+            component: () => import("@/views/userlv/shopowner/guarantee.vue"),
+          },
         ],
       },
       {
@@ -415,6 +444,20 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             path: "/citydistributor/sales",
             roles: ["citydistributorsales"],
             component: () => import("@/views/userlv/citydistributor/sales.vue"),
+          },
+          {
+            // icon: "detail",
+            title: "银行开户",
+            path: "/citydistributor/bank",
+            roles: ["citydistributorbank"],
+            component: () => import("@/views/userlv/citydistributor/bank.vue"),
+          },
+          {
+            // icon: "detail",
+            title: "保单推送",
+            path: "/citydistributor/guarantee",
+            roles: ["citydistributorguarantee"],
+            component: () => import("@/views/userlv/citydistributor/guarantee.vue"),
           },
         ],
       },

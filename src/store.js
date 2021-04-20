@@ -7,6 +7,7 @@ const store = new Vuex.Store({
     state: {
         loginStatus:'error',
         currentUser: {},
+        selectmenu:""
     },
     mutations: {
         changeLoginStatus(state, payload) {
@@ -15,7 +16,13 @@ const store = new Vuex.Store({
         },
         saveCurrentUser(state, payload) {
             state.currentUser =  payload
-    },},
+        },
+        changeSelectmenu(state, payload) {
+          state.selectmenu =  payload
+  
+         
+      },
+  },
     actions: {
           //登录
         async loginsucess({ commit }, payload) {
@@ -37,7 +44,10 @@ const store = new Vuex.Store({
             } catch (error) {
               return false;
             }
-          }
+          },
+        async changeSelectmenu({commit},payload){
+          commit('changeSelectmenu',payload);
+        }
     }
   })
 export default store

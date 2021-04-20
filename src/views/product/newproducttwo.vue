@@ -169,9 +169,8 @@
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"
               :on-success="handleAvatarSuccess"
-              :limit = 1
-              v-if="!dialogImageUrl"
-              style="margin-left:-340px;margin-top:80px"
+              :on-preview="handlePictureCardPreview"
+              style="margin-left:-500px;margin-top:80px"
             >
               <template #default >
                 <div  class="imgs-title">
@@ -179,6 +178,9 @@
                 </div>
               </template>         
             </el-upload>
+            <el-dialog v-model="dialogVisible">
+              <img style="width:100%" :src='form.filePath' alt="">
+            </el-dialog>
           </tr>
         </table>
       </div>
@@ -207,11 +209,12 @@ export default {
         commodityCode: "", // 单品编码
         storeId:""
       },
-      dialogImageUrl:""
+      dialogImageUrl:"",
+      dialogVisible:false,
+      linkPosition: "", //默认选中显示
     };
   },
   mounted() {
-    //
     this.getdata();
   },
   methods: {
@@ -227,12 +230,14 @@ export default {
           params,
           "/realbrand-management-service/CommodityMgt/CommodityInfo"
         ).then((res) => {
+          // console.log(res);
           if (res.data.code == "SUCCESS") {
             //对象数据处理
             console.log(res);
             let commobj = res.data.data;
-
+            this.dialogImageUrl = commobj.filePath;
             t.form = commobj;
+
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
@@ -246,10 +251,10 @@ export default {
       //manufacturer  brandName  policyNo
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      console.log(file.url);
+      // console.log(file.url);
       this.dialogImageUrl = file.url;
       // this.dialogVisible = true;
     },
@@ -260,7 +265,7 @@ export default {
         storeId: this.form.storeId, //条形码
         brandName: this.form.brandName, //品牌名称
         commodityName: this.form.commodityName, //商品名称
-        // filePath: this.dialogImageUrl, //商品图片路径
+        filePath: this.form.filePath, //商品图片路径
         // idNumber: this.form.idNumber, //登录ID
         manufacturer: this.form.manufacturer, //厂商
         // policyNo: this.form.policyNo, //保险单号/默认为0
@@ -281,12 +286,30 @@ export default {
             message: this.$route.query.commodityCode ? "修改成功" : "添加成功",
             type: "success",
           });
+          console.log(res.data);
           this.cancelbtn();
         } else {
           //接口错误处理
           this.$message.error(res.data.msg);
         }
       });
+    },
+    //预览图片
+    handlePictureCardPreview(res, file){
+      // console.log(file);
+      console.log(res);
+      this.dialogVisible = true;
+      this.form.filePath = res.response.data;
+    },
+    //图片接口
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      console.log(res);
+      // return
+      if (res.code === "Success") {
+        this.dialogImageUrl = res.data;
+        this.form.filePath = res.data;
+      }
     },
     cancelbtn() {
       let t = this;
