@@ -25,46 +25,47 @@
 
 <script>
 export default {
+  name:"Khcommodity",
   props: ["title"],
   data() {
     return {
       showstatus: false,
-      nodekey: "systemmanage",
+      nodekey: "khcommodity",
       data: [
         {
           id: 1,
-          label: "门店配置",
-          key: "store",
+          label: "消费者侧",
+          key: "customer",
         },
         {
           id: 2,
-          label: "人员配置",
-          key: "user",
+          label: "门店侧",
+          key: "store",
         },
         {
           id: 3,
-          label: "商品配置",
-          key: "commodity",
+          label: "物流配送侧",
+          key: "logistics",
         },
         {
           id: 4,
-          label: "机具配置",
-          key: "machines",
+          label: "物流仓库侧",
+          key: "warehouse",
         },
         {
           id: 5,
-          label: "广告管理",
-          key: "advertment",
+          label: "公厂侧",
+          key: "factory",
         },
         {
           id: 6,
-          label: "对公账户",
-          key: "public",
+          label: "保险机构侧",
+          key: "insurance",
         },
         {
           id: 7,
-          label: "文件管理",
-          key: "file",
+          label: "银行机构侧",
+          key: "bank",
         },
       ],
       defaultProps: {
@@ -88,25 +89,25 @@ export default {
         this.$nextTick(() => {
           let key = 0;
           switch (selectmenu.pathname) {
-            case "store":
+            case "customer":
               key = 1;
               break;
-            case "user":
+            case "store":
               key = 2;
               break;
-            case "machines":
+            case "logistics":
               key = 3;
               break;
-            case "commodity":
+            case "warehouse":
               key = 4;
               break;
-            case "advertment":
+            case "factory":
               key = 5;
               break;
-            case "public":
+            case "insurance":
               key = 6;
               break;
-            case "file":
+            case "bank":
               key = 7; //预留文件管理
               break;
             default:
@@ -139,26 +140,26 @@ export default {
       let path = "";
       let pathname = "";
       switch (obj.key) {
+        case "customer":
+          path = "/sysuser/customer";
+          break;
         case "store":
-          path = "/setting/storelist";
+          path = "/sysuser/store";
           break;
-        case "user":
-          path = "/setting/clerklist";
+        case "logistics":
+          path = "/sysuser/logistics";
           break;
-        case "machines":
-          path = "/setting/machine";
+        case "warehouse":
+          path = "/sysuser/warehouse";
           break;
-        case "commodity":
-          path = "/product";
+        case "factory":
+          path = "/sysuser/factory";
           break;
-        case "advertment":
-          path = "/setting/advertmentlist";
+        case "insurance":
+          path = "/sysuser/insurance";
           break;
-        case "public":
-          path = "/setting/public";
-          break;
-        case "file":
-          path = "/setting/file";
+        case "bank":
+          path = "/sysuser/bank";
           break;
         default:
           break;

@@ -1,54 +1,53 @@
-import {createStore} from 'vuex'
-import Vuex from 'vuex' 
- 
+import { createStore } from 'vuex'
+import Vuex from 'vuex'
+
 import { setToken } from '@/utils/localToken';
 import { removeToken } from "@/utils/localToken";
 const store = new Vuex.Store({
     state: {
-        loginStatus:'error',
+        loginStatus: 'error',
         currentUser: {},
-        selectmenu:""
+        selectmenu: ""
     },
     mutations: {
         changeLoginStatus(state, payload) {
-          
+
             state.loginStatus = payload;
         },
         saveCurrentUser(state, payload) {
-            state.currentUser =  payload
+            state.currentUser = payload
         },
         changeSelectmenu(state, payload) {
-          state.selectmenu =  payload
-  
-         
-      },
-  },
+            state.selectmenu = payload
+
+
+        },
+    },
     actions: {
-          //登录
+        //登录
         async loginsucess({ commit }, payload) {
-             //更新登录状态
-            commit('changeLoginStatus',payload);
+            //更新登录状态
+            commit('changeLoginStatus', payload);
         },
         async logout({ commit }) {
             try {
-           
-           
-              await removeToken();
-              commit('saveCurrentUser',  {
-                id: 0,
-                name: '',
-                avatar: '',
-                roles: [],
-              });
-              return true;
+
+
+                await removeToken();
+                commit('saveCurrentUser', {
+                    id: 0,
+                    name: '',
+                    avatar: '',
+                    roles: [],
+                });
+                return true;
             } catch (error) {
-              return false;
+                return false;
             }
-          },
-        async changeSelectmenu({commit},payload){
-          commit('changeSelectmenu',payload);
+        },
+        async changeSelectmenu({ commit }, payload) {
+            commit('changeSelectmenu', payload);
         }
     }
-  })
+})
 export default store
- 

@@ -1,58 +1,116 @@
 <template>
   <div id="indexlayout">
+    <!-- <left
+          :collapsed="collapsed"
+          :topNavEnable="topNavEnable"
+          :belongTopMenu="belongTopMenu"
+          :defaultActive="defaultActive"
+          :menuData="permissionMenuData"
+        >
+        </left>
+
+        <div
+          id="indexlayout-right"
+          :class="{'fiexd-header': headFixed}"
+        >
+
+            <right-top
+              :collapsed="collapsed"
+              :topNavEnable="topNavEnable"
+              
+              :menuData="permissionMenuData"
+            >              
+            </right-top>
+
+            <div class="indexlayout-right-main">
+                <permission :roles="routeItem.roles">
+                  <router-view></router-view>
+                </permission>
+                
+            </div>
+
+        </div> -->
+
     <div class="indexlayout-newtop">
-      <span class="systemtitle">{{ lvname }}门店管理系统</span>
+      <!-- <div class="selectroles">
+        <el-select v-model="rolename" @change="loginout" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div> -->
+      <span class="systemtitle">海王集团门店管理系统</span>
     </div>
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
         <div class="index-user">
           <span class="index-user-title">{{ systitle }}</span>
           <div class="index-user-content">
-            <el-avatar :size="50" :src="circleUrl"></el-avatar>
-            <span class="index-user-lvname"
-              ><img
-                @click="edituser()"
-                src="../../assets/images/edit.png"
-                alt=""
-              />{{ lvname }}</span
-            >
+            <el-avatar
+              :size="50"
+              :src="circleUrl"
+            ></el-avatar>
+            <span class="index-user-lvname"><img @click="edituser()" src="../../assets/images/edit.png" alt="">{{ lvname }}</span>
           </div>
         </div>
-        <div class="roles" :key="indexkey">
-          <!-- <div class="a"></div> -->
+        <!-- <div class="index-store">
+          <div class="index-stroe-title">
+            门店店员
+            <div
+              :class="1 == 0 ? 'index-menu-show' : 'index-menu-hidden'"
+            ></div>
+          </div>
+          <div class="index-store-content">
+            <el-tree
+              :data="data"
+              :props="defaultProps"
+              @node-click="handleNodeClick"
+            ></el-tree>
+          </div>
+        </div> -->
+        <div class="roles" :key='indexkey'>
+          <div class="a"></div>
           <RoleLv
             v-if="rolelv['clerk']"
             title="门店店员"
             nodekey="clerk"
-            @jumpurl="jumpurl"
+            @jumpurl='jumpurl'
+           
           ></RoleLv>
           <RoleLv
             v-if="rolelv['shopowner']"
             title="门店店长"
             nodekey="shopowner"
-            @jumpurl="jumpurl"
+              @jumpurl='jumpurl'
+              
           ></RoleLv>
           <RoleLv
             v-if="rolelv['citydistributor']"
             title="市级经销商"
             nodekey="citydistributor"
-            @jumpurl="jumpurl"
+              @jumpurl='jumpurl'
+              
           ></RoleLv>
           <RoleLv
             v-if="rolelv['provincedistributor']"
             title="省级经销商"
             nodekey="provincedistributor"
-            @jumpurl="jumpurl"
+              @jumpurl='jumpurl'
+             
           ></RoleLv>
           <RoleLv
             v-if="rolelv['countrydistributor']"
             title="全国经销商"
             nodekey="countrydistributor"
-            @jumpurl="jumpurl"
+            @jumpurl='jumpurl'
+             
           ></RoleLv>
-
-          <SystemManage v-if="showSystemManage" title="内部管理"></SystemManage>
-          <Khcommodity title="凯华内部商品配置"></Khcommodity>
+          
+          <SystemManage title="内部管理"></SystemManage>
         </div>
       </div>
 
@@ -62,110 +120,83 @@
         </permission>
       </div>
     </div>
+    <!-- <div class="indexlayout-newsup">
+      <span style="color: #333">技术支持单位：</span>
+      <span style="color: #2a78d2"
+        >深圳凯华技术有限公司&nbsp;&nbsp;&nbsp;&nbsp;</span
+      >
+      <span style="color: #333"> 技术支持电话：0755-83825745 </span>
+    </div> -->
+
     <!-- 个人设置弹窗 -->
 
     <div v-if="dialogVisible" class="edituser-modal">
       <div class="modal-userinfo">
-        <div class="modal-top">
-          <div class="modal-title">个人设置</div>
-          <div class="modalbtns">
-            <div class="modalbtn" @click="saveuser">
-              <img src="../../assets/images/ic-save.png" class="modalben-img" />
-              <span>应用</span>
-            </div>
-            <div class="modalbtn" style="margin-left:20px" @click="escclick">
-              <img src="../../assets/images/ic-esc.png" class="modalben-img" />
-              <span @click="remove">退出</span>
-            </div>
+      <div class="modal-top">
+        <div class="modal-title">个人设置</div>
+        <div class="modalbtns">
+          <div class="modalbtn" @click="saveuser">
+            <img src="../../assets/images/ic-save.png" class="modalben-img" />
+            <span>应用</span>
+          </div>
+          <div class="modalbtn" style="margin-left:20px" @click="escclick">
+            <img src="../../assets/images/ic-esc.png" class="modalben-img" />
+            <span @click="remove">退出</span>
           </div>
         </div>
-        <div class="modal-bot">
-          <div class="modalbot-left">
-            <div
-              class="modalbot-menu"
-              :class="selectmenu == 'baseinfo' ? 'modalmunebg' : ''"
-              @click="changemenu('baseinfo')"
-            >
-              基本信息
-            </div>
-            <div
-              class="modalbot-menu"
-              :class="selectmenu == 'userseting' ? 'modalmunebg' : ''"
-              @click="changemenu('userseting')"
-            >
-              个人设置
-            </div>
-          </div>
-          <div class="modalbot-right">
-            <div v-if="selectmenu == 'baseinfo'" class="modal-baseinfo">
-              <div class="baseinfo-left">
-                <div class="baseinfo-info">
+      </div>
+      <div class="modal-bot">
+        <div class="modalbot-left">
+          <div class="modalbot-menu" :class="selectmenu=='baseinfo'?'modalmunebg':''"   @click="changemenu('baseinfo')">基本信息</div>
+          <div class="modalbot-menu" :class="selectmenu=='userseting'?'modalmunebg':''" @click="changemenu('userseting')">个人设置</div>
+        </div>
+        <div class="modalbot-right">
+          <div v-if="selectmenu=='baseinfo'" class="modal-baseinfo">
+            <div class="baseinfo-left">
+              <div class="baseinfo-info">
                   <div class="baseinfo-title">用户名称：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      disabled="disabled"
-                      v-model="userinfo.name"
-                    />
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.name" />
                   </div>
-                </div>
-                <div class="baseinfo-info">
+              </div>
+            <div class="baseinfo-info">
                   <div class="baseinfo-title">所属门店：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      disabled="disabled"
-                      v-model="userinfo.storeName"
-                    />
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.storeName" />
                   </div>
-                </div>
-                <div class="baseinfo-info">
+              </div>
+              <div class="baseinfo-info">
                   <div class="baseinfo-title">联系号码：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      disabled="disabled"
-                      v-model="userinfo.telNum"
-                    />
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.telNum" />
                   </div>
-                </div>
               </div>
-              <div class="baseinfo-right">
+            </div>
+            <div class="baseinfo-right">
                 <div class="baseinfo-info">
                   <div class="baseinfo-title">用户账号：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      disabled="disabled"
-                      v-model="userinfo.username"
-                    />
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.idNumber" />
                   </div>
-                </div>
+              </div>
                 <div class="baseinfo-info">
                   <div class="baseinfo-title">用户角色：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      disabled="disabled"
-                      v-model="userinfo.station"
-                    />
+                    <input class="baseinfo-input" disabled="disabled" v-model="userinfo.station" />
                   </div>
-                </div>
+              </div>
                 <div class="baseinfo-info">
                   <div class="baseinfo-title">用户密码：</div>
                   <div class="baseinfo-content">
-                    <input
-                      class="baseinfo-input"
-                      v-model="userpsw"
-                      type="password"
-                    />
+                    <input class="baseinfo-input" v-model="userpsw" type="password" />
                   </div>
-                </div>
               </div>
+              
             </div>
-            <div v-else class="modal-userseting"></div>
           </div>
+          <div v-else class="modal-userseting"></div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -196,7 +227,6 @@ import Left from "./components/Left.vue";
 import RightTop from "./components/RightTop.vue";
 import RoleLv from "./components/RoleLv.vue";
 import SystemManage from "./components/SystemManage.vue";
-import Khcommodity from "./components/khcommodity.vue";
 import httpreques from "../../utils/httpreques";
 interface IndexLayoutSetupData {
   collapsed: boolean;
@@ -218,11 +248,9 @@ export default defineComponent({
     RightTop,
     RoleLv,
     SystemManage,
-    Khcommodity
   },
   data() {
     return {
-      showSystemManage:true,
       options: [
         {
           value: "CUSTOMER",
@@ -319,14 +347,11 @@ export default defineComponent({
           ],
         },
       ],
-     
-        rolelv: {
+      rolelv: {
         clerk: "clerk",
-        shopowner: "shopowner", 
+        shopowner: "shopowner",
         citydistributor: "citydistributor",
-        sysuser:"sysuser"
-      },
-       //角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
+      }, //角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
       dialogVisible: false,
       selectmenu:'baseinfo',
       userinfo:{},
@@ -337,12 +362,6 @@ export default defineComponent({
   },
   mounted() {
     let rolename = JSON.parse(localStorage.getItem("roleEnum"));
-    if(rolename == 'KAIHUA'){
-      // console.log(rolename+"11111");
-      // console.log(this.rolename+"22222");
-      this.showSystemManage = false
-      this.rolelv = false
-    }
     let systitle = "";
     switch (rolename) {
       case "CUSTOMER":
@@ -384,13 +403,6 @@ export default defineComponent({
     this.rolename = "系统用户：  " + rolename;
     this.systitle = "用户：   " + systitle;
     this.lvname = this.$store.state.user.currentUser.name;
-    // if(rolename == 'KAIHUA'){
-    //   console.log(rolename+"11111");
-    //   console.log(this.rolename+'22222');
-    //   this.showSystemManage = false
-    // }
-    // console.log(rolename+"3333");
-    
   },
   methods: {
     remove(){
@@ -407,9 +419,9 @@ export default defineComponent({
     getdata(){
          let t = this;
          const loginuser = JSON.parse(localStorage.getItem('loginuser'));
-
+        
          let params ={
-           idCard:loginuser.userDetails.username
+           idCard:loginuser.userDetails.idNumber
          };
          httpreques(
           "post",
@@ -437,7 +449,6 @@ export default defineComponent({
       t.selectmenu = menu;
     },
     //保存设置
-
     saveuser(){
             let t = this;
          const loginuser = JSON.parse(localStorage.getItem('loginuser'));
@@ -447,7 +458,7 @@ export default defineComponent({
              return;
          }
          let params ={
-           username:loginuser.userDetails.username,
+           idNumber:loginuser.userDetails.idNumber,
            password:t.userpsw
          };
          httpreques(
@@ -475,17 +486,17 @@ export default defineComponent({
     },
     //
     jumpurl(params){
-
+     
       this.childmenu = params.nodekey;
         this.$router.push({
           path: params.path,
           query: {}, //后续传递当前级别
         });
-
+      
       // this.indexkey ++;    //强制渲染；
     }
   },
-
+ 
   setup(): IndexLayoutSetupData {
     const store = useStore<{
       global: GlobalStateType;
@@ -505,7 +516,6 @@ export default defineComponent({
     const permissionMenuData = computed<RoutesDataItem[]>(() =>
       getPermissionMenuData(store.state.user.currentUser.roles, menuData)
     );
-    console.log(permissionMenuData);
 
     // 当前路由的顶部菜单path
     const belongTopMenu = computed<string>(() =>
@@ -556,7 +566,7 @@ export default defineComponent({
       routeItem: (routeItem as unknown) as RoutesDataItem,
     };
   },
-
+     
 });
 </script>
 <style lang="scss" scoped>
@@ -598,7 +608,7 @@ export default defineComponent({
 
 .indexlayout-newtop {
   height: 42px;
-  background: #288dff;
+  background: #288DFF;
   opacity: 1;
   width: 100%;
   display: flex;
@@ -608,12 +618,12 @@ export default defineComponent({
   top: 0;
   left: 0;
 }
-.systemtitle {
+.systemtitle{
   font-size: 24px;
-  font-family: STHeiti;
-  font-weight: 400;
-  line-height: 42px;
-  color: #ffffff;
+font-family: STHeiti;
+font-weight: 400;
+ line-height: 42px;
+color: #FFFFFF;
 }
 .indexlayout-newbot {
   display: flex;
@@ -672,7 +682,7 @@ export default defineComponent({
   color: #222222;
   font-weight: bold;
   padding-top: 10px;
-  img {
+  img{
     width: 14px;
     margin-right: 6px;
     cursor: pointer;
@@ -684,7 +694,7 @@ export default defineComponent({
   padding: 0 10px 10px 0;
 }
 
-.indexlayout-newsup {
+.indexlayout-newsup{
   height: 38px;
   width: 100vw;
   position: fixed;
@@ -712,19 +722,20 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
 }
-.modal-userinfo {
+.modal-userinfo{
   width: 924px;
   height: 580px;
-  background: #ffffff;
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
+ 
 }
-.modal-title {
+.modal-title{
   font-size: 16px;
-  font-family: Source Han Sans CN;
-
-  font-weight: bold;
-  color: #333333;
+font-family: Source Han Sans CN;
+ 
+ font-weight: bold;
+color: #333333;
 }
 .modal-top {
   height: 48px;
@@ -737,77 +748,79 @@ export default defineComponent({
   box-sizing: border-box;
   padding: 0 20px 0 20px;
 }
-.modalbtns {
+.modalbtns{
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
-.modalbtn {
+.modalbtn{
   font-size: 16px;
-  font-family: Source Han Sans CN;
-
-  color: #333333;
-  display: flex;
-  align-items: center;
-  width: 68px;
-  height: 30px;
-  border: 1px solid #c0c0c0;
-  background: linear-gradient(180deg, #f9f9f9 0%, #e3e3e3 100%);
-  border-radius: 2px;
-  justify-content: space-evenly;
-  box-sizing: border-box;
-  cursor: pointer;
+font-family: Source Han Sans CN;
+ 
+color: #333333;
+display: flex;
+align-items: center;
+width: 68px;
+height: 30px;
+border: 1px solid #C0C0C0;
+background: linear-gradient(180deg, #F9F9F9 0%, #E3E3E3 100%);
+border-radius: 2px;
+justify-content: space-evenly;
+box-sizing: border-box;
+ cursor: pointer;
 }
-.modal-bot {
+.modal-bot{
   flex: 1;
   display: flex;
   flex-direction: row;
 }
-.modalbot-left {
+.modalbot-left{
   width: 124px;
   height: 100%;
-  background: #f3f3f3;
+  background: #F3F3F3;
   box-sizing: border-box;
-  padding-top: 20px;
+  padding-top: 20px ;
 }
-.modalbot-menu {
+.modalbot-menu{
   height: 38px;
   width: 124px;
-
+  
   font-size: 14px;
   font-family: Source Han Sans CN;
-  text-align: center;
-  line-height: 38px;
-  color: #3f4551;
-  cursor: pointer;
+   text-align: center;
+line-height: 38px;
+color: #3F4551;
+cursor: pointer;
 }
-.modalmunebg {
-  background: #fff;
+.modalmunebg{
+background: #fff;
 }
-.modal-baseinfo {
+.modal-baseinfo{
   display: flex;
   flex-direction: row;
 }
-.baseinfo-info {
+.baseinfo-info{
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
   padding: 20px 0 0 30px;
   font-size: 14px;
-  font-family: Source Han Sans CN;
+font-family: Source Han Sans CN;
+ 
+ 
+color: #666666;
+align-items: center;
 
-  color: #666666;
-  align-items: center;
 }
-.baseinfo-right {
+.baseinfo-right{
   padding-left: 100px;
 }
-.baseinfo-input {
+.baseinfo-input{
   width: 180px;
-  height: 26px;
-  background: #f5f5f5;
-  border: 1px solid #dddddd;
+ height: 26px;
+ background: #F5F5F5;
+ border: 1px solid #DDDDDD; 
   outline: none;
 }
 /deep/.el-input__inner {
@@ -822,9 +835,9 @@ export default defineComponent({
 /deep/.el-input__inner:hover {
   border: none;
 }
-.roles {
-  height: 700px;
-  overflow: auto;
-  border: 1px solid #b8d0f2;
+.roles{
+    height: 700px;
+    overflow: auto;
+    border: 1px solid #b8d0f2;
 }
 </style>

@@ -15,20 +15,20 @@
         :data="data"
         :props="defaultProps"
         @node-click="handleNodeClick"
-          @node-expand="handleNodeOpen"
+        @node-expand="handleNodeOpen"
         @node-collapse="handleNodeClose"
         highlight-current
         node-key="id"
         ref="vueTree"
-        :default-expanded-keys='defaultkeys'
+        :default-expanded-keys="defaultkeys"
       ></el-tree>
     </div>
   </div>
 </template>
 
 <script>
-import store from '../../../store';
-import _ from 'lodash'
+import store from "../../../store";
+import _ from "lodash";
 export default {
   props: ["title", "nodekey"],
   data() {
@@ -42,11 +42,11 @@ export default {
           "node-key": "receiving",
           children: [
             {
-              id: 4,
+              id: 6,
               label: "待收货",
             },
             {
-              id: 5,
+              id: 7,
               label: "已收货",
             },
           ],
@@ -54,14 +54,14 @@ export default {
         {
           id: 2,
           label: "盘货",
-          "node-key": "inventory",
+           'node-key': "inventory",
           children: [
             {
-              id: 6,
+              id: 8,
               label: "待盘货",
             },
             {
-              id: 7,
+              id: 9,
               label: "已盘货",
             },
           ],
@@ -69,37 +69,45 @@ export default {
         {
           id: 3,
           label: "销售",
-          "node-key": "sale",
+           'node-key': "sale",
           children: [
             {
-              id: 8,
+              id: 10,
               label: "待销售",
             },
             {
-              id: 9,
+              id: 11,
               label: "已销售",
             },
           ],
         },
         {
-          id: 10,
+          id: 4,
           label: "银行开户",
-          "node-key": "bank",
+           'node-key': "bank",
           children: [
             {
-              id: 11,
-              label: "银行开户",
+              id: 12,
+              label: "待开户",
+            },
+            {
+              id: 13,
+              label: "已开户",
             },
           ],
         },
         {
-          id: 12,
+          id: 5,
           label: "保单推送",
-          "node-key": "guarantee",
+           'node-key': "guarantee",
           children: [
             {
-              id: 13,
-              label: "保单推送",
+              id: 14,
+              label: "待推送",
+            },
+            {
+              id: 15,
+              label: "已推送",
             },
           ],
         },
@@ -108,7 +116,7 @@ export default {
         children: "children",
         label: "label",
       },
-      defaultkeys:[],//展开的节点
+      defaultkeys: [], //展开的节点
     };
   },
   mounted() {
@@ -119,9 +127,9 @@ export default {
       stu = stuobj[this.nodekey];
     }
     this.showstatus = stu;
-    let defaultkeys = JSON.parse(localStorage.getItem(this.nodekey+"keys"));
-    this.defaultkeys =defaultkeys;
-    
+    let defaultkeys = JSON.parse(localStorage.getItem(this.nodekey + "keys"));
+    this.defaultkeys = defaultkeys;
+
     //数组件的默认展开
     let selectmenu = JSON.parse(localStorage.getItem("selectmenu"));
     //判断组件选中高亮
@@ -131,22 +139,34 @@ export default {
           let key = 0;
           switch (selectmenu.pathname) {
             case "noreceive":
-              key = 4;
-              break;
-            case "receive":
-              key = 5;
-              break;
-            case "nocheckproduct":
               key = 6;
               break;
-            case "checkproduct":
+            case "receive":
               key = 7;
               break;
-            case "nosale":
+            case "nocheckproduct":
               key = 8;
               break;
-            case "sales":
+            case "checkproduct":
               key = 9;
+              break;
+            case "nosale":
+              key = 10;
+              break;
+            case "sales":
+              key = 11;
+              break;
+            case "nobank":
+              key = 12;
+              break;
+            case "bank":
+              key = 13;
+              break;
+            case "noguarantee":
+              key = 14;
+              break;
+            case "guarantee":
+              key = 15;
               break;
           }
           this.$refs.vueTree.setCurrentKey(key);
@@ -166,11 +186,49 @@ export default {
       localStorage.setItem(nodekey, JSON.stringify(menuobj));
     },
     handleNodeClick(obj) {
-      // if(this.nodekey)
-     
+      let path2 = "";
+
+      //if做单个判断的时候可以用。多个判断的时候用switch
+      // switch(obj.id){
+      //   case '6' || '7':
+      //     path2 = "/receive";
+      //     break;
+      //   case '8' || '9':
+      //     path2 = "/check";
+      //     break;
+      //   case '10' || '11':
+      //     path2 = "/sale";
+      //     break;
+      //   case '12' || '13':
+      //     path2 = "/bank";
+      //     break;
+      //   case '14' || '15':
+      //     path2 = "/insurance";
+      //     break;
+      // }
+      if (obj.id == 6 || obj.id == 7 ) {
+        path2 = "/receive";
+      }
+      if (obj.id == 8 || obj.id == 9 ) {
+        path2 = "/check";
+      }
+      if (obj.id == 10 || obj.id == 11 ) {
+        path2 = "/sale";
+      }
+      if (obj.id == 12 || obj.id == 13 ) {
+        path2 = "/bank";
+      }
+      if (obj.id == 14 || obj.id == 15 ) {
+        path2 = "/insurance";
+      }
       let path = "";
       let jumprouter = false;
-      path += "/" + this.nodekey;
+      // this.nodekey 判断加载的是店长还是店员等内容  【如果只有店员需要嵌套，则不需要改成switch】
+      if(this.nodekey=='shopowner'){
+        path += "/" + this.nodekey ; //path2为路由拼接的参数  根据不同的类型加载不同的嵌套层
+      }else{
+        path += "/" + this.nodekey + path2; //path2为路由拼接的参数  根据不同的类型加载不同的嵌套层
+      }
       let pathname = "";
       switch (obj.label) {
         case "待收货":
@@ -203,12 +261,22 @@ export default {
           pathname = "sales";
           jumprouter = true;
           break;
-        case "银行开户":
+        case "待开户":
+          path += "/nobank";
+          pathname = "nobank";
+          jumprouter = true;
+          break;
+        case "已开户":
           path += "/bank";
           pathname = "bank";
           jumprouter = true;
           break;
-        case "保单推送":
+        case "待推送":
+          path += "/noguarantee";
+          pathname = "noguarantee";
+          jumprouter = true;
+          break;
+        case "已推送":
           path += "/guarantee";
           pathname = "guarantee";
           jumprouter = true;
@@ -221,27 +289,28 @@ export default {
           pathname: pathname,
         };
         localStorage.setItem("selectmenu", JSON.stringify(selectmenu)); //需要在此处判断，路由跳转才缓存
-        this.$emit('jumpurl',{path:path,nodekey:this.nodekey})
+        this.$emit("jumpurl", { path: path, nodekey: this.nodekey });
         // this.$router.push({
         //   path: path,
         //   query: {}, //后续传递当前级别
         // });
       }
     },
-    handleNodeOpen(obj){
+    handleNodeOpen(obj) {
       let arr = [];
       arr.push(obj.id);
 
-     
-      localStorage.setItem(this.nodekey+'keys', JSON.stringify(arr));
+      localStorage.setItem(this.nodekey + "keys", JSON.stringify(arr));
       this.defaultkeys = arr;
     },
-    handleNodeClose(obj){
-       _.pull(this.defaultkeys, obj.id);
-        localStorage.setItem(this.nodekey+'keys', JSON.stringify(this.defaultkeys));
-    }
+    handleNodeClose(obj) {
+      _.pull(this.defaultkeys, obj.id);
+      localStorage.setItem(
+        this.nodekey + "keys",
+        JSON.stringify(this.defaultkeys)
+      );
+    },
   },
-
 };
 </script>
 
@@ -342,10 +411,13 @@ export default {
 .contenthidden {
   display: none !important;
 }
-/deep/.el-tree-node__content{
+/deep/.el-tree-node__content {
   margin-left: 14px;
 }
-/deep/.el-tree-node__children > .el-tree-node > .el-tree-node__content > .el-tree-node__expand-icon{
+/deep/.el-tree-node__children
+  > .el-tree-node
+  > .el-tree-node__content
+  > .el-tree-node__expand-icon {
   padding-left: 14px;
 }
 </style>>

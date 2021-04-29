@@ -2,11 +2,11 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="../../../assets/images/add.png" alt=""><span class="axis">新增商品</span></div>
-        <div class="print"><img class="icon" src="../../../assets/images/delete.png" alt=""><span class="axis">删除商品</span></div>
-        <div class="print"><img class="icon" src="../../../assets/images/pay.png" alt=""><span class="axis">启动支付</span></div>
-        <div class="print"><img class="icon" src="../../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增商品</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除商品</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/pay.png" alt=""><span class="axis">启动支付</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <!-- <el-radio-group v-model="radio1" size="mini">
@@ -14,7 +14,7 @@
           <el-radio-button label="按单品编码统计"></el-radio-button>
         </el-radio-group> -->
         <div class="setup">
-          <img class="set" src="../../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+          <img class="set" src="@/assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="商品名称:" prop="name" class="name-search">
           <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
-          <img @click="scan" src="../../../assets/images/ic-code.png" alt="">
+          <img @click="scan" src="@/assets/images/ic-code.png" alt="">
         </el-form-item>
         <el-form-item label="统计时间:">
           <div class="date-status">
@@ -102,7 +102,7 @@
  
 <script>
 import Page from '@/components/Pagination/page.vue'
-import httpreques from '../../../utils/httpreques';
+import httpreques from '@/utils/httpreques';
  
 export default {
   name: "tab",
@@ -216,5 +216,5 @@ export default {
 </script>
  
 <style lang="scss" scoped>
-@import '../../../assets/css/reset.scss'
+@import '@/assets/css/reset.scss'
 </style>

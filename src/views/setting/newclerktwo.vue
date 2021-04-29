@@ -268,7 +268,7 @@
           <el-dialog v-model="dialogVisible">
             <img style="width:100%" :src='ruleForm.frontId' alt="">
           </el-dialog>
-          <el-upload  style="position: absolute;top:60px;left:640px"
+          <el-upload  style="position: absolute;top:95px;left:638px"
             action="http://14.29.162.130:6602/image/imageUpload"
             list-type="picture-card"
             :on-success="handleAvatarSuccess"

@@ -87,6 +87,7 @@ export default {
     };
   },
    mounted() {
+    //  this.a()
     // 在页面加载时从cookie获取登录信息
     let t = this;
     let username = this.getCookie("username");
@@ -108,24 +109,27 @@ export default {
      loginsystem() {
       let t = this;
       let loginparams = {
-        idNumber: t.username,
+        username : t.username,
         password: t.userpsw,
-        captcha	: this.verificationCode,
-        roleEnum: t.rolekey,
+        captcha    : this.verificationCode,
+        module : t.rolekey,
       };
-      localStorage.removeItem('roleEnum');
+      // localStorage.removeItem('roleEnum');
       httpreques("post", loginparams, "/managementLogin").then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.code == "SUCCESS") {
-          console.log(JSON.parse(localStorage.getItem("roleEnum")));
+          // console.log(JSON.parse(localStorage.getItem("roleEnum")));
           localStorage.setItem("roleEnum", JSON.stringify(t.rolekey));//缓存当前的登录成功的角色。接口未返回角色名称
           localStorage.setItem("loginuser", JSON.stringify(res.data.data));
           store.dispatch("loginsucess", "ok");
+          // console.log(localStorage.getItem('roleEnum'));
           t.$message({
             message: "登录成功",
             type: "success",
           });
-          t.$router.push({ path: "/" });
+          // console.log(111);
+          t.$router.push({ path: "/"});
+          // console.log(123);
           // 储存登录信息
           t.setUserInfo();
         } else {
@@ -141,7 +145,7 @@ export default {
         idNumber: this.username
       }
       httpreques("post", params, "/sendCAPTCHA").then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.code == "SUCCESS") {
           this.$message.success("发送验证码成功");
         } else {
@@ -191,7 +195,7 @@ export default {
   },
 };
 </script>
-
+ 
 <style lang="scss" scoped>
 .login {
   width: 100%;
@@ -352,6 +356,4 @@ color: #333333;
 /deep/.el-form-item--small.el-form-item:last-child{
   margin-bottom: 0;
 }
-</style>>
-
- 
+</style>

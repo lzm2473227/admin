@@ -9,7 +9,6 @@ export default defineComponent({
   name: 'App',
   setup() {
     const { locale } = useI18n();
-
     onMounted(() => {
       setHtmlLang(locale.value);
     })

@@ -153,10 +153,10 @@ export default {
     };
   },
   mounted() {
-    if (localStorage.getItem("loginuser"))
-      this.idNumber = JSON.parse(
-        localStorage.getItem("loginuser")
-      ).userDetails.idNumber;
+    // if (localStorage.getItem("loginuser"))
+    //   this.idNumber = JSON.parse(
+    //     localStorage.getItem("loginuser")
+    //   ).userDetails.idNumber;
     this.getdata();
   },
   methods: {
