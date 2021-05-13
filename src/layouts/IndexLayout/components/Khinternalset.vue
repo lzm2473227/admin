@@ -25,47 +25,22 @@
 
 <script>
 export default {
-  name:"Khcommodity",
+  name:"Khinternalset",
   props: ["title"],
   data() {
     return {
       showstatus: false,
-      nodekey: "khcommodity",
+      nodekey: "Khinternalset",
       data: [
         {
           id: 1,
-          label: "消费者侧",
-          key: "customer",
+          label: "角色权限",
+          key: "systemsetrole",
         },
         {
           id: 2,
-          label: "门店侧",
-          key: "store",
-        },
-        {
-          id: 3,
-          label: "物流配送侧",
-          key: "logistics",
-        },
-        {
-          id: 4,
-          label: "物流仓库侧",
-          key: "warehouse",
-        },
-        {
-          id: 5,
-          label: "公厂侧",
-          key: "factory",
-        },
-        {
-          id: 6,
-          label: "保险机构侧",
-          key: "insurance",
-        },
-        {
-          id: 7,
-          label: "银行机构侧",
-          key: "bank",
+          label: "功能菜单",
+          key: "systemsetmenu",
         },
       ],
       defaultProps: {
@@ -89,27 +64,13 @@ export default {
         this.$nextTick(() => {
           let key = 0;
           switch (selectmenu.pathname) {
-            case "customer":
+            case "systemsetrole":
               key = 1;
               break;
-            case "store":
+            case "systemsetmenu":
               key = 2;
               break;
-            case "logistics":
-              key = 3;
-              break;
-            case "warehouse":
-              key = 4;
-              break;
-            case "factory":
-              key = 5;
-              break;
-            case "insurance":
-              key = 6;
-              break;
-            case "bank":
-              key = 7; //预留文件管理
-              break;
+             //预留文件管理
             default:
               key = 4;
               break;
@@ -139,28 +100,11 @@ export default {
       let path = "";
       let pathname = "";
       switch (obj.key) {
-        case "customer":
-          path = "/sysuser/customer";
+        case "systemsetrole":
+          path = "/systemset/systemsetrole";
           break;
-        case "store":
-          path = "/sysuser/store";
-          break;
-        case "logistics":
-          path = "/sysuser/logistics";
-          break;
-        case "warehouse":
-          path = "/sysuser/warehouse";
-          break;
-        case "factory":
-          path = "/sysuser/factory";
-          break;
-        case "insurance":
-          path = "/sysuser/insurance";
-          break;
-        case "bank":
-          path = "/sysuser/bank";
-          break;
-        default:
+        case "systemsetmenu":
+          path = "/systemset/systemsetmenu";
           break;
       }
       if (path) {

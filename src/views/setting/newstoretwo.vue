@@ -151,10 +151,10 @@ export default {
   mounted() {
     // let t = this;
     // t.selectedOptions = TextToCode[province][city][county].code;
-    if (localStorage.getItem("loginuser"))
-      this.idNumber = JSON.parse(
-        localStorage.getItem("loginuser")
-      ).userDetails.idNumber;
+    // if (localStorage.getItem("loginuser"))
+    //   this.idNumber = JSON.parse(
+    //     localStorage.getItem("loginuser")
+    //   ).userDetails.idNumber;
     this.getdata();
   },
   methods: {
@@ -299,7 +299,6 @@ table {
 }
 td {
   padding-left: 20px;
-  // padding-top: 10px;
 }
 .bg {
   background: #ecf3fb;
@@ -324,7 +323,4 @@ td {
   font-family: Source Han Sans CN;
   border: 1px solid #ddd !important;
 }
-// /deep/.el-input__inner:hover {
-// //   border: 1px solid #66b1ff ;
-// }
 </style>

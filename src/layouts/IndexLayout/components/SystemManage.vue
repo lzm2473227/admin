@@ -66,6 +66,16 @@ export default {
           label: "文件管理",
           key: "file",
         },
+        {
+          id: 8,
+          label: "活动列表",
+          key: "promotion",
+        },
+        {
+          id: 9,
+          label: "活动商品列表",
+          key: "Sellinglist",
+        },
       ],
       defaultProps: {
         children: "children",
@@ -107,7 +117,13 @@ export default {
               key = 6;
               break;
             case "file":
-              key = 7; //预留文件管理
+              key = 7; 
+              break;
+            case "promotion":
+              key = 8; 
+              break;
+            case "Sellinglist":
+              key = 9; 
               break;
             default:
               key = 4;
@@ -159,6 +175,12 @@ export default {
           break;
         case "file":
           path = "/setting/file";
+          break;
+        case "promotion":
+          path = "/setting/promotion";
+          break;
+        case "Sellinglist":
+          path = "/setting/Sellinglist";
           break;
         default:
           break;

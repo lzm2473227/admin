@@ -131,7 +131,7 @@ const StoreModel: ModuleType = {
             if(item=="clerk"){
               //店员身份权限
               userDetails.roles.push('clerk','clerknoreceive','clerkreceive','clerknocheckproduct','clerknosale','clerksale','clerkcheckproduct',
-              'clerkbank','clerkguarantee','clerknoreceive','clerkreceive',);
+              'clerkbank','clerkguarantee','clerknoreceive','clerkreceive',"Sellinglist",'promotion',"newactivity","newselling","ruleOutGoods",);
             }
             if(item=="shopowner"){
                //店长身份权限
@@ -149,10 +149,10 @@ const StoreModel: ModuleType = {
               //全国经销商权限
               userDetails.roles.push('countrydistributor','countrydistributornoreceive','countrydistributorreceive','countrydistributornocheckproduct','countrydistributornosale','countrydistributorsales','countrydistributorcheckproduct');
             }
-            if(item=="sysuser"){
-              //凯华商品
-              userDetails.roles.push('sysuser','insurance','factory','warehouse','logistics','customer','bank');
-            }
+            // if(item=="sysuser"){
+            //   //凯华商品
+            //   userDetails.roles.push('sysuser','insurance','factory','warehouse','logistics','customer','bank');
+            // }
           })
  
           };
@@ -187,7 +187,8 @@ const StoreModel: ModuleType = {
           //   ]
           // };
             userDetails.roles =['kh','product','productinfo','store','storeapproval','rolepower','funcmenu','khset','bank',
-          'insurance','factory','warehouse','logistics','customer','sysuser']
+          'insurance','factory','warehouse','logistics','customer','sysuser','systemUser','userlist','consumerlist',
+            "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","",]
           };
          
         commit('saveCurrentUser', userDetails || {});

@@ -69,6 +69,7 @@
                 format="YYYY-MM-DD HH:mm:ss"
                 prefix-icon=none
                 placeholder="请选择时间"
+                
               >
               </el-date-picker>
             </td>
@@ -80,6 +81,7 @@
                 format="YYYY-MM-DD HH:mm:ss"
                 prefix-icon=none
                 placeholder="请选择时间"
+                
               >
               </el-date-picker>
           </td>
@@ -117,10 +119,23 @@
               <img style="width:100%" :src='ruleForm.linkPosition' alt="">
             </el-dialog>
           </td>
+          <!-- <div class="block">     //转化为时间戳
+            <span class="demonstration">时间戳</span>
+            <div class="demonstration">值：{{ value1 }}</div>
+            <el-date-picker
+              v-model="value1"
+              type="date"
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              @change="aad(value1)"
+              value1-format="timestamp">
+            </el-date-picker>
+          </div> -->
         </tr>
       </table>
     </form>
   </div>
+  
   </div>
 </template>
 <script>
@@ -133,6 +148,7 @@ export default {
   components: { NewBreadCrumb, Btn },
   data() {
     return {
+      value1:"",
       a: "",
       b: "",
       c: "",
@@ -158,8 +174,14 @@ export default {
     //     localStorage.getItem("loginuser")
     //   ).userDetails.idNumber;
     this.getdata();
+    // console.log( new Date().getTime());
+    // this.aad()
   },
   methods: {
+    aad(){
+      console.log(new Date().getTime(this.value1));
+      // console.log(timestamp);
+    },
     //图片
     handleAvatarSuccess(res, file) {
       // console.log(file);
@@ -191,7 +213,7 @@ export default {
           "/realbrand-management-service/AdvertisementMgt/AdvertisementInfo"
         ).then((res) => {
           if (res.data.code == "SUCCESS") {
-            //对象数据处理
+            // 对象数据处理
             let advobj = res.data.data;
             advobj.startTime = moment(advobj.startTime).format(
               "YYYY-MM-DD HH:mm:ss"

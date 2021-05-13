@@ -1,10 +1,11 @@
 <template>
-  <div class="tab">
+  <div class="promotion">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addStore"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增门店</span></div>
-        <div class="print" @click="editstore"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑门店</span></div>
-        <div class="print" @click="delstore"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除门店</span></div>
+        <div class="print" @click="addStore1"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增折扣活动</span></div>
+        <div class="print" @click="addStore2"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增买赠活动</span></div>
+        <div class="print" @click="addStore3"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增满赠活动</span></div>
+        <div class="print" @click="delstore"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除活动</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -25,16 +26,13 @@
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="门店机构代码" align="center" sortable width="330"></el-table-column>
-        <el-table-column prop="storeName" label="门店名称" sortable width="350"></el-table-column>
-        <el-table-column prop="address" label="门店地址" sortable width="480"></el-table-column>
-        <el-table-column prop="storeType" label="门店类别" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="门店许可证" align="center" width="243" >
-          <template v-slot="scope">
-            <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
-          </template>
-        </el-table-column>
+        <el-table-column label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column label="小活动编号" align="center" sortable width="260"></el-table-column>
+        <el-table-column label="小活动名称" sortable width="310" align="center"></el-table-column>
+        <el-table-column label="大活动名称" sortable width="320" align="center"></el-table-column>
+        <el-table-column label="活动对象" sortable align="center" width="190"></el-table-column>
+        <el-table-column label="起止时间" sortable align="center" width="243" ></el-table-column>
+        <el-table-column label="活动状态" sortable align="center" width="193" >  </el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -43,13 +41,13 @@
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="门店名称:" prop="storeName" class="name-search">
-          <el-input v-model="ruleForm.storeName" placeholder="请输入门店名称"></el-input>
+        <el-form-item label="小活动名称:" prop="storeName" class="name-search">
+          <el-input v-model="ruleForm.storeName"></el-input>
         </el-form-item>
-        <el-form-item label="门店类别:" prop="name">
-          <el-select v-model="ruleForm.storeType" placeholder="请选择门店类别">
-            <el-option label="直营" value="直营">直营</el-option>
-            <el-option label="加盟" value="加盟">加盟</el-option>
+        <el-form-item label="活动状态:" prop="name">
+          <el-select v-model="ruleForm.storeType">
+            <el-option label="进行中" value="进行中">进行中</el-option>
+            <el-option label="关闭" value="关闭">关闭</el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -65,7 +63,7 @@
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '../../utils/httpreques';
 export default {
-  name: "tab",
+  name: "Promotion",
   components: {
     Page
   },
@@ -85,48 +83,52 @@ export default {
     };
   },
   created() {
-    this.getdata()
+    // this.getdata()
   },
   methods: {
-    getdata(){
-      let t = this;
-      let params = {
-        "storeName": this.ruleForm.storeName,
-        "pageNum": this.pageNum,
-        "pageSize": this.pageSize,
-      };
-      this.tabledata = []
-      httpreques(
-        "post",
-        params,
-        "/realbrand-management-service/StoreMgt/StoreInfoList"
-      ).then((res) => {
-        // console.log(res);
-        if (res.data.code == "SUCCESS") {
-          res.data.data.forEach((item,key) => {
-             item.index = key + 1; //加入index
-            let address = item.province + item.city + item.county;
-            item.address = address + item.address;
-          });
-          t.tabledata = res.data.data;
-          t.total= res.data.total;
-          t.tabledata.reverse()
-        } else {
-          this.$message(res.data.msg)
-        }
-      });
-    },
+    // getdata(){
+    //   let t = this;
+    //   let params = {
+    //     "storeName": this.ruleForm.storeName,
+    //     "pageNum": this.pageNum,
+    //     "pageSize": this.pageSize,
+    //   };
+    //   this.tabledata = []
+    //   httpreques(
+    //     "post",
+    //     params,
+    //     "/realbrand-management-service/StoreMgt/StoreInfoList"
+    //   ).then((res) => {
+    //     // console.log(res);
+    //     if (res.data.code == "SUCCESS") {
+    //       res.data.data.forEach((item,key) => {
+    //          item.index = key + 1; //加入index
+    //         let address = item.province + item.city + item.county;
+    //         item.address = address + item.address;
+    //       });
+    //       t.tabledata = res.data.data;
+    //       t.total= res.data.total;
+    //       t.tabledata.reverse()
+    //     } else {
+    //       this.$message(res.data.msg)
+    //     }
+    //   });
+    // },
     // 搜索
-    submitForm(){
-      this.getdata()
-    },
+    // submitForm(){
+    //   this.getdata()
+    // },
     // 重置
     resetForm(){
       this.ruleForm = {}
     },
-    addStore() {
-      this.$router.push({ path: "/setting/newstore" });
+
+
+    addStore1() {
+      this.$router.push({ path: "/setting/newactivity" });
     },
+
+
     delstore() {
       if(this.multipleSelection.length <= 0) return this.$message.error({message: '请选择需要删除的门店'})
       let t = this;

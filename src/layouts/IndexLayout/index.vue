@@ -52,7 +52,9 @@
           ></RoleLv>
 
           <SystemManage v-if="showSystemManage" title="内部管理"></SystemManage>
-          <Khcommodity title="凯华内部商品配置"></Khcommodity>
+          <Khcommodity title="商品" v-if="khShow"></Khcommodity>
+          <Khuser title="系统用户管理" v-if="khShow"></Khuser>
+          <Khinternalset title="系统内部设置" v-if="khShow"></Khinternalset>
         </div>
       </div>
 
@@ -195,8 +197,10 @@ import Permission from "@/components/Permission/index.vue";
 import Left from "./components/Left.vue";
 import RightTop from "./components/RightTop.vue";
 import RoleLv from "./components/RoleLv.vue";
+import Khinternalset from "./components/Khinternalset.vue";
 import SystemManage from "./components/SystemManage.vue";
 import Khcommodity from "./components/khcommodity.vue";
+import Khuser from "./components/Khuser.vue";
 import httpreques from "../../utils/httpreques";
 interface IndexLayoutSetupData {
   collapsed: boolean;
@@ -218,11 +222,14 @@ export default defineComponent({
     RightTop,
     RoleLv,
     SystemManage,
-    Khcommodity
+    Khcommodity,
+    Khuser,
+    Khinternalset,
   },
   data() {
     return {
       showSystemManage:true,
+      khShow:false,
       options: [
         {
           value: "CUSTOMER",
@@ -324,7 +331,8 @@ export default defineComponent({
         clerk: "clerk",
         shopowner: "shopowner", 
         citydistributor: "citydistributor",
-        sysuser:"sysuser"
+        sysuser:"sysuser",
+        Khuser:'Khuser'
       },
        //角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
       dialogVisible: false,
@@ -339,10 +347,12 @@ export default defineComponent({
     let rolename = JSON.parse(localStorage.getItem("roleEnum"));
     if(rolename == 'KAIHUA'){
       // console.log(rolename+"11111");
-      // console.log(this.rolename+"22222");
       this.showSystemManage = false
       this.rolelv = false
+      this.khShow = true
     }
+    // console.log(rolename);
+    
     let systitle = "";
     switch (rolename) {
       case "CUSTOMER":
@@ -380,23 +390,19 @@ export default defineComponent({
       default:
         break;
     }
-
     this.rolename = "系统用户：  " + rolename;
     this.systitle = "用户：   " + systitle;
     this.lvname = this.$store.state.user.currentUser.name;
     // if(rolename == 'KAIHUA'){
     //   console.log(rolename+"11111");
-    //   console.log(this.rolename+'22222');
-    //   this.showSystemManage = false
     // }
     // console.log(rolename+"3333");
-    
   },
   methods: {
     remove(){
       localStorage.removeItem('loginuser')
       localStorage.removeItem('roleEnum')
-      // localStorage.removeItem('loglevel:webpack-dev-server')
+      localStorage.removeItem('loglevel:webpack-dev-server')
       this.$router.replace('/user/login')
     },
     async loginout() {
@@ -505,7 +511,7 @@ export default defineComponent({
     const permissionMenuData = computed<RoutesDataItem[]>(() =>
       getPermissionMenuData(store.state.user.currentUser.roles, menuData)
     );
-    console.log(permissionMenuData);
+    // console.log(permissionMenuData);
 
     // 当前路由的顶部菜单path
     const belongTopMenu = computed<string>(() =>
@@ -681,7 +687,8 @@ export default defineComponent({
 .indexlayout-bot-right {
   flex: 1;
   box-sizing: border-box;
-  padding: 0 10px 10px 0;
+  // padding: 0 10px 10px 0;
+  background-color: #fff;
 }
 
 .indexlayout-newsup {

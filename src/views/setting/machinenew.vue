@@ -51,7 +51,7 @@
         </tr>
         <tr style="vertical-align: top;">
             <td class="table-left" style="padding-top: 12px;">机具图片</td>
-            <td class="table-right" colspan="3" style="height: 600px; padding-top: 6px;">
+            <td class="table-right" colspan="3" style="height: 555px; padding-top: 6px;">
               <el-upload
                 action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"

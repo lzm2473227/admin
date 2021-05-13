@@ -8,10 +8,7 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     title: "商品",
     path: "/product",
     roles: ["product"],
-    // redirect: "productlist",
-    // component: BlankLayout,
     component: () => import("@/views/product/productlist.vue"),
-    
   },
   {
     icon: "home",
@@ -22,8 +19,8 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     hidden: true,
     selectLeftMenu: "/product",
   },
+  //内部设置
   {
-    icon: "detail",
     title: "设置",
     path: "/setting",
     redirect: "/setting/storelist",
@@ -31,14 +28,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     roles: ["setting"],
     children: [
       {
-        // icon: "detail",
         title: "门店列表",
         path: "/setting/storelist",
         roles: ["storelist"],
         component: () => import("@/views/setting/storelist.vue"),
       },
       {
-        // icon: "detail",
         title: "新增门店",
         path: "/setting/newstore",
         roles: ["newstore"],
@@ -47,7 +42,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         selectLeftMenu: "/setting/storelist",
       },
       {
-        // icon: "detail",
         title: "新增门店",
         path: "/setting/newstore",
         roles: ["newstore"],
@@ -56,14 +50,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         selectLeftMenu: "/setting/storelist",
       },
       {
-        // icon: "detail",
         title: "员工管理",
         path: "/setting/clerklist",
         roles: ["clerklist"],
         component: () => import("@/views/setting/clerklist.vue"),
       },
       {
-        // icon: "detail",
         title: "新增店员",
         path: "/setting/newclerktwo",
         roles: ["newclerktwo"],
@@ -72,7 +64,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
-        // icon: "detail",
         title: "新增店员",
         path: "/setting/newclerk",
         roles: ["newclerk"],
@@ -81,14 +72,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
-        // icon: "detail",
         title: "岗位管理",
         path: "/setting/role",
         roles: ["role"],
         component: import("@/views/setting/rolelist.vue"),
       },
       {
-        // icon: "detail",
         title: "权限分配",
         path: "/setting/Authority",
         roles: ["Authority"],
@@ -97,7 +86,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         selectLeftMenu: "/setting/rolelist",
       },
       {
-        icon: "detail",
         title: "新增角色",
         path: "/setting/newrole",
         roles: ["newrole"],
@@ -105,22 +93,18 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: import("@/views/setting/newrole.vue"),
       },
       {
-        // icon: "detail",
         title: "修改密码",
         path: "/setting/editpsw",
         roles: ["editpsw"],
         component: () => import("@/views/setting/editpsw.vue"),
       },
       {
-        // icon: "detail",
-
         title: "机具管理",
         path: "/setting/machine",
         roles: ["machine"],
         component: () => import("@/views/setting/machine.vue"),
       },
       {
-        icon: "detail",
         title: "新增机具",
         path: "/setting/machinenew",
         roles: ["machinenew"],
@@ -129,7 +113,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
-        // icon: "detail",
         title: "广告管理",
         path: "/setting/advertmentlist",
         roles: ["advertmentlist"],
@@ -148,7 +131,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import("@/views/setting/file.vue"),
       },
       {
-        icon: "detail",
         title: "新增广告",
         path: "/setting/newadvertmenttwo",
         roles: ["newadvertmenttwo"],
@@ -157,26 +139,50 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
-        icon: "detail",
-        title: "新增广告",
-        path: "/setting/newadvertment",
-        roles: ["newadvertment"],
-        component: () => import("@/views/setting/newadvertment.vue"),
-        selectLeftMenu: "/setting/advertmentlist",
+        title: "活动列表",
+        path: "/setting/promotion",
+        roles: ["promotion"],
+        component: () => import("@/views/setting/promotion.vue"),
+        selectLeftMenu: "/setting/promotion",
         hidden: true,
       },
-      // {
-      //   title: "企业信息",
-      //   path: "/setting/CorporateInformation",
-      //   roles: ["machine"],
-      //   component: () => import("@/views/setting/CorporateInformation.vue"),
-      // },
+      {
+        title: "新增活动折扣",
+        path: "/setting/newactivity",
+        roles: ["newactivity"],
+        component: () => import("@/views/setting/newactivity.vue"),
+        selectLeftMenu: "/setting/newactivity",
+        hidden: true,
+      },
+      {
+        title: "活动商品列表",
+        path: "/setting/Sellinglist",
+        roles: ["Sellinglist"],
+        component: () => import("@/views/setting/Sellinglist.vue"),
+        selectLeftMenu: "/setting/Sellinglist",
+        hidden: true,
+      },
+      {
+        title: "匹配商品小类",
+        path: "/setting/newselling",
+        roles: ["newselling"],
+        component: () => import("@/views/setting/newselling.vue"),
+        selectLeftMenu: "/setting/newselling",
+        hidden: true,
+      },
+      {
+        title: "排除商品",
+        path: "/setting/ruleOutGoods",
+        roles: ["ruleOutGoods"],
+        component: () => import("@/views/setting/ruleOutGoods.vue"),
+        selectLeftMenu: "/setting/ruleOutGoods",
+        hidden: true,
+      },
     ],
   },
   //凯华管理员
   {
-    icon: "detail",
-    title: "系统用户",
+    title: "凯华系统用户",
     path: "/sysuser",
     redirect: "/sysuser/customer",
     component: BlankLayout,
@@ -217,13 +223,117 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         path: "insurance",
         roles: ["insurance"],
         component: () => import("@/views/sysuser/insurance.vue"),
-      }, {
+      },
+      {
         title: "银行",
         path: "bank",
         roles: ["bank"],
         component: () => import("@/views/sysuser/bank.vue"),
       },
-      
+    ],
+  },
+  //系统用户管理
+  {
+    title: "系统用户管理",
+    path: "/systemUser",
+    redirect: "/systemUser/userlist",
+    component: BlankLayout,
+    roles: ["systemUser"],
+    children: [
+      {
+        title: "系统用户列表",
+        path: "/systemUser/userlist",
+        roles: ["userlist"],
+        component: () => import("@/views/systemUser/userlist.vue"),
+      },
+      {
+        title: "新增系统用户",
+        path: "/systemUser/newuser",
+        roles: ["newuser"],
+        component: () => import("@/views/systemUser/newuser.vue"),
+      },
+      {
+        title: "新增经销商",
+        path: "/systemUser/newdealer",
+        roles: ["newdealer"],
+        component: () => import("@/views/systemUser/newdealer.vue"),
+      },
+      {
+        title: "新增银行",
+        path: "/systemUser/newbank",
+        roles: ["newbank"],
+        component: () => import("@/views/systemUser/newdealer.vue"),
+      },
+      {
+        title: "经销商",
+        path: "/systemUser/dealer",
+        roles: ["dealer"],
+        component: () => import("@/views/systemUser/dealer.vue"),
+      },
+      {
+        title: "消费者",
+        path: "/systemUser/consumerlist",
+        roles: ["consumerlist"],
+        component: () => import("@/views/systemUser/consumerlist.vue"),
+      },
+      {
+        title: "物流配送",
+        path: "logistics",
+        roles: ["logistics"],
+        component: () => import("@/views/systemUser/logistics.vue"),
+      },
+      {
+        title: "物流仓库",
+        path: "warehouse",
+        roles: ["warehouse"],
+        component: () => import("@/views/systemUser/warehouse.vue"),
+      },
+      {
+        title: "工厂",
+        path: "factory",
+        roles: ["factory"],
+        component: () => import("@/views/systemUser/factory.vue"),
+      },
+      {
+        title: "保险列表",
+        path: "insurance",
+        roles: ["insurance"],
+        component: () => import("@/views/systemUser/insurance.vue"),
+      },
+      {
+        title: "银行列表",
+        path: "bank",
+        roles: ["bank"],
+        component: () => import("@/views/systemUser/bank.vue"),
+      },
+    ],
+  },
+  //系统内部设置
+  {
+    title: "系统内部设置",
+    path: "/systemset",
+    redirect: "/systemset/systemsetrole",
+    component: BlankLayout,
+    roles: ["systemset"],
+    children: [
+      {
+        title: "角色权限",
+        path: "/systemset/systemsetrole",
+        roles: ["systemsetrole"],
+        component: () => import("@/views/systemset/systemsetrole.vue"),
+      },
+      {
+        title: "新增管理角色",
+        path: "/systemset/newsystemsetrole",
+        roles: ["newsystemsetrole"],
+        component: () => import("@/views/systemset/newsystemsetrole.vue"),
+      },
+      {
+        title: "功能菜单",
+        path: "/systemset/systemsetmenu",
+        roles: ["systemsetmenu"],
+        component: () => import("@/views/systemset/systemsetmenu.vue"),
+      },
     ],
   },
   {
@@ -241,7 +351,8 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     roles: ["storeapproval"],
     hidden: true,
     selectLeftMenu: "/store",
-  }, {
+  },
+  {
     icon: "set",
     title: "凯华内部设置",
     path: "/khset",
@@ -250,22 +361,20 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     roles: ["khset"],
     children: [
       {
-        
         title: "角色权限",
         path: "/rolepower",
         roles: ["rolepower"],
         component: () => import("@/views/khset/rolepower.vue"),
       },
       {
-        
         title: "功能菜单",
         path: "/funcmenu",
         roles: ["funcmenu"],
         component: () => import("@/views/khset/funcmenu.vue"),
       },
-       
     ],
   },
+  // 店员，店长，经销商
   {
     title: "用户级别",
     path: "/userlv",
@@ -274,154 +383,95 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     roles: ["userlv"],
     children: [
       {
-        // icon: "detail",
         title: "门店店员 ",
         path: "/clerk",
         roles: ["clerk"],
         component: BlankLayout,
         children: [
-          
-          // {
-          //   title: "待盘点",
-          //   path: "/clerk/nocheckproduct",
-          //   roles: ["clerknocheckproduct"],
-          //   component: () => import("@/views/userlv/clerk/nocheckproduct.vue"),
-          // },
-          // {
-          //   title: "已盘点",
-          //   path: "/clerk/checkproduct",
-          //   roles: ["clerkcheckproduct"],
-          //   component: () => import("@/views/userlv/clerk/checkproduct.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "待出售 ",
-          //   path: "/clerk/nosale",
-          //   roles: ["clerknosale"],
-          //   component: () => import("@/views/userlv/clerk/nosale.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "已出售",
-          //   path: "/clerk/sales",
-          //   roles: ["clerksales"],
-          //   component: () => import("@/views/userlv/clerk/sales.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "待开户",
-          //   path: "/clerk/nobank",
-          //   roles: ["clerkbank"],
-          //   component: () => import("@/views/userlv/clerk/nobank.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "已开户",
-          //   path: "/clerk/bank",
-          //   roles: ["clerkbank"],
-          //   component: () => import("@/views/userlv/clerk/bank.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "待推送",
-          //   path: "/clerk/noguarantee",
-          //   roles: ["clerkguarantee"],
-          //   component: () => import("@/views/userlv/clerk/noguarantee.vue"),
-          // },
-          // {
-          //   // icon: "detail",
-          //   title: "已推送",
-          //   path: "/clerk/guarantee",
-          //   roles: ["clerkguarantee"],
-          //   component: () => import("@/views/userlv/clerk/guarantee.vue"),
-          // },
-          // {
-          //   title: "待盘点",
-          //   path: "/clerk/nocheckproduct",
-          //   roles: ["clerknocheckproduct"],
-          //   component: () => import("@/views/userlv/clerk/nocheckproduct.vue"),
-          // },
-          // {
-          //   title: "已盘点",
-          //   path: "/clerk/checkproduct",
-          //   roles: ["clerkcheckproduct"],
-          //   component: () => import("@/views/userlv/clerk/checkproduct.vue"),
-          // },
           {
-            // icon: "detail",
             title: "盘货",
             path: "/clerk/check",
             roles: ["clerkcheck"],
             component: BlankLayout,
-            children:[
+            children: [
               {
                 title: "待盘货",
                 path: "/clerk/check/nocheckproduct",
                 roles: ["clerknocheckproduct"],
-                component: () => import("@/views/userlv/clerk/check/nocheckproduct.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/check/nocheckproduct.vue"),
               },
               {
                 title: "待盘货统计",
                 path: "/clerk/check/nocheckproductStatistics",
                 roles: ["clerknocheckproduct"],
-                component: () => import("@/views/userlv/clerk/check/nocheckproductStatistics.vue"),
+                component: () =>
+                  import(
+                    "@/views/userlv/clerk/check/nocheckproductStatistics.vue"
+                  ),
               },
               {
-                // icon: "detail",
                 title: "已盘货",
                 path: "/clerk/check/checkproduct",
                 roles: ["clerkcheckproduct"],
-                component: () => import("@/views/userlv/clerk/check/checkproduct.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/check/checkproduct.vue"),
               },
               {
                 title: "已盘货统计",
                 path: "/clerk/check/checkproductStatistics",
                 roles: ["clerkcheckproduct"],
-                component: () => import("@/views/userlv/clerk/check/checkproductStatistics.vue"),
+                component: () =>
+                  import(
+                    "@/views/userlv/clerk/check/checkproductStatistics.vue"
+                  ),
               },
-            ]
+            ],
           },
           {
-            // icon: "detail",
             title: "收货",
             path: "/clerk/receive",
             roles: ["clerkreceive"],
             component: BlankLayout,
-            children:[
+            children: [
               {
                 title: "待收货",
                 path: "/clerk/receive/noreceive",
                 roles: ["clerknoreceive"],
-                component: () => import("@/views/userlv/clerk/receive/noreceive.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/receive/noreceive.vue"),
               },
               {
                 title: "待收货统计",
                 path: "/clerk/receive/noreceiveStatistics",
                 roles: ["clerkreceive"],
-                component: () => import("@/views/userlv/clerk/receive/noreceiveStatistics.vue"),
+                component: () =>
+                  import(
+                    "@/views/userlv/clerk/receive/noreceiveStatistics.vue"
+                  ),
               },
               {
-                // icon: "detail",
                 title: "已收货",
                 path: "/clerk/receive/receive",
                 roles: ["clerkreceive"],
-                component: () => import("@/views/userlv/clerk/receive/receive.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/receive/receive.vue"),
               },
               {
                 title: "已收货统计",
                 path: "/clerk/receive/receiveStatistics",
                 roles: ["clerkreceive"],
-                component: () => import("@/views/userlv/clerk/receive/receiveStatistics.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/receive/receiveStatistics.vue"),
               },
-            ]
+            ],
           },
           {
-            // icon: "detail",
             title: "销售",
             path: "/clerk/sale",
             roles: ["clerksale"],
             component: BlankLayout,
-            children:[
+            children: [
               {
                 title: "待售出",
                 path: "/clerk/sale/nosale",
@@ -432,10 +482,10 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 title: "待售出统计",
                 path: "/clerk/sale/nosaleStatistics",
                 roles: ["clerknosale"],
-                component: () => import("@/views/userlv/clerk/sale/nosaleStatistics.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/sale/nosaleStatistics.vue"),
               },
               {
-                // icon: "detail",
                 title: "已售出",
                 path: "/clerk/sale/sales",
                 roles: ["clerksale"],
@@ -445,17 +495,17 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 title: "已售出统计",
                 path: "/clerk/sale/saleStatistics",
                 roles: ["clerksale"],
-                component: () => import("@/views/userlv/clerk/sale/saleStatistics.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/sale/saleStatistics.vue"),
               },
-            ]
+            ],
           },
           {
-            // icon: "detail",
             title: "银行开户",
             path: "/clerk/bank",
             roles: ["clerkbank"],
             component: BlankLayout,
-            children:[
+            children: [
               {
                 title: "待开户",
                 path: "/clerk/bank/nobank",
@@ -466,43 +516,42 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 title: "待开户统计",
                 path: "/clerk/bank/nobankStatistics",
                 roles: ["clerkbankStatistics"],
-                component: () => import("@/views/userlv/clerk/bank/nobankStatistics.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/bank/nobankStatistics.vue"),
               },
               {
-                // icon: "detail",
                 title: "已开户",
                 path: "/clerk/bank/bank",
                 roles: ["clerkbank"],
                 component: () => import("@/views/userlv/clerk/bank/bank.vue"),
               },
-            ]
+            ],
           },
           {
-            // icon: "detail",
             title: "银行开户",
             path: "/clerk/insurance",
             roles: ["clerkguarantee"],
             component: BlankLayout,
-            children:[
+            children: [
               {
                 title: "待开户",
                 path: "/clerk/insurance/noguarantee",
                 roles: ["clerkguarantee"],
-                component: () => import("@/views/userlv/clerk/insurance/noguarantee.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/insurance/noguarantee.vue"),
               },
               {
-                // icon: "detail",
                 title: "已开户",
                 path: "/clerk/insurance/guarantee",
                 roles: ["clerkguarantee"],
-                component: () => import("@/views/userlv/clerk/insurance/guarantee.vue"),
+                component: () =>
+                  import("@/views/userlv/clerk/insurance/guarantee.vue"),
               },
-            ]
+            ],
           },
         ],
       },
       {
-        // icon: "detail",
         title: "门店店长",
         path: "/userlv/shopowner/noreceive",
         roles: ["shopowner"],
@@ -515,7 +564,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             component: () => import("@/views/userlv/shopowner/noreceive.vue"),
           },
           {
-            // icon: "detail",
             title: "已收货",
             path: "/shopowner/receive",
             roles: ["shopownerreceive"],
@@ -525,37 +573,35 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             title: "待盘点",
             path: "/shopowner/nocheckproduct",
             roles: ["shopownernocheckproduct"],
-            component: () => import("@/views/userlv/shopowner/nocheckproduct.vue"),
+            component: () =>
+              import("@/views/userlv/shopowner/nocheckproduct.vue"),
           },
           {
             title: "已盘点",
             path: "/shopowner/checkproduct",
             roles: ["shopownercheckproduct"],
-            component: () => import("@/views/userlv/shopowner/checkproduct.vue"),
+            component: () =>
+              import("@/views/userlv/shopowner/checkproduct.vue"),
           },
           {
-            // icon: "detail",
             title: "待出售 ",
             path: "/shopowner/nosale",
             roles: ["shopownernosale"],
             component: () => import("@/views/userlv/shopowner/nosale.vue"),
           },
           {
-            // icon: "detail",
             title: "已出售",
             path: "/shopowner/sales",
             roles: ["shopownersales"],
             component: () => import("@/views/userlv/shopowner/sales.vue"),
           },
           {
-            // icon: "detail",
             title: "银行开户",
             path: "/shopowner/bank",
             roles: ["shopownerbank"],
             component: () => import("@/views/userlv/shopowner/bank.vue"),
           },
           {
-            // icon: "detail",
             title: "保单推送",
             path: "/shopowner/guarantee",
             roles: ["shopownerguarantee"],
@@ -564,7 +610,6 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         ],
       },
       {
-        // icon: "detail",
         title: "市级经销商",
         path: "/citydistributor",
         roles: ["citydistributor"],
@@ -574,59 +619,59 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             title: "待收货",
             path: "/citydistributor/noreceive",
             roles: ["citydistributornoreceive"],
-            component: () => import("@/views/userlv/citydistributor/noreceive.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/noreceive.vue"),
           },
           {
-            // icon: "detail",
             title: "已收货",
             path: "/citydistributor/receive",
             roles: ["citydistributorreceive"],
-            component: () => import("@/views/userlv/citydistributor/receive.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/receive.vue"),
           },
           {
             title: "待盘点",
             path: "/citydistributor/nocheckproduct",
             roles: ["citydistributornocheckproduct"],
-            component: () => import("@/views/userlv/citydistributor/nocheckproduct.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/nocheckproduct.vue"),
           },
           {
             title: "已盘点",
             path: "/citydistributor/checkproduct",
             roles: ["citydistributorcheckproduct"],
-            component: () => import("@/views/userlv/citydistributor/checkproduct.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/checkproduct.vue"),
           },
           {
-            // icon: "detail",
             title: "待出售 ",
             path: "/citydistributor/nosale",
             roles: ["citydistributornosale"],
-            component: () => import("@/views/userlv/citydistributor/nosale.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/nosale.vue"),
           },
           {
-            // icon: "detail",
             title: "已出售",
             path: "/citydistributor/sales",
             roles: ["citydistributorsales"],
             component: () => import("@/views/userlv/citydistributor/sales.vue"),
           },
           {
-            // icon: "detail",
             title: "银行开户",
             path: "/citydistributor/bank",
             roles: ["citydistributorbank"],
             component: () => import("@/views/userlv/citydistributor/bank.vue"),
           },
           {
-            // icon: "detail",
             title: "保单推送",
             path: "/citydistributor/guarantee",
             roles: ["citydistributorguarantee"],
-            component: () => import("@/views/userlv/citydistributor/guarantee.vue"),
+            component: () =>
+              import("@/views/userlv/citydistributor/guarantee.vue"),
           },
         ],
       },
       {
-        // icon: "detail",
         title: "省级经销商 ",
         path: "/provincedistributor",
         roles: ["provincedistributor"],
@@ -636,45 +681,47 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             title: "待收货",
             path: "/provincedistributor/noreceive",
             roles: ["provincedistributornoreceive"],
-            component: () => import("@/views/userlv/provincedistributor/noreceive.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/noreceive.vue"),
           },
           {
-            // icon: "detail",
             title: "已收货",
             path: "/provincedistributor/receive",
             roles: ["provincedistributorreceive"],
-            component: () => import("@/views/userlv/provincedistributor/receive.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/receive.vue"),
           },
           {
             title: "待盘点",
             path: "/provincedistributor/nocheckproduct",
             roles: ["provincedistributornocheckproduct"],
-            component: () => import("@/views/userlv/provincedistributor/nocheckproduct.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/nocheckproduct.vue"),
           },
           {
             title: "已盘点",
             path: "/provincedistributor/checkproduct",
             roles: ["provincedistributorcheckproduct"],
-            component: () => import("@/views/userlv/provincedistributor/checkproduct.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/checkproduct.vue"),
           },
           {
-            // icon: "detail",
             title: "待出售 ",
             path: "/provincedistributor/nosale",
             roles: ["provincedistributornosale"],
-            component: () => import("@/views/userlv/provincedistributor/nosale.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/nosale.vue"),
           },
           {
-            // icon: "detail",
             title: "已出售",
             path: "/provincedistributor/sales",
             roles: ["provincedistributorsales"],
-            component: () => import("@/views/userlv/provincedistributor/sales.vue"),
+            component: () =>
+              import("@/views/userlv/provincedistributor/sales.vue"),
           },
         ],
       },
       {
-        // icon: "detail",
         title: "全国经销商 ",
         path: "/countrydistributor",
         roles: ["countrydistributor"],
@@ -684,40 +731,43 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             title: "待收货",
             path: "/countrydistributor/noreceive",
             roles: ["countrydistributornoreceive"],
-            component: () => import("@/views/userlv/countrydistributor/noreceive.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/noreceive.vue"),
           },
           {
-            // icon: "detail",
             title: "已收货",
             path: "/countrydistributor/receive",
             roles: ["countrydistributorreceive"],
-            component: () => import("@/views/userlv/countrydistributor/receive.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/receive.vue"),
           },
           {
             title: "待盘点",
             path: "/countrydistributor/nocheckproduct",
             roles: ["countrydistributornocheckproduct"],
-            component: () => import("@/views/userlv/countrydistributor/nocheckproduct.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/nocheckproduct.vue"),
           },
           {
             title: "已盘点",
             path: "/countrydistributor/checkproduct",
             roles: ["countrydistributorcheckproduct"],
-            component: () => import("@/views/userlv/countrydistributor/checkproduct.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/checkproduct.vue"),
           },
           {
-            // icon: "detail",
             title: "待出售 ",
             path: "/countrydistributor/nosale",
             roles: ["countrydistributornosale"],
-            component: () => import("@/views/userlv/countrydistributor/nosale.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/nosale.vue"),
           },
           {
-            // icon: "detail",
             title: "已出售",
             path: "/countrydistributor/sales",
             roles: ["countrydistributorsales"],
-            component: () => import("@/views/userlv/countrydistributor/sales.vue"),
+            component: () =>
+              import("@/views/userlv/countrydistributor/sales.vue"),
           },
         ],
       },
