@@ -39,8 +39,8 @@
     </div>
     <div class="table-main">
       <div class="table-title">
-          <p>新增人员</p>
-        </div>
+        <p>新增人员</p>
+      </div>
       <form action="#">
         <table border="1" class="">
           <tr>
