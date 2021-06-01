@@ -36,13 +36,13 @@
       <table border="1">
         <tr>
           <td class="table-left">广告编码</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="a"></td>
+          <td class="table-right"><input type="text" placeholder="请输入广告编码" v-model="ruleForm.advertisementNumber"></td>
           <td class="table-left">广告名称</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="b"></td>
+          <td class="table-right"><input type="text" placeholder="请输入广告名称" v-model="ruleForm.advertisementName"></td>
         </tr>
         <tr>
           <td class="table-left">广告类型</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="c"></td>
+          <td class="table-right"><input type="text" placeholder="请输入广告类型" v-model="ruleForm.type"></td>
           <td class="table-left">广告位置</td>
           <td class="table-right">     
               <select
@@ -87,7 +87,7 @@
           </td>
         </tr>
         <tr>
-          <!-- <td class="table-left">广告状态</td>
+          <td class="table-left">广告状态</td>
           <td class="table-right">
             <el-radio v-model="ruleForm.enableState" label="1">启用</el-radio>
             <el-radio
@@ -96,9 +96,9 @@
               label="0"
               >禁用</el-radio
             >
-          </td> -->
+          </td>
           <td class="table-left">广告描述</td>
-          <td class="table-right" colspan="3"><textarea class="table-item" placeholder="请输入广告描述" v-model="d"></textarea></td>
+          <td class="table-right"><textarea class="table-item" placeholder="请输入广告描述" v-model="ruleForm.advertisementDescribe"></textarea></td>
         </tr>
         <tr style="vertical-align: top;">
           <td class="table-left" style="padding-top: 12px;">广告图片</td>
@@ -116,7 +116,7 @@
               </template>         
             </el-upload>
             <el-dialog v-model="dialogVisible">
-              <img style="width:100%" :src='ruleForm.linkPosition' alt="">
+              <img style="width:100%" :src='ruleForm.linkPosition' alt="文字介绍">
             </el-dialog>
           </td>
           <!-- <div class="block">     //转化为时间戳
@@ -149,10 +149,6 @@ export default {
   data() {
     return {
       value1:"",
-      a: "",
-      b: "",
-      c: "",
-      d: "",
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -161,7 +157,11 @@ export default {
         endTime: "",
         linkPosition: "",
         positionName: "",
-        startTime: "",
+        startTime: "", 
+        advertisementNumber:"", //广告编码
+        advertisementName:"",  //广告名称
+        type:"",               //广告类型
+        advertisementDescribe:"",  //广告描述
       },
       linkPosition: "", //默认选中显示
       positions: [],
@@ -169,10 +169,6 @@ export default {
     };
   },
   mounted() {
-    // if (localStorage.getItem("loginuser"))
-    //   this.idNumber = JSON.parse(
-    //     localStorage.getItem("loginuser")
-    //   ).userDetails.idNumber;
     this.getdata();
     // console.log( new Date().getTime());
     // this.aad()
@@ -292,6 +288,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../../assets/css/reset.scss";
+@import "@/assets/css/image2.scss";
 /deep/.el-date-editor.el-input, .el-date-editor.el-input__inner, .table-right .el-input__inner{
   width: 196px;
   height: 24px;

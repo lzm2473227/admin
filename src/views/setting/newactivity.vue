@@ -115,8 +115,8 @@
         </table>
       </form>
     </div>
-    <el-dialog title="" v-model="centerDialogVisible" width="30%" :close-on-click-modal="false">
-      <tr>
+    <el-dialog title="" v-model="centerDialogVisible" width="50%" :close-on-click-modal="false">
+      <tr class="h">
         <td class="table-left">性别</td>
         <td class="table-right" style="margin-right:18px">
           <el-radio-group v-model="ruleForm.sex">
@@ -126,7 +126,7 @@
           </el-radio-group>
         </td>
       </tr>
-      <tr>
+      <tr class="h">
         <td class="table-left">年龄区间</td>
         <td class="table-right" style="margin-right:18px">
           <el-radio-group v-model="ruleForm.age">
@@ -135,7 +135,7 @@
           </el-radio-group>
         </td>
       </tr>
-      <tr>
+      <tr class="h">
         <td class="table-left">生日</td>
         <td class="table-right" style="margin-right:18px">
           <el-radio-group v-model="ruleForm.birthday">
@@ -145,7 +145,7 @@
           </el-radio-group>
         </td>
       </tr>
-      <tr>
+      <tr class="h">
         <td class="table-left">职业</td>
         <td class="table-right" style="margin-right:18px">
           <el-radio-group v-model="ruleForm.profession">
@@ -216,5 +216,10 @@ export default {
 /deep/.el-dialog__header{
   padding: 5px;
 }
-
+/deep/.h{
+  margin: 18px;
+}
+/deep/.el-dialog__body{
+  height: 400px;
+}
 </style>

@@ -255,6 +255,10 @@
     line-height: 24px;
 }
 
+/deep/.tab-body .el-table thead tr .cell {
+    color: #274DAB;
+}
+
 /deep/.el-table th {
     background-image: linear-gradient(#F5FAFD, #E0EDF6);
     background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
@@ -466,4 +470,10 @@ input:focus {
 input:focus,
 .el-input__inner:hover {
     border-color: #409eff;
+}
+
+.table-button {
+    color: #3377FF;
+    text-decoration: underline;
+    cursor: pointer;
 }

@@ -3,7 +3,7 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="scan"><img class="icon" src="@/assets/images/again.png" alt=""><span class="axis">重新盘货</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
+        <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -49,8 +49,8 @@
       <!-- <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination> -->
     </div>
     <div class="total">
-      <div>已盘货单品编码数量：<span>{{totalNum}}</span></div>
-      <div>已盘货商品种类：<span>{{totalNum}}</span></div>
+      <div>已盘货单品编码数量：<span>{{count}}</span></div>
+      <div>已盘货商品种类：<span>{{barCount}}</span></div>
       <div>已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
@@ -115,8 +115,9 @@ export default {
       total: 0,
       pageSize: 15,
       price: 0,
-      totalNum: 0,
-      tabs: ['当日', '当周', '当月'],
+      barCount: 0,
+      count: 0,
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
@@ -130,36 +131,38 @@ export default {
     };
   },
   created() {
-    this.getdata(this.pageNum)
+    this.getdata()
+    this.getTotal()
   },
   methods: {
-    getPageSize(val){
-
-    },
-    changeCurrentPage(val){
-      console.log(val)
-      this.pageNum=val
-      this.getdata()
-    },
     getdata(){
       let param = {
-        "barCode": "",
-        "commodityCode": "",
-        "commodityName": "",
+        "barcode": "",
+        "city": "",
+        "fdate": "",
+        "flag": "1",
+        "inventoryTime": "",
+        "ldate": "",
+        "like": "",
         "pageNum": this.pageNum,
-        "pageSize": this.pageSize
+        "pageSize": this.pageSize,
+        "province": "",
+        "storeId": "",
+        "storeName": "",
+        "userIdNumber": "",
+        "userName": ""
       }
       this.tableData = []
-      httpreques('post', param, '/realbrand-management-service/Inventory/InventoryList').then(res => {
+      httpreques('post', param, '/realbrand-management-service/Inventory/inventoryRecordsApi').then(res => {
         console.log(res)
         if(res.data.code === 'SUCCESS'){
           let data = res.data.data
+          data.length == 0 ? this.total = 0 : this.total = res.data.total
           data.forEach(item => {
             item.scanTime = moment(item.scanTime).format(
               "YYYY-MM-DD HH:mm:ss"
             );
           })
-          this.total = res.data.total
           this.totalNum = res.data.total
           for(let i = 0; i < data.length; i++){
             this.tableData.push({
@@ -198,9 +201,29 @@ export default {
         }
       })
     },
-    currentchange(val){
-      this.pageNum = val
-      this.getdata()
+    // 获取单品编码数量、商品种类、金额
+    getTotal(){
+      let parame = {
+        "city": "string",
+        "fdate": "",
+        "ldate": "",
+        "like": "string",
+        "pageNum": 0,
+        "pageSize": 0,
+        "province": "string",
+        "storeId": "string",
+        "userIdNumber": "string"
+      }
+      httpreques('post', parame, '/realbrand-management-service/Inventory/YesInventoryCount').then(res => {
+        console.log(res)
+        if(res.data.code === "SUCCESS"){
+          this.barCount = res.data.data.barCount
+          this.count = res.data.data.count
+          this.price = res.data.data.price
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){
@@ -221,11 +244,22 @@ export default {
       },
     scan(){
       this.centerDialogVisible = true
+    },
+    getPageSize(val){
+
+    },
+    changeCurrentPage(val){
+      this.pageNum=val
+      this.getdata()
+    },
+    statistics(){
+      this.$router.push('/clerk/check/checkproductStatistics')
     }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset.scss'
+@import '@/assets/css/reset.scss';
+@import '@/assets/css/image1'
 </style>

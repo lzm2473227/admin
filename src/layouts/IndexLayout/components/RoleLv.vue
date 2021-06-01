@@ -73,11 +73,11 @@ export default {
           children: [
             {
               id: 10,
-              label: "待销售",
+              label: "待售出",
             },
             {
               id: 11,
-              label: "已销售",
+              label: "已售出",
             },
           ],
         },
@@ -251,12 +251,12 @@ export default {
           pathname = "checkproduct";
           jumprouter = true;
           break;
-        case "待销售":
+        case "待售出":
           path += "/nosale";
           pathname = "nosale";
           jumprouter = true;
           break;
-        case "已销售":
+        case "已售出":
           path += "/sales";
           pathname = "sales";
           jumprouter = true;

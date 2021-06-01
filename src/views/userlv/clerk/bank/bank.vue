@@ -27,13 +27,13 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="commodityCode" label="开户业务编号" align="center" sortable width="200"></el-table-column>
-        <el-table-column prop="barcode" label="身份证号码" align="center" sortable width="180"></el-table-column>
+        <el-table-column prop="commodityCode" label="开户业务编号" align="center" sortable width="260"></el-table-column>
+        <el-table-column prop="barcode" label="身份证号码" align="center" sortable width="230"></el-table-column>
         <el-table-column prop="commodityName" label="开户人姓名" sortable width="300"></el-table-column>
         <el-table-column prop="specsParameter" label="手机号码" align="center" sortable width="210"></el-table-column>
-        <el-table-column prop="brandName" label="状态" sortable width="140"></el-table-column>
-        <el-table-column prop="time" label="开户时间" align="center"  sortable width="183" ></el-table-column>
-        <el-table-column prop="time" label="开户佣金" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="brandName" label="状态" sortable width="170"></el-table-column>
+        <el-table-column prop="time" label="开户时间" align="center"  sortable width="220" ></el-table-column>
+        <el-table-column prop="time" label="开户佣金" align="center"  sortable width="203" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -89,7 +89,7 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       centerDialogVisible: false,
       textarea: '',
@@ -177,5 +177,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset.scss'
+@import '@/assets/css/reset.scss';
+@import '@/assets/css/image1'
 </style>

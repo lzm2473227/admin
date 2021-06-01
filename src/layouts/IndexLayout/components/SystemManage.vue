@@ -45,6 +45,23 @@ export default {
           id: 3,
           label: "商品配置",
           key: "commodity",
+          children:[
+                {
+              id: 11,
+              label: "商品类别设置",
+              key: "commodity1",
+            },
+            {
+              id: 12,
+              label: "商品列表",
+              key: "commodity",
+            },
+            {
+              id: 13,
+              label: "上架中商品列表",
+              key: "commodity2",
+            },
+          ]
         },
         {
           id: 4,
@@ -57,6 +74,45 @@ export default {
           key: "advertment",
         },
         {
+          id: 10,   //外面这层不用在js写出来，是这个外层需要的东西
+          label: "活动管理",
+          key: "promotion",
+          children:[
+                {
+              id: 8,
+              label: "活动列表",
+              key: "promotion",
+            },
+            {
+              id: 9,
+              label: "活动商品列表",
+              key: "Sellinglist",
+            },
+          ]
+        },
+        {
+          id: 14,
+          label: "积分管理",
+          key: "integralrule",
+          children:[
+                {
+              id: 15,
+              label: "规则设置",
+              key: "integralrule",
+            },
+            {
+              id: 16,
+              label: "会员等级设置",
+              key: "memberset",
+            },
+            {
+              id: 17,
+              label: "积分对象",
+              key: "integralobj",
+            },
+          ]
+        },
+        {
           id: 6,
           label: "对公账户",
           key: "public",
@@ -65,16 +121,6 @@ export default {
           id: 7,
           label: "文件管理",
           key: "file",
-        },
-        {
-          id: 8,
-          label: "活动列表",
-          key: "promotion",
-        },
-        {
-          id: 9,
-          label: "活动商品列表",
-          key: "Sellinglist",
         },
       ],
       defaultProps: {
@@ -124,6 +170,21 @@ export default {
               break;
             case "Sellinglist":
               key = 9; 
+              break;
+            case "commodity1":
+              key = 10; 
+              break;
+            case "commodity2":
+              key = 11; 
+              break;
+            case "integralrule":
+              key = 15; 
+              break;
+            case "memberset":
+              key = 16; 
+              break;
+            case "integralobj":
+              key = 17; 
               break;
             default:
               key = 4;
@@ -181,6 +242,21 @@ export default {
           break;
         case "Sellinglist":
           path = "/setting/Sellinglist";
+          break;
+        case "commodity1":
+          path = "/commodity1";
+          break;
+        case "commodity2":
+          path = "/commodity2";
+          break;
+        case "integralrule":
+          path = "/setting/integral/integralrule";
+          break;
+        case "memberset":
+          path = "/setting/integral/memberset";
+          break;
+        case "integralobj":
+          path = "/setting/integral/integralobj";
           break;
         default:
           break;
@@ -294,6 +370,9 @@ export default {
 }
 /deep/.el-tree-node__content > .el-tree-node__expand-icon{
   padding-left: 20px;
+}
+/deep/.el-tree-node__expand-icon.expanded{
+  transform:none; 
 }
 </style>>
  

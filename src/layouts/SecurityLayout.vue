@@ -44,7 +44,6 @@ export default defineComponent({
             const currentUser =  t.$store.state.user.currentUser;
        
             isLogin = currentUser && currentUser.id? true :false;
-            // console.log('999');
            
         //  console.log(currentUser)
             if(!isLogin && t.$router.currentRoute.value.path !== '/user/login') {

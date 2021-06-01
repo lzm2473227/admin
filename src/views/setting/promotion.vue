@@ -42,10 +42,10 @@
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="小活动名称:" prop="storeName" class="name-search">
-          <el-input v-model="ruleForm.storeName"></el-input>
+          <el-input v-model="ruleForm.subActivityName"></el-input>
         </el-form-item>
         <el-form-item label="活动状态:" prop="name">
-          <el-select v-model="ruleForm.storeType">
+          <el-select v-model="ruleForm.activityState">
             <el-option label="进行中" value="进行中">进行中</el-option>
             <el-option label="关闭" value="关闭">关闭</el-option>
           </el-select>
@@ -76,48 +76,48 @@ export default {
       totalNum: 0,
       dialogImageUrl:"",
       ruleForm: {
-          storeName: '',
-          storeType: ''
+          subActivityName: '',  //小活动名称
+          activityState: ''     //活动状态
       },
       multipleSelection: []
     };
   },
   created() {
-    // this.getdata()
+    this.getdata()
   },
   methods: {
-    // getdata(){
-    //   let t = this;
-    //   let params = {
-    //     "storeName": this.ruleForm.storeName,
-    //     "pageNum": this.pageNum,
-    //     "pageSize": this.pageSize,
-    //   };
-    //   this.tabledata = []
-    //   httpreques(
-    //     "post",
-    //     params,
-    //     "/realbrand-management-service/StoreMgt/StoreInfoList"
-    //   ).then((res) => {
-    //     // console.log(res);
-    //     if (res.data.code == "SUCCESS") {
-    //       res.data.data.forEach((item,key) => {
-    //          item.index = key + 1; //加入index
-    //         let address = item.province + item.city + item.county;
-    //         item.address = address + item.address;
-    //       });
-    //       t.tabledata = res.data.data;
-    //       t.total= res.data.total;
-    //       t.tabledata.reverse()
-    //     } else {
-    //       this.$message(res.data.msg)
-    //     }
-    //   });
-    // },
+    getdata(){
+      let t = this;
+      let params = {
+        // "subActivityName": this.ruleForm.subActivityName,
+        "pageNum": this.pageNum,
+        "pageSize": this.pageSize,
+      };
+      this.tabledata = []
+      httpreques(
+        "post",
+        params,
+        "realbrand-management-service/Activity/ActivityList"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code == "SUCCESS") {
+          res.data.data.forEach((item,key) => {
+             item.index = key + 1; //加入index
+            let address = item.province + item.city + item.county;
+            item.address = address + item.address;
+          });
+          t.tabledata = res.data.data;
+          t.total= res.data.total;
+          t.tabledata.reverse()
+        } else {
+          this.$message(res.data.msg)
+        }
+      });
+    },
     // 搜索
-    // submitForm(){
-    //   this.getdata()
-    // },
+    submitForm(){
+      this.getdata()
+    },
     // 重置
     resetForm(){
       this.ruleForm = {}
@@ -129,46 +129,46 @@ export default {
     },
 
 
-    delstore() {
-      if(this.multipleSelection.length <= 0) return this.$message.error({message: '请选择需要删除的门店'})
-      let t = this;
-      let storeName = []
-      _.forEach(
-        JSON.parse(JSON.stringify(this.multipleSelection)),
-        function (item, key) {
-          storeName.push(item.storeName);
-        }
-      )
-      let params = {
-        storeName: storeName,
-      };
-      httpreques(
-        "post",
-        params,
-        "/realbrand-management-service/StoreMgt/DeleteStore"
-      ).then((res) => {
-        if (res.data.code == "SUCCESS") {
-          t.$message({
-            message: "删除成功",
-            type: "success",
-          });
-          t.getdata();
-        } else {
-          //接口错误处理
-          t.$message.error(res.data.msg);
-        }
-      });
-    },
-    editstore() {
-      if(this.multipleSelection.length !== 1) return this.$message('请选择一个需要编辑的门店')
-      let storename = this.multipleSelection[0].storeName
-      this.$router.push({
-        path: "/setting/newstore",
-        query: {
-          storename: storename,
-        },
-      });
-    },
+    // delstore() {
+    //   if(this.multipleSelection.length <= 0) return this.$message.error({message: '请选择需要删除的门店'})
+    //   let t = this;
+    //   let storeName = []
+    //   _.forEach(
+    //     JSON.parse(JSON.stringify(this.multipleSelection)),
+    //     function (item, key) {
+    //       storeName.push(item.storeName);
+    //     }
+    //   )
+    //   let params = {
+    //     storeName: storeName,
+    //   };
+    //   httpreques(
+    //     "post",
+    //     params,
+    //     "/realbrand-management-service/StoreMgt/DeleteStore"
+    //   ).then((res) => {
+    //     if (res.data.code == "SUCCESS") {
+    //       t.$message({
+    //         message: "删除成功",
+    //         type: "success",
+    //       });
+    //       t.getdata();
+    //     } else {
+    //       //接口错误处理
+    //       t.$message.error(res.data.msg);
+    //     }
+    //   });
+    // },
+    // editstore() {
+    //   if(this.multipleSelection.length !== 1) return this.$message('请选择一个需要编辑的门店')
+    //   let storename = this.multipleSelection[0].storeName
+    //   this.$router.push({
+    //     path: "/setting/newstore",
+    //     query: {
+    //       storename: storename,
+    //     },
+    //   });
+    // },
     changeCurrentPage(val){
       this.pageNum = val
       this.getdata()

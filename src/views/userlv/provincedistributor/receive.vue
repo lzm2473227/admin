@@ -111,7 +111,7 @@ export default {
   data() {
     return {
       total:100,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       tableData: [

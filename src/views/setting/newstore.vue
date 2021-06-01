@@ -301,4 +301,5 @@ export default {
   color: #ddd;
 }
 @import "../../assets/css/reset.scss";
+@import "@/assets/css/image2.scss";
 </style>

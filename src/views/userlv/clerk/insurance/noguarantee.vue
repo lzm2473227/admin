@@ -106,7 +106,7 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
@@ -157,5 +157,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset'
+@import '@/assets/css/reset';
+@import '@/assets/css/image1'
 </style>

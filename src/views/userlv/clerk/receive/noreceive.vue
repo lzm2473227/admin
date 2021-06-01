@@ -18,9 +18,8 @@
     <div class="tab-body">
       <el-table
       :row-class-name="tableRowClassName"
-    
       ref="singleTable"
-      :data="tableData"
+      :data="tabledata"
       style="width: 100%"
       highlight-current-row
       @current-change="handleCurrentChange"
@@ -30,16 +29,21 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
-        <el-table-column prop="price" label="商品单价" sortable width="120">
+        <el-table-column prop="commodityName" label="商品名称" width="430"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" width="280"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="190"></el-table-column>
+        <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column> -->
+        <el-table-column prop="price" label="商品单价" sortable width="140">
           <template v-slot="scope">
 						￥{{ scope.row.price }}
 					</template>
         </el-table-column>
-        <el-table-column prop="time" label="收货时间" align="center"  sortable width="183" ></el-table-column>
+        <!-- <el-table-column label="待收货数量" sortable width="160">
+          <template v-slot="scope" @click="toCodeList(scope.row.num)">
+						{{ scope.row.num }}
+					</template>
+        </el-table-column> -->
+        <el-table-column prop="scanTime" label="收货时间" align="center"  sortable width="213" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -87,10 +91,10 @@
           type="textarea"
           :rows="5"
           placeholder="请扫描或输入单品编码"
-          v-model="textarea">
+          v-model="codeInfo">
         </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addCommodify">确 定</el-button>
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
@@ -100,6 +104,7 @@
 <script>
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '@/utils/httpreques';
+import moment from "moment";
 export default {
   name: "tab",
   components: {
@@ -110,13 +115,14 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
       textarea: '',
       tabledata: [],
       totalNum: 0,
+      codeInfo: '',
       ruleForm: {
           name: '',
           region: '',
@@ -130,6 +136,32 @@ export default {
     };
   },
   methods: {
+    addCommodify(){
+      let commodityCodeList = []
+      commodityCodeList = this.codeInfo.split(',')
+      let params = {
+        "commodityList": commodityCodeList,
+        "pageNum": this.pageNum,
+        "pageSize": this.pageSize
+      } 
+      httpreques("post", params, "/realbrand-store-service/Commodity/batchQueryCommodity").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.centerDialogVisible = false
+          this.codeInfo = ''
+          let data = res.data.data
+          data.forEach((item, index) => {
+            item.index = index+1
+            item.scanTime = moment(item.scanTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+          })
+          this.tabledata = data
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
     currentchange(val){
       this.pageNum = val
     },
@@ -150,6 +182,14 @@ export default {
     handleCurrentChange(val) {
         this.currentRow = val;
       },
+    toCodeList(num){
+      this.$router.push({
+        path: '/clerk/receive/codeList',
+        query: {
+          num: num
+        }
+      })
+    },
     scan(){
       this.centerDialogVisible = true
     },
@@ -161,5 +201,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset'
+@import '@/assets/css/reset';
+@import '@/assets/css/image1'
 </style>

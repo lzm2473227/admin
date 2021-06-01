@@ -2,7 +2,8 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print"><img class="icon" src="@/assets/images/back-commodity.png" alt=""><span class="axis">退回商品</span></div>
+        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">增加退回商品</span></div>
+        <div class="print" @click="backCommodity"><img class="icon" src="@/assets/images/back-commodity.png" alt=""><span class="axis">退回商品</span></div>
         <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
@@ -24,7 +25,7 @@
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -47,9 +48,9 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>已收货单品编码数量：<span>{{totalNum}}</span></div>
-      <div>已收货商品种类：<span>{{totalNum}}</span></div>
-      <div>已收货商品金额：<span class="small">￥</span><span>0</span></div>
+      <div>已收货单品编码数量：<span>{{codeCount}}</span></div>
+      <div>已收货商品种类：<span>{{barcodeCount}}</span></div>
+      <div>已收货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
@@ -70,7 +71,7 @@
             >{{item}}</span>
           </div>
           <el-date-picker
-            v-model="value1"
+            v-model="date"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -79,7 +80,7 @@
         </el-form-item>
         <el-form-item>
           <el-button class="a" type="primary" @click="submitForm()">查询</el-button>
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+          <el-button class="a" type="primary" @click="resetForm()">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -88,10 +89,10 @@
           type="textarea"
           :rows="5"
           placeholder="请扫描或输入单品编码"
-          v-model="textarea">
+          v-model="codeInfo">
         </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="backCommodity('1')">确 定</el-button>
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
@@ -101,6 +102,7 @@
 <script>
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '@/utils/httpreques';
+import moment from "moment";
 export default {
   name: "tab",
   components: {
@@ -111,58 +113,35 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
-      textarea: '',
+      codeInfo: '',
       tabledata: [],
-      totalNum: 0,
+      barcodeCount: 0, // 条形码总数
+      codeCount: 0, // 单品编码总数
+      price: 0, // 总金额
       form: {
           commodityName: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          barcode: '',
+          date: '',
+          codeState: '',
+          commodityCode: ''
       },
+      multipleSelection : []
     };
   },
   created() {
-    this.getdata(this.pageNum)
+    this.getdata()
+    this.getTotal()
   },
   methods: {
-    // changePage(type) {/* 仅改变当前页码操作 */
-    //   switch (type) {
-    //     case 'home':
-    //       this.page = 1
-    //       break;
-    //     case 'pre':
-    //       if (this.page > 1) {
-    //         this.page--
-    //       }
-    //       break;
-    //     case 'next':
-    //       if (this.page < this.page) {
-    //         this.page++
-    //       }
-    //       break;
-    //     case 'last':
-    //       this.page = this.page
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    //   this.$emit("callFather", this.page);
-    // },
-
     getdata(){
       let parame = {
-        "barcode": "",
-        "codeState": "",
-        "commodityCode": "",
+        "barcode": this.form.barcode,
+        "codeState": this.form.codeState,
+        "commodityCode": this.form.commodityCode,
         "commodityName": this.form.commodityName,
         "pageNum": this.pageNum,
         "pageSize": this.pageSize
@@ -208,8 +187,62 @@ export default {
         }
       })
     },
+    getTotal(){
+      let params = {
+        "barcode": this.form.barcode,
+        "codeState": 0,
+        "commodityCode": this.form.commodityCode,
+        "commodityName": this.form.commodityName,
+        "pageNum": 0,
+        "pageSize": 0
+      }
+      httpreques('post', params, '/realbrand-management-service/CommodityMgt/queryReceivedCommodityStatistics').then(res => {
+        if(res.data.code === "SUCCESS"){
+          this.barcodeCount = res.data.data.barcodeCount
+          this.codeCount = res.data.data.codeCount
+          this.price = res.data.data.price
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    // 退回商品
+    backCommodity(val){
+      let commodityCodeList = []
+      if(val === '1'){
+        commodityCodeList = this.codeInfo.split(',')
+        this.centerDialogVisible = false
+      }else{
+        if(this.multipleSelection.length <= 0) return this.$message('请选择需要退回的商品')
+        _.forEach(
+          JSON.parse(JSON.stringify(this.multipleSelection)),
+          function (item, key) {
+            commodityCodeList.push(item.commodityCode);
+          }
+        )
+      }
+      httpreques(
+        "post",
+        {
+          commodityCodeList: commodityCodeList,
+        },
+        "/realbrand-store-service/Receipt/returnCommodity"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.$message.success("退回商品成功!");
+          this.getdata()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
     submitForm(){
       this.getdata()
+      this.getTotal()
     },
     changeCurrentPage(val){
       this.pageNum = val
@@ -222,13 +255,6 @@ export default {
       }
       return '';
     },
-    formatter(row, column) {
-      return row.address;
-    },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      },
     handleCurrentChange(val) {
         this.currentRow = val;
       },
@@ -236,7 +262,7 @@ export default {
       this.centerDialogVisible = true
     },
     statistics(){
-      this.$router.push('/clerk/receive/noreceiveStatistics')
+      this.$router.push('/clerk/receive/receiveStatistics')
     }
   }
 };
@@ -244,5 +270,5 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/reset.scss';
-
+@import '@/assets/css/image1'
 </style>

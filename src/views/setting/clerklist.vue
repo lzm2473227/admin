@@ -227,7 +227,7 @@ export default {
     },
     //删除
     delclerk() {
-      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的机具')
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的人员')
       let idNumber = []
       _.forEach(
         JSON.parse(JSON.stringify(this.multipleSelection)),
@@ -293,4 +293,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/css/reset.scss";
+@import "@/assets/css/image2.scss";
 </style>

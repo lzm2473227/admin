@@ -50,9 +50,9 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>待盘货商品种类：<span>{{totalNum}}</span></div>
-      <div>待盘货商品数量：<span>{{totalNum}}</span></div>
-      <div>待盘货商品金额：<span class="small">￥</span><span>0</span></div>
+      <div>待盘货商品种类：<span>{{barCount}}</span></div>
+      <div>待盘货商品数量：<span>{{count}}</span></div>
+      <div>待盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
@@ -114,13 +114,15 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
       textarea: '',
       tabledata: [],
-      totalNum: 0,
+      barCount: 0,
+      count: 0,
+      price: 0,
       ruleForm: {
           name: '',
           region: '',
@@ -133,7 +135,85 @@ export default {
       },
     };
   },
+  created() {
+    this.getdata()
+    this.getTotal()
+  },
   methods: {
+    getdata(){
+      let parame = {
+        "barcode": "",
+        "city": "",
+        "fdate": "",
+        "flag": "0",
+        "inventoryTime": "",
+        "ldate": "",
+        "like": "",
+        "pageNum": this.pageNum,
+        "pageSize": this.pageSize,
+        "province": "",
+        "storeId": "",
+        "storeName": "",
+        "userIdNumber": "",
+        "userName": ""
+      }
+      this.tabledata = []
+      httpreques('post', parame, '/realbrand-management-service/Inventory/commodityCountApi').then(res => {
+        console.log(res)
+        if(res.data.code === "SUCCESS"){
+          let data = res.data.data
+          this.total = res.data.total
+          for(let i = 0; i < data.length; i++){
+            this.tabledata.push({
+              index: i+1,
+              barcode: data[i].barcode,
+              brandName: data[i].brandName,
+              commodityCode: data[i].commodityCode,
+              commodityName: data[i].commodityName,
+              filePath: data[i].filePath,
+              id: data[i].id,
+              manufacturer: data[i].manufacturer,
+              policyNo: data[i].policyNo,
+              price: data[i].price,
+              specsParameter: data[i].specsParameter,
+              guigemignc: '-',
+              size: '-',
+              productstandard: '-',
+              weight: '-',
+              volume: '-',
+              type1: '-',
+              type2: '-',
+              type3: '-',
+              baozhuangleixing: '-',
+              baozhuangsize: '-',
+              jianjie: '-',
+              name: '-',
+              time: '-',
+            })
+          }
+          this.tabledata.reverse()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    getTotal(){
+      let parame = {
+        "storeName": '',
+        "pageNum": '',
+        "pageSize": ''
+      }
+      httpreques('post', parame, '/realbrand-management-service/Inventory/NoInventoryCount').then(res => {
+        console.log(res)
+        if(res.data.code === "SUCCESS"){
+          this.barCount = res.data.data.barCount
+          this.count = res.data.data.count
+          this.price = res.data.data.price
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
     currentchange(val){
       this.pageNum = val
     },
@@ -165,5 +245,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset'
+@import '@/assets/css/reset';
+@import '@/assets/css/image1'
 </style>

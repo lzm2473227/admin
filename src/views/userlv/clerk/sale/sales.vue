@@ -2,8 +2,9 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">销售退货</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
+        <div class="print" @click="scan"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">增加销售退货</span></div>
+        <div class="print" @click="refund"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">销售退货</span></div>
+        <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -24,32 +25,35 @@
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="210"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂家" sortable width="200"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="350"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column>
+        <!-- <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column> -->
+        <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="200"></el-table-column> -->
         <el-table-column label="销售单价" sortable width="120">
           <template v-slot="scope">
             ￥{{ scope.row.price }}
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="售出时间" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="time" label="售出时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column prop="time" label="订单号" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column prop="time" label="订单类型" align="center"  sortable width="130" ></el-table-column>
+        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="173" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>已售出单品编码数量：<span>{{totalNum}}</span></div>
-      <div>已售出商品种类：<span>{{totalNum}}</span></div>
-      <div>已售出商品金额：<span class="small">￥</span><span>0</span></div>
+      <div>已售出单品编码数量：<span>{{sum}}</span></div>
+      <div>已售出商品种类：<span>{{sku}}</span></div>
+      <div>已售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
@@ -85,10 +89,10 @@
           type="textarea"
           :rows="5"
           placeholder="请扫描或输入单品编码"
-          v-model="textarea">
+          v-model="codeInfo">
         </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addCommodify">确 定</el-button>
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
@@ -98,6 +102,7 @@
 <script>
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '@/utils/httpreques';
+import moment from "moment";
  
 export default {
   name: "tab",
@@ -109,13 +114,15 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
-      textarea: '',
+      codeInfo: '',
       tabledata: [],
-      totalNum: 0,
+      sku: 0, // 商品种类
+      sum: 0, // 销售数量
+      total: 0, // 销售总计
       ruleForm: {
           name: '',
           region: '',
@@ -126,10 +133,12 @@ export default {
           resource: '',
           desc: ''
       },
+      multipleSelection: []
     };
   },
   created() {
-    this.getdata(this.pageNum)
+    this.getdata()
+    this.getTotal()
   },
   methods: {
     getdata(){
@@ -178,6 +187,47 @@ export default {
         }
       })
     },
+    getTotal(){
+      httpreques('post', { }, '/realbrand-management-service/CommodityMgt/SaleStatistics').then(res => {
+        if(res.data.code === "SUCCESS"){
+          this.sum = res.data.data.sum
+          this.sku = res.data.data.sku
+          this.total = res.data.data.total
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    addCommodify(){
+      let commodityCodeList = []
+      commodityCodeList = this.codeInfo.split(',')
+      let params = {
+        "commodityList": commodityCodeList,
+        "pageNum": this.pageNum,
+        "pageSize": this.pageSize
+      } 
+      httpreques("post", params, "/realbrand-store-service/Commodity/batchQueryCommodity").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.centerDialogVisible = false
+          this.codeInfo = ''
+          let data = res.data.data
+          data.forEach((item, index) => {
+            item.index = this.tabledata.length+1
+            item.scanTime = moment(item.scanTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+            this.tabledata.unshift(item) // 数组最前面新增数据
+          })
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    // 销售退货
+    refund(){
+      if(this.multipleSelection.length <= 0) return this.$message('请选择需要退货的商品')
+    },
     changeCurrentPage(val){
       this.pageNum = val
       this.getdata()
@@ -192,13 +242,12 @@ export default {
     formatter(row, column) {
       return row.address;
     },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      },
-    handleCurrentChange(val) {
-        this.currentRow = val;
-      },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    statistics(){
+      this.$router.push('/clerk/sale/saleStatistics')
+    },
     scan(){
       this.centerDialogVisible = true
     }
@@ -207,5 +256,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset.scss'
+@import '@/assets/css/reset.scss';
+@import '@/assets/css/image1'
 </style>

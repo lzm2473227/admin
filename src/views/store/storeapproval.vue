@@ -1,11 +1,18 @@
 <template>
-  <div class="CorporateInformation">
-    <NewBreadCrumb
-      ptitle="门店"
-      ctitle="新增账号"
-      path="/store"
-    ></NewBreadCrumb>
-    <div class="main">
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/back.png" alt=""/><span class="axis">返回列表</span></div>
+        <div class="print" @click="addStoreList()"><img class="icon" src="../../assets/images/save.png" alt=""/><span class="axis">保存内容</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
+      </div>
+      <div class="right">
+        <div class="setup">
+          <img class="set" src="@/assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div>
+      </div>
+    </div>
       <div class="mainForm">
         <el-form
           :model="ruleForm"
@@ -61,7 +68,7 @@
               style="padding-top: 15px"
             ></el-input>
           </el-form-item>
-          <el-form-item
+          <!-- <el-form-item
             label="营业执照"
             prop="businessLicense"
             class="from-item-padding"
@@ -105,7 +112,14 @@
                 </template>
               </el-upload>
             </div>
+          </el-form-item> -->
+          <el-form-item label="营业执照">
+            <el-input
+              v-model="ruleForm.businessLicense"
+              placeholder="请输入营业执照"
+            ></el-input>
           </el-form-item>
+
           <el-form-item label="联系人">
             <el-input
               v-model="ruleForm.legalPerson"
@@ -131,18 +145,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <!-- <div class="footer">
-        <el-button type="primary" @click="addStoreList">新增</el-button>
-        <el-button type="danger" @click="cancelStoreList">取消</el-button>
-      </div> -->
-      <Btn
-      :btntext="$route.query.storename ? '编辑' : '新增'"
-      @addbtn="addStoreList"
-      @cancelbtn="cancelStoreList"
-    />
     </div>
-       
-  </div>
 </template>
 <script>
 import Btn from "../../components/Btn";
@@ -177,6 +180,7 @@ export default {
         province: "",
         registerTime: "",
         userMobile: "",
+        a:"",//暂用于营业执照
       },
      
       // 整个省市县数据
@@ -209,6 +213,9 @@ export default {
     //   );
     //   console.log(res);
     // },
+    toBackList(){
+      this.$router.go(-1)
+    },
     addStoreList() {
       let t = this;
       t.$refs["ruleForm"].validate((valid) => {
@@ -239,7 +246,7 @@ export default {
               type: "success",
             });
             // t.cancelbtn();
-            t.$router.push({ path: "/store" });
+            t.$router.push({ path: "/sysuser/store" });
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);
@@ -272,84 +279,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.CorporateInformation {
-   display: flex;
-  flex-direction: column;
-    position: relative;
-   background-color: #f6faff;
-  padding-top: 30px;
-  height: 100%;
-  box-sizing: border-box; 
-  //   padding: 16px;
-  .main {
-    height: 100%;
-    box-sizing: border-box;
-    padding: 16px;
-    background: #fff;
-    p {
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-    }
-    .mainForm {
-      width: 500px;
-    }
-    .footer {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translate(-50%);
-      .el-button {
-        width: 120px;
-        height: 38px;
-        margin-right: 20px;
-      }
-    }
-  }
-  .linkage {
-    display: flex;
-    div {
-      margin-right: 5px;
-    }
-  }
-}
-/deep/.el-input__inner {
-  width: 328px;
-  margin-right: 50px;
-  height: 36px;
-  font-size: 14px;
-}
-/deep/.el-form-item--medium .el-form-item__label {
-  line-height: 36px;
-  font-size: 14px;
-}
-/deep/.el-button--medium {
-  width: 92px;
-  height: 38px;
-  // margin-top: 6px;
-}
-/deep/.el-input__suffix {
-  position: absolute;
-  height: 100%;
-  right: 70px;
-  top: 0;
-  text-align: center;
-  color: #c0c4cc;
-  transition: all 0.3s;
-  pointer-events: none;
-}
-/deep/.el-upload--picture-card {
-  background-color: #fbfdff;
-  border: 1px dashed #c0ccda;
-  border-radius: 6px;
-  box-sizing: border-box;
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-  line-height: 102px;
-  vertical-align: top;
-}
-/deep/.el-form-item--small.el-form-item {
-  margin-bottom: 24px;
-}
+
+@import '@/assets/css/reset.scss';
 </style>

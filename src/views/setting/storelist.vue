@@ -189,5 +189,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/css/reset.scss'
+@import '../../assets/css/reset.scss';
+@import "@/assets/css/image2.scss";
 </style>

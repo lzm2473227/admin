@@ -27,20 +27,13 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="meid" label="广告编码" align="center" sortable width="230"></el-table-column>
-        <el-table-column prop="machinecode" label="广告名称" align="center" width="200"></el-table-column>
-        <el-table-column prop="name" label="广告类型" align="center" width="200"></el-table-column>
+        <el-table-column prop="advertisementNumber" label="广告编码" align="center" sortable width="230"></el-table-column>
+        <el-table-column prop="advertisementName" label="广告名称" align="center" width="200"></el-table-column>
+        <el-table-column prop="type" label="广告类型" align="center" width="200"></el-table-column>
         <el-table-column label="广告描述" align="center" sortable width="250">
           <template v-slot="scope">
             <img :src="scope.row.linkPosition" alt="" style="height: 20px;">
           </template>
-          <!-- <template #default="scope">
-            <el-image
-              style="width: 100%; height: 20px"
-              :src="scope.row.linkPosition"
-              :fit="cover"
-            ></el-image>
-          </template> -->
         </el-table-column>
         <el-table-column prop="positionName" label="广告位置" align="center" width="170" ></el-table-column>
         <el-table-column prop="startTime" label="起始时间" align="center" sortable width="210" ></el-table-column>
@@ -227,5 +220,6 @@ export default {
 /deep/.el-table--small td{
   padding: 0;
 }
-@import '../../assets/css/reset.scss'
+@import '../../assets/css/reset.scss';
+@import "@/assets/css/image2.scss";
 </style>

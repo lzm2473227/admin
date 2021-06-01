@@ -117,7 +117,7 @@ export default {
       pageSize: 15,
       price: 0,
       totalNum: 0,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,

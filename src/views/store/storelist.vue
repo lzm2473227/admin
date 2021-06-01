@@ -117,6 +117,10 @@ export default {
           console.log(res.total)
       this.enterpriseItemList = res.data;
     },
+
+    scan(){
+      this.$router.push("/storeapproval")
+    },
     addyy_store() {
       this.$router.replace("/storeapproval");
     },

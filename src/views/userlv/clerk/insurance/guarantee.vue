@@ -30,8 +30,8 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="380"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="180"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="370"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="200"></el-table-column>
         <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
         <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
         <el-table-column prop="time" label="保单单号" align="center"  sortable width="183" ></el-table-column>
@@ -106,7 +106,7 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
@@ -157,5 +157,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset'
+@import '@/assets/css/reset';
+@import '@/assets/css/image1'
 </style>

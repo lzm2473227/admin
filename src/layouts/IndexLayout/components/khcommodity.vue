@@ -54,7 +54,7 @@ export default {
         },
         {
           id: 5,
-          label: "公厂侧",
+          label: "工厂侧",
           key: "factory",
         },
         {

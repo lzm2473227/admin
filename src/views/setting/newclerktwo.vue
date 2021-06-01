@@ -548,6 +548,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../../assets/css/reset.scss";
+@import "@/assets/css/image2.scss";
 /deep/.el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: 196px;
 }

@@ -3,7 +3,7 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增商品</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/confirm.png" alt=""><span class="axis">确认货物</span></div>
+        <div class="print" @click="confirm"><img class="icon" src="@/assets/images/confirm.png" alt=""><span class="axis">确认货物</span></div>
         <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
@@ -21,12 +21,11 @@
     <div class="tab-body">
       <el-table
       :row-class-name="tableRowClassName"
-    
       ref="singleTable"
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -49,14 +48,14 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>待盘货单品编码数量：<span>{{totalNum}}</span></div>
-      <div>待盘货商品种类：<span>{{totalNum}}</span></div>
-      <div>待盘货商品金额：<span class="small">￥</span><span>0</span></div>
+      <div>待盘货单品编码数量：<span>{{count}}</span></div>
+      <div>待盘货商品种类：<span>{{barCount}}</span></div>
+      <div>待盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
-      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+      <el-form :inline="true" :model="form" label-width="100px" class="input-with-select">
         <el-form-item label="商品名称:" prop="commodityName" class="name-search">
-          <el-input v-model="ruleForm.commodityName" placeholder="请输入商品名称或扫69码"></el-input>
+          <el-input v-model="form.commodityName" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
         </el-form-item>
         <el-form-item label="统计时间:">
@@ -69,8 +68,10 @@
             >{{item}}</span>
           </div>
           <el-date-picker
-            v-model="ruleForm.date"
+            v-model="form.date"
             type="daterange"
+            value-format="timestamp"
+            @change="changeDate"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期">
@@ -87,10 +88,10 @@
           type="textarea"
           :rows="5"
           placeholder="请扫描或输入单品编码"
-          v-model="ruleForm.commodityName">
+          v-model="codeInfo">
         </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addCommodify">确 定</el-button>
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
@@ -100,6 +101,7 @@
 <script>
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '@/utils/httpreques';
+import moment from "moment";
 
 export default {
   name: "tab",
@@ -111,39 +113,49 @@ export default {
       total: 0,
       pageSize: 15,
       pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
+      tabs: ['当日'],
       active: 0,
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
       textarea: '',
       tabledata: [],
-      totalNum: 0,
-      ruleForm: {
+      barCount: 0,
+      count: 0,
+      price: 0,
+      codeInfo: '',
+      form: {
           commodityName: '',
-          date: ''
+          date: '',
+          barcode: '',
+          commodityCode: ''
       },
+      multipleSelection: []
     };
   },
   created() {
-    this.getdata(this.pageNum)
+    this.getdata()
+    this.getTotal()
   },
   methods: {
     getdata(){
       let parame = {
-        "barcode": "",
-        "codeState": "",
-        "commodityCode": "",
-        "commodityName": "",
+        "city": "",
+        "fdate": "",
+        "ldate": "",
+        "like": "",
         "pageNum": this.pageNum,
-        "pageSize": this.pageSize
+        "pageSize": this.pageSize,
+        "province": "",
+        "storeId": "",
+        "storeName": "",
+        "userIdNumber": ""
       }
       this.tabledata = []
-      httpreques('post', parame, '/realbrand-management-service/CommodityMgt/queryReceivedCommodityList').then(res => {
+      httpreques('post', parame, '/realbrand-management-service/Inventory/queryStoreCodeInfoApi').then(res => {
         console.log(res)
         if(res.data.code === "SUCCESS"){
           let data = res.data.data
-          this.totalNum = res.data.total
-          this.total = res.data.total
+          data.length == 0 ? this.total = 0 : this.total = res.data.total
           for(let i = 0; i < data.length; i++){
             this.tabledata.push({
               index: i+1,
@@ -178,6 +190,84 @@ export default {
         }
       })
     },
+    // 获取单品编码数量、商品种类、金额
+    getTotal(){
+      let parame = {
+        "storeName": '',
+        "pageNum": '',
+        "pageSize": ''
+      }
+      httpreques('post', parame, '/realbrand-management-service/Inventory/NoInventoryCount').then(res => {
+        console.log(res)
+        if(res.data.code === "SUCCESS"){
+          this.barCount = res.data.data.barCount
+          this.count = res.data.data.count
+          this.price = res.data.data.price
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    addCommodify(){
+      let commodityCodeList = []
+      commodityCodeList = this.codeInfo.split(',')
+      let params = {
+        "commodityList": commodityCodeList,
+        "pageNum": this.pageNum,
+        "pageSize": this.pageSize
+      } 
+      httpreques("post", params, "/realbrand-store-service/Commodity/batchQueryCommodity").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.centerDialogVisible = false
+          this.codeInfo = ''
+          let data = res.data.data
+          data.forEach((item, index) => {
+            item.index = index+1
+            item.scanTime = moment(item.scanTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+          })
+          this.tabledata = data
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    // 确认货物
+    confirm(){
+      if(this.multipleSelection.length <= 0) return this.$message('请选择需要确认的货物')
+      let parame = {
+        "flag": "1",
+        "scanTime": "",
+        "storeInventoryRecordDtos": [
+          {
+            "barCode": "string",
+            "commodityCode": "string",
+            "cumulativeSum": 0,
+            "iDNumber": "string",
+            "id": 0,
+            "inventoryState": 0,
+            "inventoryTime": "",
+            "lastCount": 0,
+            "scanTime": "",
+            "storeId": 0,
+            "storeName": ""
+          }
+        ]
+      }
+      httpreques('post', parame, '/realbrand-management-service/Inventory/storeInventListApi').then(res => {
+        console.log(res)
+        if(res.data.code === "SUCCESS"){
+          
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    changeDate(){
+      console.log(this.form.date)
+    },
     changeCurrentPage(val){
       this.pageNum = val
       this.getdata()
@@ -196,9 +286,9 @@ export default {
     setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
       },
-    handleCurrentChange(val) {
-        this.currentRow = val;
-      },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
     scan(){
       this.centerDialogVisible = true
     },
@@ -210,5 +300,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/reset.scss'
+@import '@/assets/css/reset.scss';
+@import '@/assets/css/image1'
 </style>

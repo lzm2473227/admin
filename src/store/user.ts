@@ -51,8 +51,6 @@ const StoreModel: ModuleType = {
   },
   mutations: {
     saveCurrentUser(state, payload) {
-      // console.log('vux ...');
-      
       // console.log(payload)
       state.currentUser = {
         ...initState.currentUser,
@@ -68,7 +66,6 @@ const StoreModel: ModuleType = {
     async fetchCurrent({ commit }) {
       try {
         const response = JSON.parse(localStorage.getItem('loginuser'));
-        // console.log('11111');
         // console.log(response);
         //判断权限
         // const { userDetails } = response;
@@ -84,6 +81,7 @@ const StoreModel: ModuleType = {
         userDetails.idNumber = response.idNumber;
         userDetails.name = response.name;
         const rolename = JSON.parse(localStorage.getItem('roleEnum'));
+ 
         // console.log(userDetails);
         
         // 什么情况？不是随便写验证码吗
@@ -123,7 +121,7 @@ const StoreModel: ModuleType = {
           //门店管理员基础权限
           userDetails.roles = ['md', 'productlist', 'purchase', 'product', 'inventory', 'sale', 'setting', 'user', 'noreceive', 'receive', 'checkproduct', 'nocheckproduct', 'sales', 'nosale', 'storelist', 'machine',
         , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew',
-        ,'public','file','nobank','bank',
+        ,'public','file','nobank','bank','commodity1','commodity2','integralrule','integralobj','memberset','newintegralrule','newintegralobj','newmemberset',
         ]
           let rolelv = ["clerk","shopowner",'citydistributor','sysuser'];//角色多重身份 【与indexlayouts下的index组件菜单对应。否则有权限，无菜单。只能手动输入路由】
  
@@ -149,10 +147,6 @@ const StoreModel: ModuleType = {
               //全国经销商权限
               userDetails.roles.push('countrydistributor','countrydistributornoreceive','countrydistributorreceive','countrydistributornocheckproduct','countrydistributornosale','countrydistributorsales','countrydistributorcheckproduct');
             }
-            // if(item=="sysuser"){
-            //   //凯华商品
-            //   userDetails.roles.push('sysuser','insurance','factory','warehouse','logistics','customer','bank');
-            // }
           })
  
           };
@@ -172,20 +166,6 @@ const StoreModel: ModuleType = {
             userDetails.roles =['productlist','userlv']
           };
           function kaihua(){
-             //凯华管理员
-          //   userDetails.roles =['clerkreceivenoreceive','clerkreceivenoreceiveStatistics'
-          //   ,'clerkreceivereceive','clerkreceiveStatistics',
-          //   'storelist','newstore', 'clerklist', "newclerktwo","product","newproduct", 'advertmentlist', 'newadvertmenttwo',
-          //   'machinenew','machine','public','file','sysuser','khset',
-          //   'userlv',"clerk","shopowner","citydistributor",'provincedistributor',"countrydistributor","clerkreceive",
-          //   //店员
-          //   // 'clerknocheckproduct','clerknosale','clerksales','clerkcheckproduct','clerkbank','clerkguarantee','clerkreceivenoreceive'
-          //   // ,'clerkreceivenoreceiveStatistics','clerkreceivereceive','clerkreceiveStatistics'
-          //   //店长
-          //   // ,'shopowner','shopownernoreceive','shopownerreceive','shopownernocheckproduct','shopownernosale','shopownersales'
-          //   // ,'shopownercheckproduct','shopownerbank','shopownerguarantee',
-          //   ]
-          // };
             userDetails.roles =['kh','product','productinfo','store','storeapproval','rolepower','funcmenu','khset','bank',
           'insurance','factory','warehouse','logistics','customer','sysuser','systemUser','userlist','consumerlist',
             "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","",]
