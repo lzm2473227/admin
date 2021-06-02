@@ -30,7 +30,7 @@
         <el-table-column prop="m" label="商品一级类别" align="center" sortable width="280"></el-table-column>
         <el-table-column prop="p" label="商品二级类别" align="center" sortable width="280"></el-table-column>
         <el-table-column prop="b" label="商品三级类别" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="picture" label="商品三级分类图片" align="center" sortable width="280"></el-table-column>
+        <el-table-column prop="categoryImage" label="商品三级分类图片" align="center" sortable width="280"></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -62,13 +62,19 @@
       :close-on-click-modal="false"
     >
     <el-form :model="ruleForm">
-      <el-form-item label="上级类别：">
-        <el-select v-model="categoriesCatalog.id" placeholder="请选择上级类别">
+      <el-form-item label="上级类别：" style="display:flex">
+        <!-- <el-select v-model="categoriesCatalog.id" placeholder="请选择上级类别">
           <el-option v-for="item in categoriesCatalog" :key="item.id" 
             :label="item.categoryName" 
             :value="item.categoryName">
-          </el-option>
-        </el-select>
+          </el-option>  
+        </el-select> -->
+        <el-cascader
+            v-model="value"
+            clearable 
+            :options="categoriesCatalog"
+            :props="setKesLabel"
+        ></el-cascader>
       </el-form-item>
       <el-form-item label="活动名称：" style="display:flex">
         <el-input v-model="ruleForm.sortName" autocomplete="off"></el-input>
@@ -111,15 +117,23 @@ export default {
       textarea: "",
       tabledata: [],   //列表数据
       categoriesCatalog:[],//三级目录
+      setKesLabel:{
+              value:'parenId',
+              label:'categoryName',
+              children:'subItemList',
+              checkStrictly: true
+      },//自定义  级联选择器value label
+      value: [],    /* 选中的标签 */
       total: "",
       ruleForm: {
         commodityName: "",
         price: "",
         sort:"",
         sortName:"",
-        picture:"",//图片
-        parenId:0
+        categoryImage:"",//图片
+        parenId:"23"
       },
+      // options:[],
     };
   },
   components: {
@@ -140,7 +154,7 @@ export default {
         },
         "/realbrand-management-service/Classify/Catalog"
       ).then((res) => {
-        // console.log(res.data.data);
+        console.log(res.data.data);
         if (res.data.code == "SUCCESS") {
           _.forEach(res.data.data, function (item, key) {
             item.index = key + 1; //加入index
@@ -148,6 +162,7 @@ export default {
           t.total = res.data.total;
           t.pageSize = res.data.pageSize;
           t.tabledata = res.data.data;
+          t.categoryImage = res.data.data.categoryImage;
           t.tabledata.reverse()
         } else {
           this.$message(res.data.msg);
@@ -167,8 +182,10 @@ export default {
             message:"添加成功",
             type: "success",
           });
+          //  this.ruleForm.parenId =
           console.log(res.data);
-          this.cancelbtn();
+          console.log(parenId);
+          // this.cancelbtn();
         } else {
           //接口错误处理
           this.$message.error(res.data.msg);
@@ -182,12 +199,29 @@ export default {
       ).then((result) => {
         console.log(result.data.data);
         console.log(result.data.data.categoriesCatalog);
+        
         if (result.data.code == "SUCCESS") {
           this.categoriesCatalog = result.data.data.categoriesCatalog;
+          this.getTreeData(this.categoriesCatalog)
+          
         } else {
           this.$message.error(result.data.msg);
         }
       });
+    },
+    //解决出现空白选项的bug
+    getTreeData(data){
+        // 循环遍历json数据
+        for(var i=0;i<data.length;i++){
+            if(data[i].subItemList== "null"||data[i].subItemList.length<1){
+                // children若为空数组，则将children设为undefined
+                data[i].subItemList=undefined;
+            }else {
+                // children若不为空数组，则继续 递归调用 本方法
+                this.getTreeData(data[i].subItemList);
+            }
+        }
+        return data;
     },
     //图片
     handleAvatarSuccess(res, file) {
@@ -195,7 +229,7 @@ export default {
       // console.log(res);
       if (res.code === "Success") {
         this.dialogImageUrl = res.data;
-        this.ruleForm.picture = res.data;
+        this.ruleForm.categoryImage = res.data;
       }
     },
     //分页

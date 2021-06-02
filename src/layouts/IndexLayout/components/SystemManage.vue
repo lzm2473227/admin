@@ -74,7 +74,7 @@ export default {
           key: "advertment",
         },
         {
-          id: 10,   //外面这层不用在js写出来，是这个外层需要的东西
+          id: 8,   //外面这层不用在js写出来，是这个外层需要的东西
           label: "活动管理",
           key: "promotion",
           children:[
@@ -227,6 +227,12 @@ export default {
           break;
         case "commodity":
           path = "/product";
+          break;
+        case "commodity1":
+          path = "/commodity1";
+          break;
+        case "commodity2":
+          path = "/commodity2";
           break;
         case "advertment":
           path = "/setting/advertmentlist";
