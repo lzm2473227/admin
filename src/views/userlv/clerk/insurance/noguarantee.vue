@@ -42,16 +42,16 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>待收货单品编码数量：<span>{{totalNum}}</span></div>
-      <div>待收货商品种类：<span>{{totalNum}}</span></div>
-      <div>待收货商品金额：<span class="small">￥</span><span>0</span></div>
+      <div class="statistic-item1">待推送保单单品编码数量：<span>{{totalNum}}</span></div>
+      <div class="statistic-item2">待推送保单商品种类：<span>{{totalNum}}</span></div>
+      <div class="statistic-item3">待推送保单号数量：<span class="small">￥</span><span>0</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="商品名称:" prop="name" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
-        </el-form-item>
+        </div>
         <!-- <el-form-item label="收货人:" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入收货人"></el-input>
         </el-form-item> -->

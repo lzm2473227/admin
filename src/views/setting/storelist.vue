@@ -58,6 +58,101 @@
         </el-form-item>
       </el-form>
     </div>
+    <form action="#">
+        <table border="1" class="">
+          <tr>
+            <td class="table-left">姓名</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入姓名"
+                v-model="ruleForm.name"
+              />
+            </td>
+            <td class="table-left">性别</td>
+            <td class="table-right mini">
+              <el-radio-group v-model="ruleForm.sex">
+                <el-radio label="1">男</el-radio>
+                <el-radio label="2">女</el-radio>
+              </el-radio-group>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">出生年月</td>
+            <td class="table-right mini">
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                
+              >
+              </el-date-picker>
+            </td>
+            <td class="table-left">身高</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入身高"
+                v-model="ruleForm.a"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">体重</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入体重"
+                v-model="ruleForm.b"
+              />
+            </td>
+            <td class="table-left">籍贯</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入籍贯"
+                v-model="ruleForm.d"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">联系号码</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入联系号码"
+                v-model="ruleForm.telNum"
+              />
+            </td>
+            <td class="table-left">民族</td>
+            <td class="table-right mini">
+              <select type="checkout">
+                <option :value="item.name" v-for="item in nation" :key="item.id">{{item.name}}</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="table-left">学历</td>
+            <td class="table-right mini">
+              <select type="checkout" v-model="ruleForm.h">
+                <option value="本科">本科</option>
+                <option value="大专">大专</option>
+              </select>
+            </td>
+            <td class="table-left">专业</td>
+            <td class="table-right" colspan="3">
+              <input
+                type="text"
+                placeholder="请输入专业"
+                v-model="ruleForm.j"
+              />
+            </td>
+          </tr>
+        </table>
+      </form>
   </div>
 </template>
 
@@ -92,6 +187,7 @@ export default {
       let t = this;
       let params = {
         "storeName": this.ruleForm.storeName,
+        "storeType": this.ruleForm.storeType,
         "pageNum": this.pageNum,
         "pageSize": this.pageSize,
       };
@@ -102,7 +198,7 @@ export default {
         "/realbrand-management-service/StoreMgt/StoreInfoList"
       ).then((res) => {
         // console.log(res);
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           res.data.data.forEach((item,key) => {
              item.index = key + 1; //加入index
             let address = item.province + item.city + item.county;
@@ -145,7 +241,7 @@ export default {
         params,
         "/realbrand-management-service/StoreMgt/DeleteStore"
       ).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           t.$message({
             message: "删除成功",
             type: "success",

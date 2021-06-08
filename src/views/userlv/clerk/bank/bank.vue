@@ -40,9 +40,10 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>已开户数量：<span>{{totalNum}}</span></div>
-      <div>开户佣金总额：<span>{{totalNum}}</span></div>
-      <!-- <div>已售出商品金额：<span class="small">￥</span><span>0</span></div> -->
+      <div class="statistic-item1">已开户数量：<span>{{totalNum}}</span><span style="font-size: 16px; color: #384F71">（储蓄卡：1  信用卡：2）</span></div>
+      <div class="statistic-item2">开户佣金总额：<span>{{totalNum}}</span></div>
+      <div class="statistic-item3">冻结佣金金额：<span class="small">￥</span><span>0</span></div>
+      <div class="statistic-item4">可提现佣金金额：<span class="small">￥</span><span>0</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">

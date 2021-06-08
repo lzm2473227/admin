@@ -53,9 +53,65 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>单品编码数量：<span>{{totalNum}}</span>(订单商品数量：<span>{{totalNum}}</span>)</div>
-      <div>商品种类：<span>{{totalNum}}</span>(订单商品种类：<span>{{totalNum}}</span>)</div>
-      <div>商品金额：<span class="small">￥</span><span>0</span>(订单商品金额：<span>{{totalNum}}</span>)</div>
+      <div class="statistic-item1">单品编码数量：<span>{{totalNum}}</span>&nbsp;&nbsp;&nbsp;（订单商品数量：<span>{{totalNum}}</span>）</div>
+      <div class="statistic-item2">商品种类：<span>{{totalNum}}</span>&nbsp;&nbsp;&nbsp;（订单商品种类：<span>{{totalNum}}</span>）</div>
+      <div class="statistic-item3">商品金额：<span class="small">￥</span><span>0</span>&nbsp;&nbsp;&nbsp;（订单商品金额：<span>{{totalNum}}</span>）</div>
+    </div>
+    <div class="order-info">
+      <div class="order">
+        <div class="order-top">
+          <p>订单信息</p>
+        </div>
+        <div class="table-main">
+          <table border="1" class="">
+          <tr>
+            <td class="table-left">订单类型</td>
+            <td class="table-right">线上商城</td>
+            <td class="table-left">订单状态</td>
+            <td class="table-right">
+              <select placeholder="请选择门店类型" v-model="name">
+                <option value="" disabled style="display:none; color: #ddd">请选择门店类型</option>
+                <option value="直营">直营</option>
+                <option value="加盟">加盟</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">订单编号</td>
+            <td class="table-right">202106021154498797</td>
+            <td class="table-left">下单时间</td>
+            <td class="table-right">2021.1.15 09:12:54</td>
+          </tr>
+          <tr>
+            <td class="table-left">支付方式</td>
+            <td class="table-right">在线支付</td>
+            <td class="table-left">支付时间</td>
+            <td class="table-right">2021.1.15 09:12:54</td>
+          </tr>
+          <tr>
+            <td class="table-left">业务编号</td>
+            <td class="table-right">202106021154498797</td>
+            <td class="table-left">订单金额</td>
+            <td class="table-right">￥12.00</td>
+          </tr>
+          <tr>
+            <td class="table-left">下单用户</td>
+            <td class="table-right">海王</td>
+            <td class="table-left">手机号码</td>
+            <td class="table-right">13402150455</td>
+          </tr>
+          <tr>
+            <td class="table-left">正品保单</td>
+            <td class="table-right" colspan="3">PBW2021043009184985</td>
+          </tr>
+          <tr>
+            <td class="table-left">订单备注</td>
+            <td class="table-right" colspan="3">请先打电话确认是否送货上门</td>
+          </tr>
+        </table>
+        </div>
+      </div>
+      <div class="distribution"></div>
     </div>
     <!-- <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
@@ -134,6 +190,7 @@ export default {
           resource: '',
           desc: ''
       },
+      name: ''
     };
   },
   methods: {

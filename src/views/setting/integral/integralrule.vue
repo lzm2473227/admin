@@ -97,5 +97,5 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../assets/css/reset.scss';
-@import "@/assets/css/image2.scss";
+@import "@/assets/css/image3.scss";
 </style>

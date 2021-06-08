@@ -214,7 +214,7 @@ export default {
         params,
         "/realbrand-management-service/StoreUserMgt/InserUseraccount"
       ).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           console.log(res)
           this.$message({ type: "success", message: "新增成功" });
           this.dialogVisible = false;
@@ -232,7 +232,7 @@ export default {
         "/realbrand-management-service/StoreUserMgt/DeleteStoreUser"
       ).then((res) => {
         console.log(res);
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           this.$message({ type: "success", message: "删除成功" });
           this.ObtainStorelist();
         } else {

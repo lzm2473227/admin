@@ -1,7 +1,7 @@
 <template>
   <div id="indexlayout">
     <div class="indexlayout-newtop">
-      <span class="systemtitle">{{ lvname }}门店管理系统</span>
+      <span class="systemtitle">{{ lvname }}管理系统</span>
     </div>
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
@@ -337,13 +337,15 @@ export default defineComponent({
        //角色多重身份 利用对象属性值的特性，判断加载的身份组件。【非路由权限方式加载组件菜单，与store文件夹下user.ts权限对应。否则有菜单，无权限，跳转404页面】
       dialogVisible: false,
       selectmenu:'baseinfo',
-      userinfo:{},
+      userinfo:{
+      },
       userpsw:"",
       childmenu:'',
       indexkey:1
     };
   },
   mounted() {
+    // this.getdata()
     let rolename = JSON.parse(localStorage.getItem("roleEnum"));
     if(rolename == 'KAIHUA'){
       // console.log(rolename+"11111");
@@ -422,6 +424,7 @@ export default defineComponent({
           params,
           "/realbrand-management-service/StoreUserMgt/StoreUser"
         ).then((res) => {
+          // console.log(res);
           if (res.data.code == "SUCCESS") {
             //对象数据处理
             t.userinfo = res.data.data;
@@ -572,7 +575,7 @@ export default defineComponent({
   height: 100vh;
   overflow: hidden;
   flex-direction: column;
-  background: #f2f6fb;
+  // background: #f2f6fb;
 }
 #indexlayout-right {
   position: relative;
@@ -685,6 +688,7 @@ export default defineComponent({
   }
 }
 .indexlayout-bot-right {
+  position: relative;
   flex: 1;
   box-sizing: border-box;
   // padding: 0 10px 10px 0;

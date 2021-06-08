@@ -193,7 +193,7 @@ export default {
         "/realbrand-management-service/StoreUserMgt/StoreUserList"
       ).then((res) => {
         console.log(res);
-        if ((res.data.code = "SUCCESS")) {
+        if ((res.data.code === "SUCCESS")) {
           let { data } = res.data;
           this.total = res.data.total;
           // this.pages = res.data.pages;

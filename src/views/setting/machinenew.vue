@@ -201,7 +201,7 @@ export default {
         "/realbrand-management-service/StoreMgt/StoreNameList"
       ).then((result) => {
         console.log(result);
-        if (result.data.code == "SUCCESS") {
+        if (result.data.code === "SUCCESS") {
           this.storeName = result.data.data.storeNameItemList;
         } else {
           this.$message.error(result.data.msg);
@@ -227,7 +227,7 @@ export default {
           : "/realbrand-management-service/StoreMgt/InsertStoreInfo";
 
         httpreques("post", params, url).then((res) => {
-          if (res.data.code == "SUCCESS") {
+          if (res.data.code === "SUCCESS") {
             t.$message({
               message: t.$route.query.storename ? "修改成功" : "添加成功",
               type: "success",

@@ -208,7 +208,7 @@ export default {
           params,
           "/realbrand-management-service/AdvertisementMgt/AdvertisementInfo"
         ).then((res) => {
-          if (res.data.code == "SUCCESS") {
+          if (res.data.code === "SUCCESS") {
             // 对象数据处理
             let advobj = res.data.data;
             advobj.startTime = moment(advobj.startTime).format(
@@ -234,7 +234,7 @@ export default {
         {},
         "/realbrand-management-service/AdvertisementMgt/PositionNameList"
       ).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           //对象数据处理
           t.positions = res.data.data.positionNameItemList;
         } else {
@@ -263,7 +263,7 @@ export default {
       params.endTime = moment(params.endTime);
 
       httpreques("post", params, url).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           t.$message({
             message: t.$route.query.storename ? "修改成功" : "添加成功",
             type: "success",

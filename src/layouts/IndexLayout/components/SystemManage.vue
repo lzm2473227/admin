@@ -190,7 +190,7 @@ export default {
               key = 4;
               break;
           }
-          this.$refs.vueTree2.setCurrentKey(key);
+          // this.$refs.vueTree2.setCurrentKey(key);
         });
       }
     } else {

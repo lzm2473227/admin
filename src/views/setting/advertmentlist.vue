@@ -118,7 +118,7 @@ export default {
         "/realbrand-management-service/AdvertisementMgt/AdvertisementInfoList"
       ).then((res) => {
         console.log(res);
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           _.forEach(res.data.data, function (item, key) {
             item.startTime = moment(item.startTime).format(
               "YYYY-MM-DD HH:mm:ss"
@@ -148,7 +148,7 @@ export default {
         { id: id },
         "/realbrand-management-service/AdvertisementMgt/DeleteAdvertisement"
       ).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           t.$message({
             message: "广告已删除",
             type: "success",
@@ -181,7 +181,7 @@ export default {
         params,
         "/realbrand-management-service/AdvertisementMgt/EnableAdvertisement"
       ).then((res) => {
-        if (res.data.code == "SUCCESS") {
+        if (res.data.code === "SUCCESS") {
           console.log(res);
           t.$message({
             message: stu == 0 ? "广告已禁用" : "广告已启用",

@@ -268,7 +268,7 @@
           <el-dialog v-model="dialogVisible">
             <img style="width:100%" :src='ruleForm.frontId' alt="">
           </el-dialog>
-          <el-upload  style="position: absolute;top:95px;left:638px"
+          <el-upload  style="position: absolute;top:97px;left:456px"
             action="http://14.29.162.130:6602/image/imageUpload"
             list-type="picture-card"
             :on-success="handleAvatarSuccess"
@@ -462,7 +462,7 @@ export default {
           "/realbrand-management-service/StoreUserMgt/StoreUser"
         ).then((res) => {
           console.log(res)
-          if (res.data.code == "SUCCESS") {
+          if (res.data.code === "SUCCESS") {
             //对象数据处理
             let storeobj = res.data.data;
             storeobj.storetype = storeobj.storeType;
@@ -494,7 +494,7 @@ export default {
           params,
           "/realbrand-management-service/StoreUserMgt/UpdateUserInfo"
         ).then((res) => {
-          if ((res.data.code = "SUCCESS")) {
+          if ((res.data.code === "SUCCESS")) {
             this.$message.success("编辑员工成功");
             this.$router.replace("/setting/clerklist");
           } else {
@@ -508,7 +508,7 @@ export default {
           "/realbrand-management-service/StoreUserMgt/InserUseraccount"
         ).then((res) => {
           // console.log(res)
-          if ((res.data.code = "SUCCESS")) {
+          if ((res.data.code === "SUCCESS")) {
             this.$message.success("新增员工成功");
             this.$router.replace("/setting/clerklist");
           } else {
@@ -527,12 +527,12 @@ export default {
           storeName: this.ruleForm.storeName,
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"
-      ).then((result) => {
-        // console.log(result);
-        if (result.data.code == "SUCCESS") {
-          this.storeNameItemList = result.data.data.storeNameItemList;
+      ).then((res) => {
+        // console.log(res);
+        if (res.data.code == "SUCCESS") {
+          this.storeNameItemList = res.data.data.storeNameItemList;
         } else {
-          this.$message.error(result.data.msg);
+          this.$message.error(res.data.msg);
         }
       });
     },

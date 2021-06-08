@@ -2,8 +2,8 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增门店</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除门店</span></div>
+        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增企业</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除企业</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column prop="industryName" align="center" label="所属行业" width="150">
         </el-table-column>
-        <el-table-column prop="idNumber" align="center" width="150" label="企业账号">   
+        <el-table-column prop="idNumber" align="center" width="250" label="企业账号">   
         </el-table-column>
         <el-table-column prop="city" align="center" label="企业地址" width="150">
         </el-table-column>
@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column prop="userMobile" align="center" label="联系人手机号" width="150">
         </el-table-column>
-        <el-table-column prop="registertime" align="center" label="注册时间" width="150">
+        <el-table-column prop="registertime" align="center" label="注册时间" width="250">
         </el-table-column>
 
         <el-table-column label="操作" align="center" width="150">

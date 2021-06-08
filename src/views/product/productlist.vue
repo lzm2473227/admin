@@ -60,14 +60,16 @@
           width="120"
         ></el-table-column>
         <el-table-column
-          prop="a"
+          prop="brandName"
           label="品牌"
+          align="center"
           width="120"
         ></el-table-column>
         <el-table-column
-          prop="b"
+          prop="manufacturer"
           label="生产厂商"
           width="150"
+          align="center"
         ></el-table-column>
         <el-table-column
           prop="b"
@@ -84,7 +86,7 @@
           label="商品一级类别"
           width="180"
         ></el-table-column>
-        <el-table-column label="商品单价" sortable width="120">
+        <el-table-column label="商品单价" align="center" sortable width="120">
           <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
         <el-table-column prop="time" label="图片" align="center" width="150">

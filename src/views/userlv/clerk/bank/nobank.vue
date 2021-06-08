@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">申请开户</span></div>
+        <div class="print" @click="openAccount"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">申请开户</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -42,8 +42,8 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>待开户数量：<span>{{totalNum}}</span></div>
-      <div>待开户佣金总额：<span>{{totalNum}}</span></div>
+      <div class="statistic-item1">待开户数量：<span>{{totalNum}}</span></div>
+      <div class="statistic-item2">待开户佣金总额：<span>{{totalNum}}</span></div>
       <!-- <div>已售出商品金额：<span class="small">￥</span><span>0</span></div> -->
     </div>
     <div class="inp-bot">
@@ -152,6 +152,9 @@ export default {
           this.$message(res.data.msg)
         }
       })
+    },
+    openAccount(){
+      this.$router.push('/clerk/bank/openAccount')
     },
     changeCurrentPage(val){
       this.pageNum = val

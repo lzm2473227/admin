@@ -2,10 +2,10 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="toBackList"><img class="icon" src="../../assets/images/back.png" alt=""/><span class="axis">返回列表</span></div>
-        <div class="print" @click="addstore()"><img class="icon" src="../../assets/images/save.png" alt=""/><span class="axis">保存内容</span></div>
-        <div class="print"><img class="icon" src="../../assets/images/print.png" alt="" /><span class="axis">打印列表</span></div>
-        <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt="" /><span class="axis">导出表格</span></div>
+        <div class="print" @click="toBackList"><img class="icon" src="@/assets/images/back.png" alt=""/><span class="axis">返回列表</span></div>
+        <div class="print" @click="addstore()"><img class="icon" src="@/assets/images/save.png" alt=""/><span class="axis">保存内容</span></div>
+        <div class="print"><img class="icon" src="@/assets/images/print.png" alt="" /><span class="axis">打印列表</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt="" /><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
         <!-- <div class="setup">
@@ -16,35 +16,42 @@
     <div class="table-main">
       <form action="">
         <div class="table-title">
-          <p>新增门店</p>
+          <p>新增开户申请资料</p>
         </div>
         <table border="1" class="">
           <tr>
-            <td class="table-left">门店机构代码</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入门店机构代码" v-model="form.orgCode" />
-            </td>
-            <td class="table-left">门店类型</td>
-            <td class="table-right">
-              <select placeholder="请选择门店类型" v-model="form.storeType">
-                <option value="" disabled style="display:none; color: #ddd">请选择门店类型</option>
-                <option value="直营">直营</option>
-                <option value="加盟">加盟</option>
-              </select>
+            <td class="table-left">开户类型</td>
+            <td class="table-right" colspan="3">
+              <input
+                type="text"
+                placeholder="开户业务编号由系统随机生成"
+                style="width: 100%"
+                v-model="form.address"
+              />
             </td>
           </tr>
           <tr>
-            <td class="table-left">法人代表姓名</td>
+            <td class="table-left">身份证号</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入身份证号码" v-model="form.name" />
+            </td>
+            <td class="table-left">开户人姓名</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入开户人姓名" v-model="form.tel" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">开户银行</td>
             <td class="table-right">
               <input type="text" placeholder="请输入法人代表姓名" v-model="form.name" />
             </td>
-            <td class="table-left">电话号码</td>
+            <td class="table-left">开卡类型</td>
             <td class="table-right">
               <input type="text" placeholder="请输入电话号码" v-model="form.tel" />
             </td>
           </tr>
           <tr>
-            <td class="table-left">法人身份证号</td>
+            <td class="table-left">开户人性别</td>
             <td class="table-right">
               <input
                 type="text"
@@ -52,17 +59,13 @@
                 v-model="form.code"
               />
             </td>
-            <td class="table-left">门店名称</td>
+            <td class="table-left">手机号码</td>
             <td class="table-right">
-              <input
-                type="text"
-                placeholder="请输入门店名称"
-                v-model="form.storeName"
-              />
+              <input type="text" placeholder="请输入手机号码" v-model="form.storeName"/>
             </td>
           </tr>
           <tr>
-            <td class="table-left">门店地址</td>
+            <td class="table-left">开户类型</td>
             <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
                 :options="options"
@@ -82,46 +85,14 @@
               />
             </td>
           </tr>
-          <tr>
-            <td class="table-left">门店简介</td>
-            <td class="table-right" colspan="3">
-              <textarea
-                class="table-item"
-                placeholder="请输入门店简介"
-                v-model="form.jianjie"
-              ></textarea>
-            </td>
-          </tr>
-          <tr style="vertical-align: top">
-            <td class="table-left" style="padding-top: 12px">证件照</td>
-            <td class="table-right" colspan="3" style="height: 516px; padding-top: 6px;">
-              <el-upload
-                action="http://14.29.162.130:6602/image/imageUpload"
-                list-type="picture-card"
-                :file-list="imgArr" 
-                :on-success="handleAvatarSuccess"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-              >
-                  <div  class="imgs-title">
-                    <i class="el-icon-plus"></i>
-                  </div>      
-              <el-dialog v-if="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
-              </el-upload>
-              <el-dialog v-model="dialogVisible">
-                <img style="width:100%" :src='form.storeLicence' alt="">
-              </el-dialog>
-            </td>
-          </tr>
         </table>
+        <button class="guangzhou">点击进入广州银行系统开户界面</button>
       </form>
     </div>
   </div>
 </template>
 <script>
-import httpreques from "../../utils/httpreques";
+import httpreques from "@/utils/httpreques";
 import {
   provinceAndCityData,
   regionData,
@@ -141,7 +112,7 @@ export default {
         businessLicense: "",
         storeName: "",
         address: "",
-        storeType: "",
+        storetype: "",
         county: "",
         city: "",
         province: "",
@@ -180,7 +151,7 @@ export default {
           "/realbrand-management-service/StoreMgt/StoreInfo"
         ).then((res) => {
           console.log(res)
-          if (res.data.code === "SUCCESS") {
+          if (res.data.code == "SUCCESS") {
             //对象数据处理
             let storeobj = res.data.data;
             storeobj.storetype = storeobj.storeType;
@@ -202,18 +173,9 @@ export default {
     addstore() {
       let t = this;
       let params = t.form;
-      if(!params.orgCode) return this.$message.error('门店机构代码不能为空')
-      if(!params.storeType) return this.$message.error('请选择门店类型')
-      if(!params.name) return this.$message.error('法人代表姓名不能为空')
-      if(!params.tel) return this.$message.error('电话号码不能为空')
-      if(!params.code) return this.$message.error('法人身份证号不能为空')
-      if(!params.storeName) return this.$message.error('门店名称不能为空')
-      if(!params.province) return this.$message.error('门店地址不能为空')
-      if(!params.jianjie) return this.$message.error('门店简介不能为空')
-      if(!params.storeLicence) return this.$message.error('请上传证件照')
       params.id = this.form.id;
+      // params.storeLicence = 111111111111;
       params.storeLicence = this.form.storeLicence;
-      params.orgCode = this.form.orgCode;
       delete params.storeaccount;
       delete params.storepsw;
 
@@ -227,7 +189,7 @@ export default {
         : "/realbrand-management-service/StoreMgt/InsertStoreInfo";
 
       httpreques("post", params, url).then((res) => {
-        if (res.data.code === "SUCCESS") {
+        if (res.data.code == "SUCCESS") {
           t.$message({
             message: t.$route.query.storename ? "修改成功" : "添加成功",
             type: "success",
@@ -309,6 +271,16 @@ export default {
 /deep/.el-cascader .el-input__inner::-ms-input-placeholder {
   color: #ddd;
 }
-@import "../../assets/css/reset.scss";
-@import "@/assets/css/image2.scss";
+.guangzhou{
+    width: 599px;
+    text-align: center;
+    margin-top: 40px;
+    padding: 10px 0;
+    background: #F3F7FF;
+    border: 1px solid #3377FF;
+    font-size: 16px;
+    color: #3377FF;
+    cursor: pointer;
+}
+@import "@/assets/css/reset.scss";
 </style>

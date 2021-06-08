@@ -49,16 +49,16 @@
       <!-- <el-pagination layout=" prev, pager, next ,total" :total="total" :page-size="pageSize" @current-change="currentchange"></el-pagination> -->
     </div>
     <div class="total">
-      <div>已盘货单品编码数量：<span>{{count}}</span></div>
-      <div>已盘货商品种类：<span>{{barCount}}</span></div>
-      <div>已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
+      <div class="statistic-item1">已盘货单品编码数量：<span>{{count}}</span></div>
+      <div class="statistic-item2">已盘货商品种类：<span>{{barCount}}</span></div>
+      <div class="statistic-item3">已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="商品名称:" prop="commodityName" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.commodityName" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
-        </el-form-item>
+        </div>
         <el-form-item label="统计时间:">
           <div class="date-status">
             <span

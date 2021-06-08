@@ -50,16 +50,16 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>已盘货商品种类：<span>{{barCount}}</span></div>
-      <div>已盘货商品数量：<span>{{count}}</span></div>
-      <div>已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
+      <div class="statistic-item1">已盘货商品种类：<span>{{barCount}}</span></div>
+      <div class="statistic-item2">已盘货商品数量：<span>{{count}}</span></div>
+      <div class="statistic-item3">已盘货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="商品名称:" prop="name" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
-        </el-form-item>
+        </div>
         <!-- <el-form-item label="收货人:" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入收货人"></el-input>
         </el-form-item> -->

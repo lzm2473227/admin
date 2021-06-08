@@ -148,6 +148,17 @@
             </td>
           </tr>
           <tr>
+            <td class="table-left">商品分类</td>
+            <td class="table-right" colspan="3">
+              <el-cascader
+                  v-model="value"
+                  clearable 
+                  :options="categoriesCatalog"
+                  :props="setKesLabel"
+              ></el-cascader>
+            </td>
+          </tr>
+          <tr>
             <td class="table-left">主要功能/功效</td>
             <td class="table-right" colspan="3">
               <textarea
@@ -207,44 +218,53 @@ export default {
         price: "", //销售价格/默认为0
         specsParameter: "", // 规格参数
         commodityCode: "", // 单品编码
+        categoryId:"",   //三级分类id
         storeId:""
       },
       dialogImageUrl:"",
       linkPosition: "", //默认选中显示
-      imgArr: []
+      imgArr: [],
+      categoriesCatalog:[],//三级目录
+      setKesLabel:{
+              value:'parenId',
+              label:'categoryName',
+              children:'subItemList',
+              checkStrictly: true
+      },//自定义  级联选择器value label
     };
   },
   mounted() {
-    this.getdata();
+    // this.getdata();
+    this.threedirectories();
   },
   methods: {
-    getdata() {
-      let t = this;
-      let barcode = t.$route.query.barcode;
-      if (barcode) {
-        let params = {
-          barcode: barcode,
-        };
-        httpreques(
-          "post",
-          params,
-          "/realbrand-management-service/CommodityMgt/BarcodeInfo"
-        ).then((res) => {
-          console.log(res);
-          if (res.data.code == "SUCCESS") {
-            //对象数据处理
-            console.log(res);
-            let commobj = res.data.data;
-            this.imgArr.push({url: commobj.filePath})
-            this.dialogImageUrl = commobj.filePath;
-            t.form = commobj;
-          } else {
-            //接口错误处理
-            t.$message.error(res.data.msg);
-          }
-        });
-      }
-    },
+    // getdata() {
+    //   let t = this;
+    //   let barcode = t.$route.query.barcode;
+    //   if (barcode) {
+    //     let params = {
+    //       barcode: barcode,
+    //     };
+    //     httpreques(
+    //       "post",
+    //       params,
+    //       "/realbrand-management-service/CommodityMgt/BarcodeInfo"
+    //     ).then((res) => {
+    //       console.log(res);
+    //       if (res.data.code == "SUCCESS") {
+    //         //对象数据处理
+    //         console.log(res);
+    //         let commobj = res.data.data;
+    //         this.imgArr.push({url: commobj.filePath})
+    //         this.dialogImageUrl = commobj.filePath;
+    //         t.form = commobj;
+    //       } else {
+    //         //接口错误处理
+    //         t.$message.error(res.data.msg);
+    //       }
+    //     });
+    //   }
+    // },
     handleRemove(file, fileList) {
       // console.log(file, fileList);
     },
@@ -255,6 +275,55 @@ export default {
     },
     //提交
     addcomm() {
+      let ip = []
+      let ib = []
+      let id = []
+      let index
+      _.forEach(
+        JSON.parse(JSON.stringify(this.categoriesCatalog)),
+        function (item, key) {
+          ip.push(item.subItemList);
+        }
+      )
+       ip = {...ip };
+      // function add(index){
+      //   // let index
+      //   for(let i=0; i++ ; i<ip.length){
+      //     index = ip[i]
+      // }
+      // return index
+      // }
+      // add(index)
+      
+      
+      _.forEach(
+        JSON.parse(JSON.stringify(ip)),
+        function (items, key) {
+          console.log(items);
+          function add(items, key){
+            console.log(itemss);
+            ib.push(items.subItemList)
+            return ib
+          }
+          add()
+        }
+      )
+
+      // _.forEach(
+      //   JSON.parse(JSON.stringify(ip[i])),
+      //   function (items, key) {
+      //     ib.push(items.subItemList);
+      //   }
+      // )  
+
+      // ib = {...ib };
+      // _.forEach(
+      //   JSON.parse(JSON.stringify(ib)),
+      //   function (itemss, key) {
+      //     id.push(itemss.categoryId);
+      //   }
+      // )
+      id = id.toString()
       let params = {
         barcode: this.form.barcode, //条形码
         brandName: this.form.brandName, //品牌名称
@@ -265,12 +334,22 @@ export default {
         price: this.form.price, //销售价格/默认为0
         specsParameter: this.form.specsParameter, // 规格参数
         commodityCode: this.form.commodityCode, // 单品编码
+        categoryId:id,
       };
 
       let url = this.$route.query.barcode
         ? "/realbrand-management-service/CommodityMgt/UpdateBarcode"
         : "/realbrand-management-service/CommodityMgt/InsertCommodity";
       console.log(params);
+      // console.log(this.categoriesCatalog);
+          // console.log(mid);
+          console.log(ip);
+          console.log(index);
+          // console.log(ip[i]);
+          console.log(ib);
+          // console.log(id);
+          // console.log(categoryId);
+          // console.log(res);
 
       httpreques("post", params, url).then((res) => {
         if (res.data.code == "SUCCESS") {
@@ -285,6 +364,35 @@ export default {
           this.$message.error(res.data.msg);
         }
       });
+    },
+    //三级目录
+    threedirectories() {
+      httpreques(
+        "post",{},"/realbrand-management-service/Classify/queryCategoriesCatalogApi"
+      ).then((res) => {
+        if (res.data.code === "SUCCESS") {
+          // console.log(res);
+          this.categoriesCatalog = res.data.data.categoriesCatalog;
+          this.getTreeData(this.categoriesCatalog)
+          // console.log(res.data.data.categoriesCatalog);
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    //解决出现空白选项的bug
+    getTreeData(data){
+        // 循环遍历json数据
+        for(var i=0;i<data.length;i++){
+            if(data[i].subItemList== "null"||data[i].subItemList.length<1){
+                // children若为空数组，则将children设为undefined
+                data[i].subItemList=undefined;
+            }else {
+                // children若不为空数组，则继续 递归调用 本方法
+                this.getTreeData(data[i].subItemList);
+            }
+        }
+        return data;
     },
     handleAvatarSuccess(res, file) {
       console.log(file);
@@ -309,4 +417,16 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/css/reset.scss";
 @import "@/assets/css/image2.scss";
+/deep/.el-cascader{
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+}
+/deep/.el-input__inner {
+    width: 100%;
+    height: 20px
+}
+/deep/.el-input--small{
+  line-height: 24px;
+}
 </style>

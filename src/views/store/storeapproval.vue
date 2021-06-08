@@ -13,138 +13,107 @@
         </div>
       </div>
     </div>
-      <div class="mainForm">
-        <el-form
-          :model="ruleForm"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="130px"
-          class="demo-ruleForm"
-          label-position="left"
-        >
-          <el-form-item label="企业名称：">
-            <el-input
-              v-model="ruleForm.enterpriseName"
-              placeholder="请输入企业名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="所属行业：">
-            <el-input
-              v-model="ruleForm.industryName"
-              placeholder="请输入所属行业"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="企业账号：">
-            <el-input
-              v-model="ruleForm.idNumber"
-              placeholder="请输入企业账号"
-            ></el-input>
-            <span
-              style="
-                display: inline-block;
-                font-size: 12px;
-                color: #666666;
-                margin-top: 4px;
-              "
-              >身份证号为企业账号，初始密码为：<sapn style="color: red">66666666</sapn></span
-            >
-          </el-form-item>
-          <el-form-item
-            label="门店地址"
-            prop="address"
-            class="from-item-padding"
-          >
-            <div class="select-province">
+    <div class="table-main">
+      <form action="#">
+        <div class="table-title">
+          <p>新增企业</p>
+        </div>
+        <table border="1" class="">
+          <tr>
+            <td class="table-left">企业名称</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入企业名称" v-model="ruleForm.enterpriseName" />
+            </td>
+            <td class="table-left">所属行业</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入所属行业" v-model="ruleForm.industryName" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">企业账号</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入企业账号" v-model="ruleForm.idNumber" />
+            </td>
+            <td class="table-left">联系人</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入联系人" v-model="ruleForm.legalPerson" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">注册时间</td>
+            <td class="table-right">
+                <el-date-picker
+                  v-model="ruleForm.registerTime"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                >
+                </el-date-picker>
+            </td>
+            <td class="table-left">营业执照</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入营业执照"
+                v-model="ruleForm.businessLicense"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">联系手机号</td>
+            <td class="table-right" colspan="3">
+              <input
+                type="text"
+                placeholder="请输入联系人手机号"
+                v-model="ruleForm.userMobile"
+              />
+            </td>
+          </tr>
+          <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top:28px">企业地址</td>
+            <td class="table-right" colspan="3" style="height:665px">
               <el-cascader
                 :options="options"
                 v-model="selectedOptions"
                 @change="handleChange"
+                style="width: 100%"
+                placeholder="请选择企业地址"
               >
               </el-cascader>
-            </div>
-            <el-input
-              v-model="ruleForm.address"
-              placeholder="请输入门店详细地址"
-              style="padding-top: 15px"
-            ></el-input>
-          </el-form-item>
-          <!-- <el-form-item
-            label="营业执照"
-            prop="businessLicense"
-            class="from-item-padding"
-          >
-            <div class="clerk-imgs">
+              <br />
+              <input
+                type="text"
+                placeholder="请输入门店详细地址"
+                style="margin-top: 6px; width: 100%"
+                v-model="ruleForm.address"
+              />
+            </td>
+          </tr>
+          <!-- <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top: 12px">证件照</td>
+            <td class="table-right" colspan="3" style="height: 516px; padding-top: 6px;">
               <el-upload
-                action="#"
+                action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"
-                :auto-upload="false"
+                :file-list="imgArr" 
+                :on-success="handleAvatarSuccess"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
               >
-                <template #default>
-                  <div class="imgs-title">
+                  <div  class="imgs-title">
                     <i class="el-icon-plus"></i>
-                    <sapn class="cardfront"></sapn>
-                  </div>
-                </template>
-                <template #file="{ file }">
-                  <div>
-                    <img
-                      class="el-upload-list__item-thumbnail"
-                      :src="file.url"
-                      alt=""
-                    />
-                    <span class="el-upload-list__item-actions">
-                      <span
-                        class="el-upload-list__item-preview"
-                        @click="handlePictureCardPreview(file)"
-                      >
-                        <i class="el-icon-zoom-in"></i>
-                      </span>
-
-                      <span
-                        v-if="!disabled"
-                        class="el-upload-list__item-delete"
-                        @click="handleRemove(file)"
-                      >
-                        <i class="el-icon-delete"></i>
-                      </span>
-                    </span>
-                  </div>
-                </template>
+                  </div>      
+              <el-dialog v-if="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
               </el-upload>
-            </div>
-          </el-form-item> -->
-          <el-form-item label="营业执照">
-            <el-input
-              v-model="ruleForm.businessLicense"
-              placeholder="请输入营业执照"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="联系人">
-            <el-input
-              v-model="ruleForm.legalPerson"
-              placeholder="请输入联系人"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="联系人手机号：">
-            <el-input
-              v-model="ruleForm.userMobile"
-              placeholder="请输入联系人手机号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="注册时间">
-            <!-- <el-input v-model="ruleForm.registerTime"></el-input> -->
-            <div class="block">
-              <el-date-picker
-                v-model="ruleForm.registerTime"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
-            </div>
-          </el-form-item>
-        </el-form>
-      </div>
+              <el-dialog v-model="dialogVisible">
+                <img style="width:100%" :src='form.storeLicence' alt="">
+              </el-dialog>
+            </td>
+          </tr> -->
+        </table>
+      </form>
+    </div>
     </div>
 </template>
 <script>
@@ -218,10 +187,10 @@ export default {
     },
     addStoreList() {
       let t = this;
-      t.$refs["ruleForm"].validate((valid) => {
-        if (!valid) {
-          return false;
-        }
+      // t.$refs["ruleForm"].validate((valid) => {
+        // if (!valid) {
+          // return false;
+        // }
         let params = t.ruleForm;
         console.log(params);
         httpreques(
@@ -252,7 +221,7 @@ export default {
             t.$message.error(res.data.msg);
           }
         });
-      });
+      // });
     },
     handleChange(value) {
       let t = this;
@@ -279,6 +248,33 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
 @import '@/assets/css/reset.scss';
+/deep/.el-cascader .el-input .el-input__inner {
+  width: 100%;
+  height: 20px;
+  line-height: 28px;
+  font-size: 12px;
+  padding: 4px;
+  color: #333;
+  outline: none;
+}
+/deep/.el-input--small .el-input__inner{
+  height: 20px;
+  width: 196px;
+}
+/deep/.el-input__inner{
+  padding-left: 28px;
+}
+/deep/.el-input--small{
+  line-height: 20px;
+}
+/deep/.el-date-editor.el-input, .el-date-editor.el-input__inner{
+  width: 196px;
+}
+/deep/.el-input--suffix .el-input__inner{
+  padding-right:0;
+}
+/deep/.el-input--small .el-input__icon {
+  line-height: 24px;
+}
 </style>

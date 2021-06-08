@@ -6,7 +6,7 @@
       <div class="left">
         <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增商品</span></div>
         <div class="print" @click="del"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除商品</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/pay.png" alt=""><span class="axis">启动支付</span></div>
+        <div class="print" @click="onPay"><img class="icon" src="@/assets/images/pay.png" alt=""><span class="axis">启动支付</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -33,9 +33,9 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="280"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" width="160"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" width="120"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="260"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" width="130"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" width="100"></el-table-column>
         <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="210"></el-table-column> -->
         <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope">
@@ -48,8 +48,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="time" label="小活动名称"  sortable width="140" ></el-table-column>
-        <el-table-column prop="sum" label="待售出数量"  sortable width="140" ></el-table-column>
-        <el-table-column prop="createTime" label="售出时间" align="center"  sortable width="180" ></el-table-column>
+        <el-table-column prop="sum" label="待售出数量"  sortable width="120" ></el-table-column>
+        <!-- <el-table-column prop="createTime" label="售出时间" align="center"  sortable width="180" ></el-table-column> -->
         <el-table-column label="订单号" align="center"  sortable width="160" class="aaaa">
           <template v-slot="scope">
             <span @click="onDetail(scope.row)" class="table-button">{{ scope.row.dealNumber }}</span>
@@ -63,16 +63,16 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>待售出单品编码数量：<span>{{sku}}</span></div>
-      <div>待售出商品种类：<span>{{sku}}</span></div>
-      <div>待售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
+      <div class="statistic-item1">待售出单品编码数量：<span>{{sku}}</span></div>
+      <div class="statistic-item2">待售出商品种类：<span>{{sku}}</span></div>
+      <div class="statistic-item3">待售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="商品名称:" prop="name" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
-        </el-form-item>
+        </div>
         <el-form-item label="订单号:" prop="num" class="name-search">
           <el-input v-model="ruleForm.num" placeholder="请输入订单号"></el-input>
         </el-form-item>
@@ -111,6 +111,204 @@
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
+    <div class="pay-dialog" v-show="isDialog">
+      <!-- 活动弹窗 -->
+      <div class="dialog-content" v-show="isShowActivity">
+        <div class="dialog-top">
+          <span>提示</span>
+          <img @click="onCancel" src="@/assets/images/close.png" alt="">
+        </div>
+        <div class="dialog-body">
+          <p>以下促销活动指定消费者，购买方是否符合活动条件</p>
+          <div class="activity">
+            <div class="activity-item">
+              <div class="item-left">
+                <span>促销活动：</span>
+                <span>活动商品：</span>
+                <span>指定消费者：</span>
+                <span>是否符合：</span>
+              </div>
+              <div class="item-right">
+                <span>五一节8折</span>
+                <span>复方感冒灵颗粒</span>
+                <span>医生</span>
+                <span>
+                  <el-radio-group v-model="radio2">
+                    <el-radio :label="1">是</el-radio>
+                    <el-radio :label="2">否</el-radio>
+                  </el-radio-group></span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="item-left">
+                <span>促销活动：</span>
+                <span>活动商品：</span>
+                <span>指定消费者：</span>
+                <span>是否符合：</span>
+              </div>
+              <div class="item-right">
+                <span>五一节8折</span>
+                <span>复方感冒灵颗粒</span>
+                <span>医生</span>
+                <span>
+                  <el-radio-group v-model="radio3">
+                    <el-radio :label="1">是</el-radio>
+                    <el-radio :label="2">否</el-radio>
+                  </el-radio-group></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dialog-bottom">
+          <botton class="sure" @click="onSure">确定</botton>
+          <botton @click="onCancel">取消</botton>
+        </div>
+      </div>
+      <!-- 付款弹窗 -->
+      <div class="dialog-pay-type" v-show="isPayMoney">
+        <div class="dialog-top">
+          <div><span>应收：<span class="price">￥<span>400.00</span></span></span></div>
+          <div><span>实收：<span class="price" style="color: #FB2915">￥<span>400.00</span></span></span></div>
+          <div><span>找零：<span class="price" style="color: #3377FF">￥<span>400.00</span></span></span></div>
+        </div>
+        <div class="dialog-body">
+          <div class="item-left">
+            <div class="pay-type">选择支付方式</div>
+            <div class="card">
+              <div class="card-item" @click="onSelect('1')"><img src="@/assets/images/chuxu.png" alt="">储蓄卡</div>
+              <div class="card-item" @click="onSelect('2')"><img src="@/assets/images/shebao.png" alt="">社保卡</div>
+              <div class="card-item" @click="onSelect('3')"><img src="@/assets/images/rmb.png" alt="">现金</div>
+              <div class="card-item" @click="onSelect('4')"><img src="@/assets/images/zhifubao.png" alt="">支付宝</div>
+              <div class="card-item" @click="onSelect('5')"><img src="@/assets/images/wx.png" alt="">微信</div>
+              <div class="card-item" @click="onSelect('6')"><img src="@/assets/images/pos.png" alt="">POS收银</div>
+            </div>
+            <div class="back" @click="onList">
+              <img src="@/assets/images/ic-back.png" alt="">
+              <span>返回列表</span>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="right-bg" v-show="isShow == '' || isShow == '1'">
+              <img src="@/assets/images/ic-pay.png" alt="">
+              <span class="pay-text">请选择支付方式</span>
+            </div>
+            <div class="chuxu" v-show="isShow === '1'">
+              <div class="pay-type" style="color: #333; font-size: 16px">选择银行储蓄卡</div>
+              <div class="selece-bank">
+                <div class="bank-list">
+                  <div class="item">
+                    <img src="@/assets/images/guangzhou.png" alt="">
+                    <span>广州银行</span>
+                  </div>
+                  <el-radio v-model="radio" @click="showCode"></el-radio>
+                </div>
+                <div class="bank-list">
+                  <div class="item">
+                    <img src="@/assets/images/huishang.png" alt="">
+                    <span>徽商银行</span>
+                  </div>
+                  <el-radio v-model="radio"></el-radio>
+                </div>
+                <div class="bank-list">
+                  <div class="item">
+                    <img src="@/assets/images/guizhou.png" alt="">
+                    <span>贵州银行</span>
+                  </div>
+                  <el-radio v-model="radio"></el-radio>
+                </div>
+                <div class="bank-list">
+                  <div class="item">
+                    <img src="@/assets/images/pingan.png" alt="">
+                    <span>平安银行</span>
+                  </div>
+                  <el-radio v-model="radio"></el-radio>
+                </div>
+              </div>
+            </div>
+            <div class="xianjin" v-show="isShow === '3'">
+              <div class="num-item">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>￥10</span>
+              </div>
+              <div class="num-item">
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>￥20</span>
+              </div>
+              <div class="num-item">
+                <span>7</span>
+                <span>8</span>
+                <span>9</span>
+                <span>￥50</span>
+              </div>
+              <div class="num-item">
+                <span>0</span>
+                <span>00</span>
+                <span>.</span>
+                <span>￥100</span>
+              </div>
+              <div class="num-item">
+                <span><img src="@/assets/images/del.png" alt=""></span>
+                <span style="font-size: 22px; letter-spacing: 2px">清空</span>
+                <!-- <span></span> -->
+                <span style="width: 56%; color: #fff; background:#438AFE; font-size: 22px; letter-spacing: 2px">结算</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 扫码弹窗 -->
+      <div class="dialog-scan" v-show="isShowScan">
+        <!-- 扫用户付款码 -->
+        <div class="pay-code" v-if="!isShowCreateCode">
+          <img src="@/assets/images/scan.png" alt="" @click="onPaySuccess">
+          <p>请扫描顾客广州银行APP页面的付款码</p>
+          <div class="pay-btn">
+            <button @click="cancelPay">取消支付</button>
+            <button @click="createCode">生成收款二维码</button>
+          </div>
+        </div>
+        <!-- 生成收款码 -->
+        <div class="create-code" v-if="isShowCreateCode" @click="onPaySuccess">
+          <img src="@/assets/images/code.png" alt="">
+          <p>请顾客使用广州银行APP页面扫码付款</p>
+        </div>
+      </div>
+      <!-- 支付完成 -->
+      <div class="pay-success" v-show="!isPay">
+        <div class="pay-success-left">
+          <div class="text-order">
+            <span>订单编号：</span>
+            <span>支付方式：</span>
+            <span>应收金额：</span>
+          </div>
+          <div class="text-order text-right">
+            <span>201210602110215461</span>
+            <span>储蓄卡</span>
+            <span>￥120.00</span>
+          </div>
+        </div>
+        <div class="pay-success-right">
+          <div>
+            <div class="success-tip">
+              <img src="@/assets/images/success.png" alt="">
+              <p class="text-success">支付成功</p>
+            </div>
+            <div class="order-price">
+              <p class="total-price">￥<span>120.00</span></p>
+              <p>实收金额：120.00&nbsp;&nbsp;&nbsp;&nbsp;找零金额：<span style="color: #438AFE;">0.00</span></p>
+            </div>
+          </div>
+          <div class="success-btn">
+            <button class="print">打印小票</button>
+            <button @click="onList">返回列表</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
  
@@ -148,7 +346,17 @@ export default {
           date1: '',
           date2: ''
       },
-      value: undefined
+      value: undefined,
+      radio: '1',
+      radio2: 1,
+      radio3: 2,
+      isDialog: false,
+      isShow: '',
+      isShowActivity: false, // 是否显示活动弹窗
+      isPayMoney: false, // 是否显示付款页面
+      isShowCreateCode: false, // 是否生成收款码
+      isShowScan: false, // 是否显示扫用户付款码页面
+      isPay: true, // 是否支付成功
     };
   },
   created() {
@@ -240,6 +448,49 @@ export default {
         }
       })
     },
+    showCode(){
+      this.isShowScan = true
+      this.isShow = false
+      this.isShowCreateCode = false
+    },
+    // 生成收款码
+    createCode(){
+      this.isShowCreateCode = true
+    },
+    // 取消支付
+    cancelPay(){
+      this.isShowScan = false
+    },
+    // 启动支付
+    onPay(){
+      this.isDialog = true
+      this.isShowActivity = true
+    },
+    // 确定购买
+    onSure(){
+      this.isPayMoney = true
+      this.isShowActivity = false
+    },
+    onCancel(){
+      this.isDialog = false
+    },
+    // 返回列表
+    onList(){
+      this.isDialog = false
+      this.isPayMoney = false
+      this.isShow = false
+      this.isPay = true
+    },
+    // 支付成功
+    onPaySuccess(){
+      this.isPay = false
+      this.isShowScan = false
+      this.isPayMoney = false
+    },
+    // 选择支付方式
+    onSelect(val){
+      this.isShow = val
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -266,5 +517,388 @@ export default {
  
 <style lang="scss" scoped>
 @import '@/assets/css/reset.scss';
-@import '@/assets/css/image1'
+@import '@/assets/css/image1';
+.pay-dialog{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dialog-content{
+  width: 680px;
+  .dialog-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #438AFE;
+  color: #fff;
+  letter-spacing: 6px;
+  font-weight: 600;
+  img{
+    width: 20px;
+    height: 20px;
+  }
+}
+.dialog-body{
+  padding: 20px 30px 30px;
+  background: #fff;
+  font-size: 16px;
+  p{
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .activity{
+    display: flex;
+    justify-content: space-between;
+  }
+  .activity-item{
+    display: flex;
+    margin-right: 20px;
+    width: 50%;
+    background: #FAFBFF;
+    border-radius: 4px;
+    border: 1px solid #DEDEDE;
+    span{
+      display: inline-block;
+      padding-top: 16px;
+    }
+    span:last-child{
+      padding-bottom: 16px;
+    }
+    .item-left{
+      display: flex;
+      flex-flow: column;
+      padding-left: 16px;
+      color: #384F71;
+    }
+    .item-right{
+      color: #666;
+      display: flex;
+      flex-flow: column;
+      margin-left: 10px;
+    }
+  }
+  .activity-item:last-child{
+    margin-right: 0;
+  }
+}
+.dialog-bottom{
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  background: #F8F8F8;
+  border-top: 1px solid #DEDEDE;
+  botton{
+    padding: 12px 46px;
+    background: #FAFCFE;
+    border-radius: 2px;
+    border: 1px solid #BBCBDF;
+    color: #333;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+  .sure{
+    margin-right: 24px;
+    background: #438AFE;
+    border: 1px solid #438AFE;
+    color: #fff;
+  }
+}
+}
+.dialog-pay-type{
+  width: 930px;
+  .dialog-top{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    background: #fff;
+    color: #333;
+    font-size: 18px;
+    div{
+      border-right: 1px solid #E7E9EC;
+      padding-right: 70px;
+    }
+    div:last-child{
+      border-right: 0;
+      padding-right: 0;
+    }
+    .price{
+      span{
+        font-size: 32px;
+      }
+    }
+  }
+  .dialog-body{
+    display: flex;
+    margin-top: 10px;
+    .item-left{
+      width: 200px;
+      margin-right: 10px;
+      .back{
+        margin-top: 10px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        img{
+          margin-right: 10px;
+          padding: 16px 0;
+        }
+      }
+    }
+    .pay-type{
+      padding: 15px 0;
+      background: #F6F7FB;
+      text-align: center;
+      font-size: 18px;
+      color: #384F71;
+    }
+    .card{
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      .card-item{
+        display: flex;
+        align-items: center;
+        padding: 20px 30px;
+        border-top: 1px solid #E7E9EC;
+        font-size: 16px;
+        cursor: pointer;
+        img{
+          margin-right: 8px;
+        }
+      }
+      .card-item:first-child{
+        border-top: none;
+      }
+    }
+    .item-right{
+      position: relative;
+      width: 100%;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      .right-bg{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      .pay-text{
+        margin-top: 12px;
+        font-size: 20px;
+        color: #666;
+      }
+    }
+  }
+}
+.chuxu{
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  font-size: 16px;
+  box-shadow: 0px 0px 8px 0px rgba(2, 9, 25, 0.2);
+  .bank-list{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid #E7E9EC;
+      .item span{
+        margin-top: 0;
+        font-size: 16px;
+      }
+      .item{
+        display: flex;
+        align-items: center;
+        margin-right: 40px;
+        img{
+          margin-right: 10px;
+        }
+      }
+      
+    }
+}
+.xianjin{
+  width: 100%;
+  height: 100%;
+  padding: 26px;
+  .num-item{
+    height: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    span{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 22%;
+      height: 100%;
+      margin-right: 10px;
+      background: #F5F9FC;
+      box-shadow: 0px 2px 4px rgba(4, 24, 39, 0.12);
+      font-size: 30px;
+    }
+    span:last-child{
+      width: 34%;
+      margin-right: 0;
+      border-radius: 6px;
+      color: #FCB51A;
+    }
+  }
+}
+.dialog-scan{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  .pay-code{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    p{
+      padding: 20px 0 40px 0;
+      font-size: 20px;
+    }
+    button{
+      width: 170px;
+      height: 50px;
+      line-height: 50px;
+      background: transparent;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      outline: none;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:last-child{
+      margin-left: 20px;
+      background: #438AFE;
+      border: 1px solid #438AFE;
+    }
+  }
+  .create-code{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    font-size: 20px;
+    img{
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+  }
+}
+.pay-success{
+  height: 620px;
+  display: flex;
+  justify-content: space-between;
+  .pay-success-left{
+    display: flex;
+    background: #fff;
+    height: 100%;
+    padding: 10px;
+    font-size: 14px;
+    .text-order{
+      display: flex;
+      flex-direction: column;
+      span{
+        padding: 10px 0;
+      }
+    }
+    .text-right{
+      color: #384F71;
+    }
+  }
+  .pay-success-right{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 650px;
+    margin-left: 10px;
+    padding: 60px 0;
+    background: #fff;
+    font-size: 16px;
+    color: #666;
+    .success-tip{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    img{
+      width: 68px;
+      height: 68px;
+      margin-bottom: 10px;
+    }
+    .text-success{
+      color: #3DC637;
+    }
+    .order-price{
+      .total-price{
+        margin-bottom: 12px;
+        text-align: center;
+        color: #FB2915;
+        span{
+          font-size: 40px;
+        }
+      }
+    }
+    .success-btn{
+      display: flex;
+      flex-direction: column;
+      button{
+        width: 450px;
+        padding: 15px 0;
+        background: #FAFCFE;
+        border: 1px solid #BBCBDF;
+        border-radius: 4px;
+        font-size: 16px;
+        outline: none;
+        cursor: pointer;
+      }
+      .print{
+        margin-bottom: 20px;
+        background: #438AFE;
+        border: 1px solid #438AFE;
+        color: #fff;
+      }
+    }
+  }
+}
+.dialog-content .dialog-body .activity-item .el-radio-group span{
+  padding: 0;
+}
+.dialog-content .dialog-body .activity-item .el-radio-group .el-radio__label{
+  padding-left: 8px;
+}
+.dialog-content .dialog-body .activity-item .el-radio-group .el-radio{
+  padding-left: 20px;
+}
+.dialog-content .dialog-body .activity-item .el-radio-group .el-radio:first-child{
+  padding-left: 0;
+}
 </style>

@@ -577,6 +577,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 component: () =>
                   import("@/views/userlv/clerk/sale/saleStatistics.vue"),
               },
+              {
+                title: "已售出订单详情",
+                path: "/clerk/sale/saleOrderDetail",
+                roles: ["clerksale"],
+                component: () => import("@/views/userlv/clerk/sale/saleOrderDetail.vue"),
+              },
             ],
           },
           {
@@ -590,6 +596,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 path: "/clerk/bank/nobank",
                 roles: ["clerkbank"],
                 component: () => import("@/views/userlv/clerk/bank/nobank.vue"),
+              },
+              {
+                title: "申请开户",
+                path: "/clerk/bank/openAccount",
+                roles: ["clerkbank"],
+                component: () =>
+                  import("@/views/userlv/clerk/bank/openAccount.vue"),
               },
               {
                 title: "待开户统计",
@@ -607,20 +620,20 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
             ],
           },
           {
-            title: "银行开户",
+            title: "保单推送",
             path: "/clerk/insurance",
             roles: ["clerkguarantee"],
             component: BlankLayout,
             children: [
               {
-                title: "待开户",
+                title: "待推送",
                 path: "/clerk/insurance/noguarantee",
                 roles: ["clerkguarantee"],
                 component: () =>
                   import("@/views/userlv/clerk/insurance/noguarantee.vue"),
               },
               {
-                title: "已开户",
+                title: "已推送",
                 path: "/clerk/insurance/guarantee",
                 roles: ["clerkguarantee"],
                 component: () =>

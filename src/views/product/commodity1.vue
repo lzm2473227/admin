@@ -4,7 +4,7 @@
       <div class="left">
         <div class="print" @click="centerDialogVisible = true"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">添加类别</span></div>
         <div class="print" @click="edit"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑类别</span></div>
-        <div class="print" @click="del"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除类别</span></div>
+        <div class="print" @click="del()"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除类别</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -63,12 +63,6 @@
     >
     <el-form :model="ruleForm">
       <el-form-item label="上级类别：" style="display:flex">
-        <!-- <el-select v-model="categoriesCatalog.id" placeholder="请选择上级类别">
-          <el-option v-for="item in categoriesCatalog" :key="item.id" 
-            :label="item.categoryName" 
-            :value="item.categoryName">
-          </el-option>  
-        </el-select> -->
         <el-cascader
             v-model="value"
             clearable 
@@ -131,9 +125,11 @@ export default {
         sort:"",
         sortName:"",
         categoryImage:"",//图片
-        parenId:"23"
+        parenId:"24++"
       },
       // options:[],
+      // categoryId:""
+      multipleSelection:[]
     };
   },
   components: {
@@ -144,6 +140,65 @@ export default {
     this.threedirectories()
   },
   methods:{
+    //获取表格的所有值
+    handleSelectionChange(val){
+      this.multipleSelection = val
+      console.log(this.multipleSelection);
+      console.log(val);
+    },
+    // 删除类别   
+    del(){
+      let id = []
+      let ip = []
+      let im = []
+      let t = this
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          id.push(item.bid);
+        }
+      )
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          ip.push(item.pid);
+        }
+      )
+      _.forEach(
+        JSON.parse(JSON.stringify(this.multipleSelection)),
+        function (item, key) {
+          im.push(item.mid);
+        }
+      )
+      id = id.toString()
+      ip = ip.toString()
+      im = im.toString()
+       
+      let params = {
+        id: id ? id : ip ?ip : im,
+      };
+      httpreques(
+        "post",
+        params,
+        "/realbrand-management-service/Classify/DeleteClassify"
+      ).then((res) => {
+        if (res.data.code == "SUCCESS") {
+          t.$message({
+            message: "删除成功",
+            type: "success",
+          });
+          console.log(res);
+          console.log(this.multipleSelection);
+          console.log(id);
+          console.log(ip);
+          console.log(im);
+          t.getdata();
+        } else {
+          t.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 类别列表
     getdata() {
       let t = this;
       httpreques(
@@ -169,6 +224,7 @@ export default {
         }
       });
     },
+    // 新增类别
     add() {
       let params = {
         categoryName: this.ruleForm.sortName, //分类名字
@@ -185,7 +241,7 @@ export default {
           //  this.ruleForm.parenId =
           console.log(res.data);
           console.log(parenId);
-          // this.cancelbtn();
+          this.centerDialogVisible = false
         } else {
           //接口错误处理
           this.$message.error(res.data.msg);
@@ -196,16 +252,15 @@ export default {
     threedirectories() {
       httpreques(
         "post",{},"/realbrand-management-service/Classify/queryCategoriesCatalogApi"
-      ).then((result) => {
-        console.log(result.data.data);
-        console.log(result.data.data.categoriesCatalog);
-        
-        if (result.data.code == "SUCCESS") {
-          this.categoriesCatalog = result.data.data.categoriesCatalog;
+      ).then((res) => {
+        // console.log(res.data.data);
+        // console.log(res.data.data.categoriesCatalog);
+        if (res.data.code === "SUCCESS") {
+          this.categoriesCatalog = res.data.data.categoriesCatalog;
           this.getTreeData(this.categoriesCatalog)
           
         } else {
-          this.$message.error(result.data.msg);
+          this.$message.error(res.data.msg);
         }
       });
     },

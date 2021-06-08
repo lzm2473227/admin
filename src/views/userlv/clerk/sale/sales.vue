@@ -42,7 +42,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="time" label="售出时间" align="center"  sortable width="160" ></el-table-column>
-        <el-table-column prop="time" label="订单号" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column label="订单号" align="center"  sortable width="160" >
+          <template v-slot="scope">
+            <span @click="onDetail(scope.row)" class="table-button">{{ scope.row.dealNumber }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="time" label="订单类型" align="center"  sortable width="130" ></el-table-column>
         <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="173" ></el-table-column>
       </el-table>
@@ -51,16 +55,16 @@
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div>已售出单品编码数量：<span>{{sum}}</span></div>
-      <div>已售出商品种类：<span>{{sku}}</span></div>
-      <div>已售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
+      <div class="statistic-item1">已售出单品编码数量：<span>{{sum}}</span></div>
+      <div class="statistic-item2">已售出商品种类：<span>{{sku}}</span></div>
+      <div class="statistic-item3">已售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="商品名称:" prop="name" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
-        </el-form-item>
+        </div>
         <el-form-item label="统计时间:">
           <div class="date-status">
             <span

@@ -39,7 +39,7 @@ export default {
         },
         {
           id: 2,
-          label: "门店侧",
+          label: "企业侧",
           key: "store",
         },
         {

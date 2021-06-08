@@ -6,15 +6,16 @@
 }
 
 .tab-title {
-    height: 40px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
-    background-image: linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -moz-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -mos-linear-gradient(#F5FAFD, #E0EDF6);
-    border: 1px solid #D0DDE5;
+    background: #F6F7FB;
+    // background-image: linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -moz-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -mos-linear-gradient(#F5FAFD, #E0EDF6);
+    border: 1px solid #EAEBF0;
     padding: 0 15px;
     margin-bottom: 10px;
     .left {
@@ -28,9 +29,17 @@
             align-items: center;
         }
         .print {
+            height: 30px;
+            line-height: 30px;
+            padding: 0 8px;
+            margin-right: 18px;
+            background: #fff;
+            border: 1px solid #fff;
+            border-radius: 2px;
             cursor: pointer;
             display: flex;
             align-items: center;
+            box-shadow: 0px 0px 4px rgba(5, 17, 42, 0.2);
         }
     }
     .right {
@@ -43,38 +52,68 @@
 }
 
 .tab-body {
-    height: 630px;
+    height: 600px;
     background: #fff;
-    border-top: 1px solid #D0DDE5;
     border-bottom: 0;
 }
 
 .bot {
-    background: #E8F1FB;
+    background-image: linear-gradient(#F6F7F9 0%, #E7E9EC 100%);
+    background-image: -webkit-linear-gradient(#F6F7F9 0%, #E7E9EC 100%);
+    background-image: -o-linear-gradient(#F6F7F9 0%, #E7E9EC 100%);
+    background-image: -moz-linear-gradient(#F6F7F9 0%, #E7E9EC 100%);
+    background-image: -mos-linear-gradient(#F6F7F9 0%, #E7E9EC 100%);
     padding: 10px 0;
-    border: 1px solid #D8E8F6;
+    border: 1px solid #E0E4E6;
     border-bottom: none;
 }
 
 .total {
-    height: 48px;
-    background: #F1FFF1;
-    border: 1px solid #CFE8CF;
+    padding: 24px 12px 0 12px;
     color: #333333;
-    font-size: 14px;
+    border-left: 1px solid #EAEBF0;
+    border-right: 1px solid #EAEBF0;
+    font-size: 16px;
     display: flex;
     justify-content: space-around;
     align-items: center;
     div {
+        height: 50px;
         display: flex;
+        justify-content: center;
         align-items: center;
+        width: 100%;
+        margin-right: 20px;
+        border-radius: 2px;
         span {
-            font-size: 30px;
-            color: #70BB61;
+            font-size: 24px;
         }
         .small {
             font-size: 16px;
         }
+    }
+    div:last-child {
+        margin-right: 0;
+    }
+    .statistic-item1 {
+        background: #F9FBFE;
+        border: 1px solid #3A75E9;
+        color: #3A75E9;
+    }
+    .statistic-item2 {
+        background: #F8FFFB;
+        border: 1px solid #4FC886;
+        color: #4FC886;
+    }
+    .statistic-item3 {
+        background: #FFFBF8;
+        border: 1px solid #FF8F49;
+        color: #FF8F49;
+    }
+    .statistic-item4 {
+        background: #F6F9FE;
+        border: 1px solid #57CBF5;
+        color: #01A7DF;
     }
 }
 
@@ -183,7 +222,7 @@
 /deep/ {
     .el-table th.is-leaf,
     .el-table td {
-        border: 1px solid #E8F1FB;
+        border: 1px solid #EAEBF0;
     }
 }
 
@@ -256,15 +295,16 @@
 }
 
 /deep/.tab-body .el-table thead tr .cell {
-    color: #274DAB;
+    color: #212F3F;
 }
 
 /deep/.el-table th {
-    background-image: linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -moz-linear-gradient(#F5FAFD, #E0EDF6);
-    background-image: -mos-linear-gradient(#F5FAFD, #E0EDF6);
+    background: #F6F7FB;
+    // background-image: linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -webkit-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -o-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -moz-linear-gradient(#F5FAFD, #E0EDF6);
+    // background-image: -mos-linear-gradient(#F5FAFD, #E0EDF6);
 }
 
 /deep/.el-form-item--small .el-form-item__content {
@@ -291,6 +331,11 @@
     width: 15%;
 }
 
+/deep/.el-table--small th,
+.el-table--small td {
+    padding: 5px 0;
+}
+
 input:focus {
     border-color: #409eff;
 }
@@ -300,10 +345,29 @@ input:focus {
 }
 
 .inp-bot {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
     background: #fff;
-    padding: 25px 0;
-    border: 1px solid#D0DDE5;
+    padding: 0 10px 10px 10px;
+    border: 1px solid#EAEBF0;
     border-top: none;
+}
+
+/deep/.inp-bot .el-form-item--small.el-form-item {
+    margin-bottom: 0;
+}
+
+.search-item {
+    position: relative;
+    display: inline-block;
+    img {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
 }
 
 // /deep/.el-table__body{
@@ -351,21 +415,7 @@ input:focus {
 
 .icon {
     height: 18px;
-    padding-left: 14px;
     padding-right: 4px;
-}
-
-.print:first-child .icon {
-    padding-left: 0;
-}
-
-.axis {
-    padding-right: 14px;
-    border-right: 1px solid #B8D0F2;
-}
-
-.print:last-child .axis {
-    border-right: 0;
 }
 
 .name-search {
@@ -386,12 +436,13 @@ input:focus {
     font-size: 12px;
     .table-title {
         width: 599px;
-        height: 36px;
-        line-height: 36px;
-        background: #288DFF;
+        height: 38px;
+        line-height: 38px;
+        background: #EFF6FF;
         text-align: center;
         font-size: 14px;
-        color: #fff;
+        color: #3A4E64;
+        border-top: 4px solid #4E83FF;
     }
     table {
         border-collapse: collapse;
@@ -409,7 +460,8 @@ input:focus {
             width: 90px;
             padding: 0 4px;
             text-align: center;
-            background: #EFF6FA;
+            background: #F6F7FB;
+            color: #384F71;
         }
         .table-right {
             width: 208px;
