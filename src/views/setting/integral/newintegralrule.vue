@@ -30,17 +30,17 @@
         <div class="addintegralchild">
           <div class="addintegralrule"><p>规则编号</p>
           <div class="system">
-            <p><input class="inp" type="text"></p><p>系统生成</p>
+            <p><input class="inp" type="text" v-model="ruleId"></p><p>系统生成</p>
           </div>
           <p>规则名称</p><p>注册得积分</p>
           </div>
-          <div class="addintegraltime"><p>规则描述</p><p>消费者注册后,</p>得<div><input type="text"></div>积分
+          <div class="addintegraltime"><p>规则描述</p><p>消费者注册后,</p>得<div><input type="text" v-model="points"></div>积分
           </div>  
         </div>
         <div class="addintegralchild">
           <div class="addintegralrule"><p>规则编号</p>
           <div class="system">
-            <p><input class="inp" type="text"></p><p>系统生成</p>
+            <p><input class="inp" type="text" ></p><p>系统生成</p>
           </div>
           <p>规则名称</p><p>登录签到得积分</p>
           </div>
@@ -101,6 +101,11 @@ export default {
           value: '选项2',
           label: '第2年'
       }],
+      ruleId:["1111"],
+      money:[10],
+      points:[1],
+      ruleDescribe:["adghagdh"],
+      validityPeriod:1
     };
   },
   mounted() {
@@ -110,9 +115,31 @@ export default {
     toBackList(){
       this.$router.go(-1)
     },
-    add(){
-      
-    }
+    // 新增类别
+    add() {
+      let params = {
+        points: this.points,
+        money: this.money,
+        ruleDescribe: this.ruleDescribe,
+        ruleId: this.ruleId,
+        validityPeriod: this.validityPeriod,
+        // parenId: this.ruleForm.parenId
+      };
+      httpreques("post", params,"/realbrand-management-service/IntegralMgt/UpdateIntegralRule")
+      .then((res) => {
+        console.log(res.data.data);
+        if (res.data.code == "SUCCESS") {
+          console.log(res.data.data);
+          this.$message({
+            message:"添加成功",
+            type: "success",
+          });
+        } else {
+          //接口错误处理
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
   }
 };
 </script>

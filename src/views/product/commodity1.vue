@@ -125,7 +125,7 @@ export default {
         sort:"",
         sortName:"",
         categoryImage:"",//图片
-        parenId:"24++"
+        parenId: "3"
       },
       // options:[],
       // categoryId:""
@@ -238,10 +238,8 @@ export default {
             message:"添加成功",
             type: "success",
           });
-          //  this.ruleForm.parenId =
-          console.log(res.data);
-          console.log(parenId);
           this.centerDialogVisible = false
+          this.getdata()
         } else {
           //接口错误处理
           this.$message.error(res.data.msg);
@@ -254,7 +252,7 @@ export default {
         "post",{},"/realbrand-management-service/Classify/queryCategoriesCatalogApi"
       ).then((res) => {
         // console.log(res.data.data);
-        // console.log(res.data.data.categoriesCatalog);
+        console.log(res.data.data.categoriesCatalog);
         if (res.data.code === "SUCCESS") {
           this.categoriesCatalog = res.data.data.categoriesCatalog;
           this.getTreeData(this.categoriesCatalog)

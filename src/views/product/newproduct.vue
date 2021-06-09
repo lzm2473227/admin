@@ -208,6 +208,8 @@ export default {
   name: "Newproduct",
   data() {
     return {
+       i:[],
+       item:[],
       form: {
         barcode: "", //条形码
         brandName: "", //品牌名称
@@ -278,52 +280,35 @@ export default {
       let ip = []
       let ib = []
       let id = []
-      let index
+      
       _.forEach(
         JSON.parse(JSON.stringify(this.categoriesCatalog)),
         function (item, key) {
           ip.push(item.subItemList);
         }
       )
-       ip = {...ip };
-      // function add(index){
-      //   // let index
-      //   for(let i=0; i++ ; i<ip.length){
-      //     index = ip[i]
-      // }
-      // return index
-      // }
-      // add(index)
-      
-      
-      _.forEach(
-        JSON.parse(JSON.stringify(ip)),
-        function (items, key) {
-          console.log(items);
-          function add(items, key){
-            console.log(itemss);
-            ib.push(items.subItemList)
-            return ib
+
+      for(var i =0;i<ip.length;i++){
+          _.forEach(
+          JSON.parse(JSON.stringify(ip[i])),
+          function (items, key) {
+            // console.log(items);
+              ib.push(items.subItemList) 
           }
-          add()
-        }
-      )
-
-      // _.forEach(
-      //   JSON.parse(JSON.stringify(ip[i])),
-      //   function (items, key) {
-      //     ib.push(items.subItemList);
-      //   }
-      // )  
-
-      // ib = {...ib };
-      // _.forEach(
-      //   JSON.parse(JSON.stringify(ib)),
-      //   function (itemss, key) {
-      //     id.push(itemss.categoryId);
-      //   }
-      // )
-      id = id.toString()
+        )
+      }
+      console.log(ib);
+      for(var a =0;a<ib.length;a++){
+          _.forEach(
+          JSON.parse(JSON.stringify(ib[a])),
+          function (items, key) {
+            // console.log(items);
+              id.push(items.categoryId) 
+          }
+        )
+      }
+        
+      // id = id.toString()
       let params = {
         barcode: this.form.barcode, //条形码
         brandName: this.form.brandName, //品牌名称
@@ -334,22 +319,15 @@ export default {
         price: this.form.price, //销售价格/默认为0
         specsParameter: this.form.specsParameter, // 规格参数
         commodityCode: this.form.commodityCode, // 单品编码
-        categoryId:id,
+        categoryId:id[0],
       };
 
       let url = this.$route.query.barcode
         ? "/realbrand-management-service/CommodityMgt/UpdateBarcode"
         : "/realbrand-management-service/CommodityMgt/InsertCommodity";
-      console.log(params);
+      // console.log(params);
       // console.log(this.categoriesCatalog);
-          // console.log(mid);
-          console.log(ip);
-          console.log(index);
-          // console.log(ip[i]);
-          console.log(ib);
-          // console.log(id);
-          // console.log(categoryId);
-          // console.log(res);
+        console.log(id);
 
       httpreques("post", params, url).then((res) => {
         if (res.data.code == "SUCCESS") {
