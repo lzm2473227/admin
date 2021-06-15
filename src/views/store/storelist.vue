@@ -2,8 +2,6 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增企业</span></div>
-        <div class="print"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除企业</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -13,47 +11,47 @@
         </div>
       </div>
     </div>
-    <div class="storelist">
+    <div class="tab-body">
       <el-table
-        border
-        :data="enterpriseItemList"
-        stripe="true"
-        header-cell-style="background:#f6faff"
-        style="width: 100%"
-         :default-sort="{ prop: 'index', order: 'descending' }" 
+      :row-class-name="tableRowClassName"
+    
+      ref="singleTable"
+      :data="tableData"
+      style="width: 100%"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="index" label="序号" align="center" width="50">
-        </el-table-column>
-        <el-table-column prop="enterpriseName" align="center" label="企业名称" width="150">
-        </el-table-column>
-        <el-table-column prop="industryName" align="center" label="所属行业" width="150">
-        </el-table-column>
-        <el-table-column prop="idNumber" align="center" width="250" label="企业账号">   
-        </el-table-column>
-        <el-table-column prop="city" align="center" label="企业地址" width="150">
-        </el-table-column>
-        <el-table-column prop="businessLicense" align="center" label="营业执照" width="150">
-        </el-table-column>
-        <el-table-column prop="legalPerson" align="center" label="联系人" width="150">
-        </el-table-column>
-        <el-table-column prop="userMobile" align="center" label="联系人手机号" width="150">
-        </el-table-column>
-        <el-table-column prop="registertime" align="center" label="注册时间" width="250">
-        </el-table-column>
-
-        <el-table-column label="操作" align="center" width="150">
-          <div class="operation">
-            <div class="operation-title">重置密码</div>
-          </div>
-        </el-table-column>
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="130"></el-table-column>
+        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="140"></el-table-column>
+        <el-table-column prop="brandName" label="商品规格" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="品牌" sortable width="100"></el-table-column>
+        <el-table-column prop="manufacturer" label="门店" sortable width="120"></el-table-column>
+        <el-table-column prop="manufacturer" label="门店类型" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="进货时间" sortable width="120"></el-table-column>
+        <el-table-column prop="manufacturer" label="消费者电话" sortable width="160"></el-table-column>
+        <el-table-column prop="manufacturer" label="盘货员" sortable width="140"></el-table-column>
+        <el-table-column prop="time" label="盘货时间" align="center"  sortable width="140" ></el-table-column>
       </el-table>
-      <div class="bot">
-        <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
-      </div>
-      <div class="inp-bot">
+    </div>
+    <div class="bot">
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
+    </div>
+    <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="单位名称" prop="name" class="name-search">
           <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="系统用户类别">
+          <el-select v-model="ruleForm.region">
+          <el-option label="经销商" value="shanghai"></el-option>
+          <el-option label="物流配送" value="beijing"></el-option>
+          <el-option label="银行" value="shenzhen"></el-option>
+        </el-select>
         </el-form-item>
         <el-form-item>
           <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
@@ -61,80 +59,143 @@
         </el-form-item>
       </el-form>
     </div>
-    </div>
   </div>
 </template>
+
 <script>
-import _ from "lodash";
 import Page from '@/components/Pagination/page.vue'
-import ListTile from "../../layouts/IndexLayout/components/ListTitle";
-import httpreques from "../../utils/httpreques";
-import moment from "moment";
+import httpreques from '@/utils/httpreques';
 export default {
+  name: "Userlist",
+  components: {
+    Page
+  },
   data() {
     return {
-      enterpriseItemList: [],
-      total:0,
-      pageSize:10,
-      pageNum:1,
-      ruleForm:{
-        name:"",
-      }
+      total: 0,
+      pageSize: 15,
+      pageNum: 1,
+      tabs: ['当日', '当周', '当月'],
+      active: 0,
+      // centerDialogVisible: false,
+      textarea: '',
+      tabledata: [],
+      totalNum: 0,
+      ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+      },
     };
   },
-  created() {
-    this.ObtainenterpriseItemList();
-  },
   methods: {
-
-    async ObtainenterpriseItemList() {
-
-      let params =  {
-          "idNumber": '1111',
-          "pageNum": this.pageNum,
-          "pageSize": this.pageSize,
-        };
-      const { data: res } = await httpreques(
-        "post",
-         params,
-        "/realbrand-management-service//EnterpriseMgt/EnterpriseList"
-      );
-      // console.log(res)
-      console.log(params);
-      _.forEach(
-            res.data,
-            function (item, key) {
-              item.registertime = item.registertime?moment(item.registertime).format(
-                "YYYY-MM-DD HH:mm:ss"
-              ):"";
-               item.index = key +1;
-              // item.endTime = moment(item.endTime).format("YYYY-MM-DD HH:mm:ss");
-              console.log(item.registertime)
-            }
-          
-          );
-          this.total = res.total;
-          console.log(res.total)
-      this.enterpriseItemList = res.data;
+    currentchange(val){
+      this.pageNum = val
     },
-
-    scan(){
-      this.$router.push("/storeapproval")
+    //添加class样式
+    tableRowClassName({row, rowIndex}){
+      if (rowIndex === 0) {
+        return 'warning-row';
+      }
+      return '';
     },
-    addyy_store() {
-      this.$router.replace("/storeapproval");
+    formatter(row, column) {
+      return row.address;
     },
-    handleCurrentChange(index){
-            this.pageNum = index;
-            this.ObtainenterpriseItemList()
-    }
+    //选中你选择的条件列表
+    setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+    handleCurrentChange(val) {
+        this.currentRow = val;
+      },
+    // scan(){
+    //   this.centerDialogVisible = true
+    // },
   },
-  components: { ListTile ,Page},
 };
 </script>
+
 <style lang="scss" scoped>
-@import '@/assets/css/reset.scss';
-/deep/.el-pagination.is-background .el-pager li:not(.disabled).active{
-  color:#409eff
+@import '@/assets/css/reset';
+.header {
+  height: 42px;
+  line-height: 44px;
+  background: #ecf3fb;
+  border: 1px solid #b8d0f2;
+  font-size: 14px;
+  font-family: Source Han Sans CN;
+  font-weight: 400;
+  color: #222222;
+  ul {
+    display: flex;
+    height: 44px;
+    line-height: 44px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    li {
+      width: 112px;
+      height: 16px;
+      line-height: 16px;
+      list-style: none;
+      text-align: center;
+      border-right: 1px solid #99bbe8;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      // align-items: center;
+      img {
+        margin-right: 4px;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+.main {
+  border: 1px solid #cccccc;
+  padding: 28px;
+  box-sizing: border-box;
+  margin-top: 16px;
+}
+table {
+  border: 1px solid #b8d0f2;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: Source Han Sans CN;
+  font-weight: 400;
+}
+td {
+  padding-left: 20px;
+}
+.bg {
+  background: #ecf3fb;
+}
+.clerk-imgs {
+  display: flex;
+}
+.imgs-title {
+  display: flex;
+  flex-direction: column;
+}
+/deep/.el-form-item--small.el-form-item {
+  margin-bottom: 0px;
+}
+/deep/.el-input__inner {
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: none;
+  color: #333;
+  font-size: 14px;
+  font-family: Source Han Sans CN;
+  border: 1px solid #ddd !important;
 }
 </style>

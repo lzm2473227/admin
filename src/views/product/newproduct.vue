@@ -279,36 +279,52 @@ export default {
     addcomm() {
       let ip = []
       let ib = []
+      let io = []
       let id = []
-      
+
       _.forEach(
         JSON.parse(JSON.stringify(this.categoriesCatalog)),
         function (item, key) {
           ip.push(item.subItemList);
         }
       )
+    console.log(ip);
 
       for(var i =0;i<ip.length;i++){
           _.forEach(
           JSON.parse(JSON.stringify(ip[i])),
           function (items, key) {
-            // console.log(items);
+            console.log(items);
+            // if(items!=undefined){
               ib.push(items.subItemList) 
+            // }
           }
         )
       }
       console.log(ib);
-      for(var a =0;a<ib.length;a++){
-          _.forEach(
-          JSON.parse(JSON.stringify(ib[a])),
-          function (items, key) {
-            // console.log(items);
-              id.push(items.categoryId) 
-          }
-        )
+
+      _.forEach(
+        JSON.parse(JSON.stringify(ib)),
+        function (items, key) {
+        console.log(items);
+        if(items!=undefined){
+          io.push(items) 
+        }
       }
-        
-      // id = id.toString()
+    )
+
+    for(var a =0;a<io.length;a++){
+        _.forEach(
+        JSON.parse(JSON.stringify(io[a])),
+        function (items, key) {
+          console.log(items);
+            id.push(items.categoryId) 
+        }
+      )
+    }
+    console.log(id[0]);
+
+      id = id.toString()
       let params = {
         barcode: this.form.barcode, //条形码
         brandName: this.form.brandName, //品牌名称
@@ -349,7 +365,7 @@ export default {
         "post",{},"/realbrand-management-service/Classify/queryCategoriesCatalogApi"
       ).then((res) => {
         if (res.data.code === "SUCCESS") {
-          // console.log(res);
+          console.log(res);
           this.categoriesCatalog = res.data.data.categoriesCatalog;
           this.getTreeData(this.categoriesCatalog)
           // console.log(res.data.data.categoriesCatalog);

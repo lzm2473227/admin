@@ -35,56 +35,19 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column
-          prop="barcode"
-          label="商品69编码"
-          align="center"
-          sortable
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="commodityName"
-          label="商品名称"
-          sortable
-          width="240"
-        ></el-table-column>
-        <el-table-column
-          prop="specsParameter"
-          label="规格"
-          width="120"
-        ></el-table-column>
-        <el-table-column
-          prop="a"
-          label="品牌"
-          width="120"
-        ></el-table-column>
-        <el-table-column
-          prop="b"
-          label="生产厂商"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="b"
-          label="商品三级类别"
-          width="180"
-        ></el-table-column>
-        <el-table-column
-          prop="b"
-          label="商品二级类别"
-          width="180"
-        ></el-table-column>
-        <el-table-column
-          prop="b"
-          label="商品一级类别"
-          width="180"
-        ></el-table-column>
+        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" align="center" sortable width="240"></el-table-column>
+        <el-table-column prop="specsParameter" label="规格" width="120"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" width="120"></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂商" width="150"></el-table-column>
+        <el-table-column prop="classifyRsp.b" label="商品三级类别" width="180"></el-table-column>
+        <el-table-column prop="classifyRsp.p" label="商品二级类别" width="180"></el-table-column>
+        <el-table-column prop="classifyRsp.m" label="商品一级类别" width="180"></el-table-column>
         <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
         <el-table-column prop="time" label="图片" align="center" width="150">
-          <template v-slot="scope">
-            <img :src="scope.row.filePath" alt="" style="height: 20px;">
-          </template>
+          <template v-slot="scope"><img :src="scope.row.filePath" alt="" style="height: 20px;"></template>
         </el-table-column>
       </el-table>
     </div>
@@ -158,9 +121,6 @@ export default {
   },
   data() {
     return {
-      total: 0,
-      pageSize: 15,
-      pageNum: 1,
       radio1: "按商品69编码统计",
       centerDialogVisible: false,
       textarea: "",
@@ -173,13 +133,51 @@ export default {
         brand:"",
         category:""
       },
+      total: 0,
+      pageSize: 15,
+      pageNum: 1,
     };
   },
-  created() {
-    
+  mounted() {
+    this.getdata()
   },
   methods: {
-
+    getdata() {
+      let t = this;
+      let params= {
+        // brandName: "",
+        // categoryId: "",
+        // commodityName: "",
+        pageNum: t.pageNum,
+        pageSize: t.pageSize,
+        // price: ""
+      }
+      httpreques(
+        "post",
+         params,
+        "/realbrand-management-service/CommodityMgt/OnSaleCommodityList"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code == "SUCCESS") {
+          _.forEach(res.data.data, function (item, key) {
+            item.index = key + 1; //加入index
+          });
+          t.total = res.data.total;
+          t.pageSize = res.data.pageSize;
+          t.pageNum = res.data.pageNum;
+          t.tabledata = res.data.data;
+          // t.categoryImage = res.data.data.categoryImage;
+          t.tabledata.reverse()
+        } else {
+          this.$message(res.data.msg);
+        }
+      });
+    },
+    //分页
+    changeCurrentPage(val) {
+      this.pageNum = val;
+      this.getdata();
+    },
   }
 };
 </script>

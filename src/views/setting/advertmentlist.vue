@@ -142,7 +142,6 @@ export default {
     },
     deladvertment(id) {
       let t = this;
-
       httpreques(
         "post",
         { id: id },

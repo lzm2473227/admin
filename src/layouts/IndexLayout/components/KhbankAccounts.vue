@@ -25,22 +25,80 @@
 
 <script>
 export default {
-  name:"Khinternalset",
+  name:"Khcommodity",
   props: ["title"],
   data() {
     return {
       showstatus: false,
-      nodekey: "Khinternalset",
+      nodekey: "khcommodity",
       data: [
         {
           id: 1,
-          label: "员工管理",
-          key: "systemsetrole",
+          label: "佣金规则",
+          key: "customer",
+          children:[
+                {
+              id: 1,
+              label: "未设置",
+              key: "commodity1",
+            },
+            {
+              id: 4,
+              label: "已设置",
+              key: "commodity",
+            },
+          ]
         },
         {
           id: 2,
-          label: "岗位管理",
-          key: "systemsetmenu",
+          label: "银行开户",
+          key: "store",
+          children:[
+                {
+              id: 2,
+              label: "未开户",
+              key: "commodity1",
+            },
+            {
+              id: 5,
+              label: "已开户",
+              key: "commodity",
+            },
+          ]
+        },
+        {
+          id: 3,
+          label: "佣金核算",
+          key: "logistics",
+          children:[
+                {
+              id: 3,
+              label: "未核算",
+              key: "commodity1",
+            },
+            {
+              id: 6,
+              label: "已核算",
+              key: "commodity",
+            },
+          ]
+        },
+        {
+          id: 4,
+          label: "佣金拨款",
+          key: "warehouse",
+          children:[
+                {
+              id: 4,
+              label: "已拨款",
+              key: "commodity1",
+            },
+            {
+              id: 7,
+              label: "未拨款",
+              key: "commodity",
+            },
+          ]
         },
       ],
       defaultProps: {
@@ -64,14 +122,16 @@ export default {
         this.$nextTick(() => {
           let key = 0;
           switch (selectmenu.pathname) {
-            case "systemsetrole":
+            case "customer":
               key = 1;
               break;
-            case "systemsetmenu":
+            case "store":
               key = 2;
               break;
-             //预留文件管理
-            default:
+            case "logistics":
+              key = 3;
+              break;
+            case "warehouse":
               key = 4;
               break;
           }
@@ -100,11 +160,19 @@ export default {
       let path = "";
       let pathname = "";
       switch (obj.key) {
-        case "systemsetrole":
-          path = "/systemset/systemsetrole";
+        case "customer":
+          path = "/sysuser/customer";
           break;
-        case "systemsetmenu":
-          path = "/systemset/systemsetmenu";
+        case "store":
+          path = "/sysuser/store";
+          break;
+        case "logistics":
+          path = "/sysuser/logistics";
+          break;
+        case "warehouse":
+          path = "/sysuser/warehouse";
+          break;
+        default:
           break;
       }
       if (path) {

@@ -1,8 +1,8 @@
 <template>
   <div class="tab">
-    <div class="tab-title">
+    <!-- <div class="tab-title">
       <div class="left">
-        <div class="print" @click="$router.push('/systemUser/bank')">
+        <div class="print" @click="$router.push('/systemUser/userlist')">
           <img class="icon" src="../../assets/images/back.png" alt="" /><span class="axis">返回列表</span>
         </div>
         <div class="print" @click="addstore()">
@@ -16,11 +16,8 @@
         </div>
       </div>
       <div class="right"></div>
-    </div>
-    <div class="table-main">
-      <!-- <div class="table-title">
-          <p>新增人员</p>
-        </div> -->
+    </div> -->
+    <!-- <div class="table-main">
       <form action="#">
         <table border="1" class="">
           <tr>
@@ -77,9 +74,9 @@
             </td>
           </tr>
 
-        <tr style="vertical-align: top">
-            <td class="table-left" style="padding-top:28px">门店地址</td>
-            <td class="table-right" colspan="3" style="padding: 6px;height:615px">
+        <tr>
+            <td class="table-left">门店地址</td>
+            <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
                 :options="options"
                 v-model="selectedOptions"
@@ -98,11 +95,64 @@
             </td>
           </tr>
 
+           <tr>
+            <td class="table-left">重置密码</td>
+            <td class="table-right" colspan="3"> 
+              <input
+                style="width:100%;height:40px"
+                type="text"
+                placeholder="请输入新的密码"
+                v-model="ruleForm.g"
+              />
+            </td>
+           
+          </tr>
+
+          <tr style="vertical-align: top;">
+            <td class="table-left" style="padding: 12px;">证件照</td>
+            <td class="table-right" colspan="3" style="padding-top: 12px;">
+              <div style="display: flex; height:368px">
+              <el-upload  
+                action="http://14.29.162.130:6602/image/imageUpload"
+                list-type="picture-card"
+                :on-success="handleAvatarSuccess"
+                :file-list="imgArr" 
+                :on-preview="handlePictureCardPreview"
+                :limit="1"
+              >
+                <template #default >
+                  <div class="imgs-title">
+                    <i class="el-icon-upload"></i>
+                    <div>请上传身份证正面</div> 
+                  </div>
+                </template>
+              </el-upload>
+              <el-upload  
+                action="http://14.29.162.130:6602/image/imageUpload"
+                list-type="picture-card"
+                :on-success="handleAvatarSuccess"
+                :on-preview="handlePictureCardPreview"
+              
+              >
+                <template #default>
+                  <div class="imgs-title" >
+                    <i class="el-icon-upload"></i>
+                    <div>请上传身份证反面</div> 
+                  </div>
+                </template>
+              </el-upload>
+              </div>
+            </td>
+          </tr>
+          <el-dialog v-model="dialogVisible">
+            <img style="width:100%" :src='ruleForm.frontId' alt="">
+          </el-dialog>
         </table>
       </form>
-    </div>
+    </div> -->
   </div>
 </template>
+
 <script>
 import httpreques from "../../utils/httpreques";
 import {
@@ -151,8 +201,8 @@ export default {
     };
   },
   mounted() {
-    // this.getdata();
-    // this.StoreNameList();
+    this.getdata();
+    this.StoreNameList();
   },
   methods: {
     //选择省市区
@@ -163,20 +213,51 @@ export default {
       t.ruleForm.county = CodeToText[value[2]];
     },
     // 图片预览
-    // handlePictureCardPreview(res, file){
-    //   // console.log(file);
-    //   console.log(res);
-    //   this.dialogVisible = true;
-    //   this.ruleForm.frontId = res.response.data;
-    // },
-    // handleAvatarSuccess(res, file) {
-    //   if (res.code === "Success") {
-    //     console.log(res);
-    //     this.dialogImageUrl = res.data;
-    //     this.ruleForm.frontId = res.data;
-    //   }
-    // },
-    
+    handlePictureCardPreview(res, file){
+      // console.log(file);
+      console.log(res);
+      this.dialogVisible = true;
+      this.ruleForm.frontId = res.response.data;
+    },
+    handleAvatarSuccess(res, file) {
+      if (res.code === "Success") {
+        console.log(res);
+        this.dialogImageUrl = res.data;
+        this.ruleForm.frontId = res.data;
+      }
+    },
+    getdata() {
+      let t = this;
+      let idNumber = "";
+      if (t.$route.query.idNumber) {
+        idNumber = t.$route.query.idNumber;
+      }
+      if (idNumber) {
+        let params = {
+          idCard: idNumber // 身份证号
+        };
+        httpreques(
+          "post",
+          params,
+          "/realbrand-management-service/StoreUserMgt/StoreUser"
+        ).then((res) => {
+          console.log(res)
+          if (res.data.code == "SUCCESS") {
+            //对象数据处理
+            let storeobj = res.data.data;
+            storeobj.storetype = storeobj.storeType;
+            delete storeobj.storeType;
+            t.ruleForm = storeobj;
+            this.station = storeobj.station.split(',')
+            this.imgArr.push({url: storeobj.frontId})
+            this.dialogImageUrl = storeobj.frontId;
+          } else {
+            //接口错误处理
+            t.$message.error(res.data.msg);
+          }
+        });
+      }
+    },
     addstore() {
       let params = {
         idNumber: this.ruleForm.idNumber, // 身份证号
@@ -215,6 +296,25 @@ export default {
           }
         });
       }
+    },
+    // 门店名称列表
+    StoreNameList() {
+      httpreques(
+        "post",
+        {
+          pageNum: 1,
+          pageSize: 15,
+          storeName: this.ruleForm.storeName,
+        },
+        "/realbrand-management-service/StoreMgt/StoreNameList"
+      ).then((result) => {
+        // console.log(result);
+        if (result.data.code == "SUCCESS") {
+          this.storeNameItemList = result.data.data.storeNameItemList;
+        } else {
+          this.$message.error(result.data.msg);
+        }
+      });
     },
     station1(val) {
       // this.station = val

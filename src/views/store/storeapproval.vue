@@ -16,30 +16,30 @@
     <div class="table-main">
       <form action="#">
         <div class="table-title">
-          <p>新增企业</p>
+          <p>新增经销商</p>
         </div>
         <table border="1" class="">
           <tr>
-            <td class="table-left">企业名称</td>
+            <td class="table-left">机构代码</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入机构代码" v-model="ruleForm.industryName" />
+            </td>
+            <td class="table-left">单位名称</td>
             <td class="table-right">
               <input type="text" placeholder="请输入企业名称" v-model="ruleForm.enterpriseName" />
             </td>
-            <td class="table-left">所属行业</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入所属行业" v-model="ruleForm.industryName" />
-            </td>
           </tr>
           <tr>
-            <td class="table-left">企业账号</td>
+            <td class="table-left">法人代表</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入企业账号" v-model="ruleForm.idNumber" />
+              <input type="text" placeholder="请输入法人代表" v-model="ruleForm.b" />
             </td>
-            <td class="table-left">联系人</td>
+            <td class="table-left">代理人</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入联系人" v-model="ruleForm.legalPerson" />
+              <input type="text" placeholder="请输入代理人" v-model="ruleForm.legalPerson" />
             </td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="table-left">注册时间</td>
             <td class="table-right">
                 <el-date-picker
@@ -57,10 +57,18 @@
                 v-model="ruleForm.businessLicense"
               />
             </td>
-          </tr>
+          </tr> -->
           <tr>
+            <td class="table-left">身份证号</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入代理人身份证号"
+                v-model="ruleForm.a"
+              />
+            </td>
             <td class="table-left">联系手机号</td>
-            <td class="table-right" colspan="3">
+            <td class="table-right">
               <input
                 type="text"
                 placeholder="请输入联系人手机号"
@@ -69,8 +77,8 @@
             </td>
           </tr>
           <tr style="vertical-align: top">
-            <td class="table-left" style="padding-top:28px">企业地址</td>
-            <td class="table-right" colspan="3" style="height:665px">
+            <td class="table-left" style="padding-top:28px">单位地址</td>
+            <td class="table-right" colspan="3">
               <el-cascader
                 :options="options"
                 v-model="selectedOptions"
@@ -82,35 +90,18 @@
               <br />
               <input
                 type="text"
-                placeholder="请输入门店详细地址"
+                placeholder="请输入单位详细地址"
                 style="margin-top: 6px; width: 100%"
                 v-model="ruleForm.address"
               />
             </td>
           </tr>
-          <!-- <tr style="vertical-align: top">
-            <td class="table-left" style="padding-top: 12px">证件照</td>
-            <td class="table-right" colspan="3" style="height: 516px; padding-top: 6px;">
-              <el-upload
-                action="http://14.29.162.130:6602/image/imageUpload"
-                list-type="picture-card"
-                :file-list="imgArr" 
-                :on-success="handleAvatarSuccess"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-              >
-                  <div  class="imgs-title">
-                    <i class="el-icon-plus"></i>
-                  </div>      
-              <el-dialog v-if="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
-              </el-upload>
-              <el-dialog v-model="dialogVisible">
-                <img style="width:100%" :src='form.storeLicence' alt="">
-              </el-dialog>
+          <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top:20px">初始密码</td>
+            <td class="table-right" colspan="3" style="height:615px; padding-top:20px">
+              <div class="password"><div>666666</div><button type="button">重置密码</button></div>
             </td>
-          </tr> -->
+          </tr>
         </table>
       </form>
     </div>
@@ -136,6 +127,7 @@ export default {
       options: regionData,
       selectedOptions: [],
       ruleForm: {
+        password:"666666",
         address: "",
         auditState: "",
         businessLicense: "",
@@ -276,5 +268,15 @@ export default {
 }
 /deep/.el-input--small .el-input__icon {
   line-height: 24px;
+}
+.password{
+  display: flex;
+  // justify-content: space-around;
+  align-items: center;
+  button{
+    margin-left: 82px;
+    outline: none;
+    padding: 0;
+  }
 }
 </style>

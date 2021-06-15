@@ -1,7 +1,7 @@
 <template>
   <div id="indexlayout">
     <div class="indexlayout-newtop">
-      <span class="systemtitle">{{ lvname }}管理系统</span>
+      <span class="systemtitle">{{ systitle }}</span>
     </div>
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
@@ -50,9 +50,9 @@
             nodekey="countrydistributor"
             @jumpurl="jumpurl"
           ></RoleLv>
-
           <SystemManage v-if="showSystemManage" title="内部管理"></SystemManage>
           <Khcommodity title="商品" v-if="khShow"></Khcommodity>
+          <KhbankAccounts title="银行开户管理" v-if="khShow"></KhbankAccounts>
           <Khuser title="系统用户管理" v-if="khShow"></Khuser>
           <Khinternalset title="系统内部设置" v-if="khShow"></Khinternalset>
         </div>
@@ -198,6 +198,7 @@ import Left from "./components/Left.vue";
 import RightTop from "./components/RightTop.vue";
 import RoleLv from "./components/RoleLv.vue";
 import Khinternalset from "./components/Khinternalset.vue";
+import KhbankAccounts from "./components/KhbankAccounts.vue";
 import SystemManage from "./components/SystemManage.vue";
 import Khcommodity from "./components/khcommodity.vue";
 import Khuser from "./components/Khuser.vue";
@@ -225,6 +226,7 @@ export default defineComponent({
     Khcommodity,
     Khuser,
     Khinternalset,
+    KhbankAccounts,
   },
   data() {
     return {
@@ -606,7 +608,7 @@ export default defineComponent({
 }
 
 .indexlayout-newtop {
-  height: 42px;
+  height: 50px;
   background: #288dff;
   opacity: 1;
   width: 100%;
@@ -618,7 +620,7 @@ export default defineComponent({
   left: 0;
 }
 .systemtitle {
-  font-size: 24px;
+  font-size: 26px;
   font-family: STHeiti;
   font-weight: 400;
   line-height: 42px;
@@ -654,7 +656,7 @@ export default defineComponent({
   width: 100%;
   height: 38px;
   line-height: 38px;
-  background: #ecf3fb;
+  background: #F1F2F4;
   font-size: 14px;
   border-bottom: 1px solid #b8d0f2;
   font-family: Source Han Sans CN;
@@ -667,7 +669,7 @@ export default defineComponent({
 .index-user-content {
   width: 100%;
   padding: 20px 0;
-  background: #ffffff;
+  background: #F1F2F4;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -837,5 +839,20 @@ export default defineComponent({
   height: 700px;
   overflow: auto;
   border: 1px solid #b8d0f2;
+  background: #F1F2F4;
+}
+/deep/.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content{
+  background-color: #4E83FF;
+  color: #fff;
+}
+
+/deep/.index-stroe-title:hover{
+  background: #fff;
+}
+/deep/.index-stroe-title:active{
+  background: #fff;
+}
+/deep/.el-tree{
+  background: #F1F2F4;
 }
 </style>

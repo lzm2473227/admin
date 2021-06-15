@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="centerDialogVisible = true"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">添加类别</span></div>
+        <div class="print" @click="dialogtrue"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">添加类别</span></div>
         <div class="print" @click="edit"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑类别</span></div>
         <div class="print" @click="del()"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除类别</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
@@ -64,10 +64,12 @@
     <el-form :model="ruleForm">
       <el-form-item label="上级类别：" style="display:flex">
         <el-cascader
+            ref="demoCascader"
             v-model="value"
             clearable 
             :options="categoriesCatalog"
             :props="setKesLabel"
+            @change="handleChange"
         ></el-cascader>
       </el-form-item>
       <el-form-item label="活动名称：" style="display:flex">
@@ -125,7 +127,7 @@ export default {
         sort:"",
         sortName:"",
         categoryImage:"",//图片
-        parenId: "3"
+        parentId: "1"
       },
       // options:[],
       // categoryId:""
@@ -136,10 +138,22 @@ export default {
     Page
   },
   mounted(){
-    this.getdata(),
+    this.getdata()
     this.threedirectories()
+    // this.handleSelectionChange()
   },
   methods:{
+    //开关
+    dialogtrue(){
+      this.centerDialogVisible = true
+    },
+    //联动触发事件
+    handleChange(){
+      const obj = this.$refs['demoCascader'].getCheckedNodes()
+      console.log(obj[0].data)  // 打印出当前选择的value所对应的对象
+      console.log(obj[0].data.parentId)  
+      this.ruleForm.parentId = obj[0].data.parentId
+    },
     //获取表格的所有值
     handleSelectionChange(val){
       this.multipleSelection = val
@@ -228,11 +242,12 @@ export default {
     add() {
       let params = {
         categoryName: this.ruleForm.sortName, //分类名字
-        parenId: this.ruleForm.parenId
+        parenId: this.ruleForm.parentId
       };
+      // console.log(value);
       httpreques("post", params,"/realbrand-management-service/Classify/InsertClassify")
       .then((res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         if (res.data.code == "SUCCESS") {
           this.$message({
             message:"添加成功",
@@ -256,7 +271,6 @@ export default {
         if (res.data.code === "SUCCESS") {
           this.categoriesCatalog = res.data.data.categoriesCatalog;
           this.getTreeData(this.categoriesCatalog)
-          
         } else {
           this.$message.error(res.data.msg);
         }

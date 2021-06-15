@@ -67,11 +67,11 @@ export default {
           label: "银行列表",
           key: "bank",
         },
-        {
-          id: 1,
-          label: "系统用户列表",
-          key: "userlist",
-        },
+        // {
+        //   id: 1,
+        //   label: "系统用户列表",
+        //   key: "userlist",
+        // },
       ],
       defaultProps: {
         children: "children",
@@ -95,9 +95,9 @@ export default {
         this.$nextTick(() => {
           let key = 0;
           switch (selectmenu.pathname) {
-            case "userlist":
-              key = 1;
-              break;
+            // case "userlist":
+            //   key = 1;
+            //   break;
             case "consumerlist":
               key = 2;
               break;
@@ -149,9 +149,9 @@ export default {
       let path = "";
       let pathname = "";
       switch (obj.key) {
-        case "userlist":
-          path = "/systemUser/userlist";
-          break;
+        // case "userlist":
+        //   path = "/systemUser/userlist";
+        //   break;
         case "consumerlist":
           path = "/systemUser/consumerlist";
           break;
@@ -202,7 +202,7 @@ export default {
 }
 .index-stroe-title {
   height: 38px;
-  background: #ecf3fb;
+  // background: #ecf3fb;
   font-size: 14px;
   font-family: Source Han Sans CN;
   font-weight: 500;

@@ -300,17 +300,17 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     component: BlankLayout,
     roles: ["systemUser"],
     children: [
+      // {
+      //   title: "系统用户列表",
+      //   path: "/systemUser/userlist",
+      //   roles: ["userlist"],
+      //   component: () => import("@/views/systemUser/userlist.vue"),
+      // },
       {
-        title: "系统用户列表",
-        path: "/systemUser/userlist",
-        roles: ["userlist"],
-        component: () => import("@/views/systemUser/userlist.vue"),
-      },
-      {
-        title: "新增系统用户",
-        path: "/systemUser/newuser",
-        roles: ["newuser"],
-        component: () => import("@/views/systemUser/newuser.vue"),
+        title: "新增消费者",
+        path: "/systemUser/newconsumerlist",
+        roles: ["newconsumerlist"],
+        component: () => import("@/views/systemUser/newconsumerlist.vue"),
       },
       {
         title: "新增经销商",
@@ -319,10 +319,34 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import("@/views/systemUser/newdealer.vue"),
       },
       {
-        title: "新增银行",
+        title: "新增银行机构",
         path: "/systemUser/newbank",
         roles: ["newbank"],
-        component: () => import("@/views/systemUser/newdealer.vue"),
+        component: () => import("@/views/systemUser/newbank.vue"),
+      },
+      {
+        title: "新增物流配送",
+        path: "/systemUser/newlogistics",
+        roles: ["newlogistics"],
+        component: () => import("@/views/systemUser/newlogistics.vue"),
+      },
+      {
+        title: "新增物流仓库",
+        path: "/systemUser/newwarehouse",
+        roles: ["newwarehouse"],
+        component: () => import("@/views/systemUser/newwarehouse.vue"),
+      },
+      {
+        title: "新增工厂",
+        path: "/systemUser/newfactory",
+        roles: ["newfactory"],
+        component: () => import("@/views/systemUser/newfactory.vue"),
+      },
+      {
+        title: "新增保险机构",
+        path: "/systemUser/newinsurance",
+        roles: ["newinsurance"],
+        component: () => import("@/views/systemUser/newinsurance.vue"),
       },
       {
         title: "经销商",
@@ -355,19 +379,116 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import("@/views/systemUser/factory.vue"),
       },
       {
-        title: "保险列表",
+        title: "保险机构",
         path: "insurance",
         roles: ["insurance"],
         component: () => import("@/views/systemUser/insurance.vue"),
       },
       {
-        title: "银行列表",
+        title: "银行机构",
         path: "bank",
         roles: ["bank"],
         component: () => import("@/views/systemUser/bank.vue"),
       },
     ],
   },
+  // 银行开户管理
+  {
+    title: "门店店员 ",
+    path: "/systembank",
+    roles: ["systembank"],
+    component: BlankLayout,
+    children: [
+      {
+        title: "盘货",
+        path: "commissionrule",
+        roles: ["commissionrule"],
+        component: BlankLayout,
+        children: [
+          {
+            title: "待盘货",
+            path: "set",
+            roles: ["set"],
+            component: () =>
+              import("@/views/systembank/commissionrule/set.vue"),
+          },
+          {
+            title: "待盘货统计",
+            path: "noset",
+            roles: ["noset"],
+            component: () =>
+            import("@/views/systembank/commissionrule/noset.vue"),
+          },
+        ],
+      },
+      {
+        title: "盘货",
+        path: "commissionrule",
+        roles: ["commissionrule"],
+        component: BlankLayout,
+        children: [
+          {
+            title: "待盘货",
+            path: "set",
+            roles: ["set"],
+            component: () =>
+              import("@/views/systembank/commissionrule/set.vue"),
+          },
+          {
+            title: "待盘货统计",
+            path: "noset",
+            roles: ["noset"],
+            component: () =>
+            import("@/views/systembank/commissionrule/noset.vue"),
+          },
+        ],
+      },
+      {
+        title: "盘货",
+        path: "commissionrule",
+        roles: ["commissionrule"],
+        component: BlankLayout,
+        children: [
+          {
+            title: "待盘货",
+            path: "set",
+            roles: ["set"],
+            component: () =>
+              import("@/views/systembank/commissionrule/set.vue"),
+          },
+          {
+            title: "待盘货统计",
+            path: "noset",
+            roles: ["noset"],
+            component: () =>
+            import("@/views/systembank/commissionrule/noset.vue"),
+          },
+        ],
+      },
+      {
+        title: "盘货",
+        path: "commissionrule",
+        roles: ["commissionrule"],
+        component: BlankLayout,
+        children: [
+          {
+            title: "待盘货",
+            path: "set",
+            roles: ["set"],
+            component: () =>
+              import("@/views/systembank/commissionrule/set.vue"),
+          },
+          {
+            title: "待盘货统计",
+            path: "noset",
+            roles: ["noset"],
+            component: () =>
+            import("@/views/systembank/commissionrule/noset.vue"),
+          },
+        ],
+      }, 
+    ],
+  }, 
   //系统内部设置
   {
     title: "系统内部设置",
@@ -421,13 +542,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     roles: ["khset"],
     children: [
       {
-        title: "角色权限",
+        title: "员工管理",
         path: "/rolepower",
         roles: ["rolepower"],
         component: () => import("@/views/khset/rolepower.vue"),
       },
       {
-        title: "功能菜单",
+        title: "岗位管理",
         path: "/funcmenu",
         roles: ["funcmenu"],
         component: () => import("@/views/khset/funcmenu.vue"),

@@ -168,7 +168,8 @@ const StoreModel: ModuleType = {
           function kaihua(){
             userDetails.roles =['kh','product','productinfo','store','storeapproval','rolepower','funcmenu','khset','bank',
           'insurance','factory','warehouse','logistics','customer','sysuser','systemUser','userlist','consumerlist',
-            "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","",]
+            "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","newlogistics",
+          "newconsumerlist","newlogistics","newwarehouse","newfactory","newinsurance",]
           };
          
         commit('saveCurrentUser', userDetails || {});

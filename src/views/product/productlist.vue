@@ -5,11 +5,14 @@
         <div class="print" @click="addProduct">
           <img class="icon" src="../../assets/images/add.png" alt="" /><span class="axis">新增商品</span>
         </div>
+        <div class="print" @click="editproduct">
+          <img class="icon" src="../../assets/images/edit.png" alt="" /><span class="axis">编辑商品</span>
+        </div>
         <div class="print" @click="delproduct()">
           <img class="icon" src="../../assets/images/delete.png" alt="" /><span class="axis">删除商品</span>
         </div>
-        <div class="print" @click="editproduct">
-          <img class="icon" src="../../assets/images/edit.png" alt="" /><span class="axis">线上商城上架</span>
+        <div class="print" @click="putaway">
+          <img class="icon" src="../../assets/images/ic-上架.png" alt="" /><span class="axis">线上商城上架</span>
         </div>
         <div class="print">
           <img class="icon" src="../../assets/images/print.png" alt="" /><span class="axis">打印列表</span>
@@ -19,14 +22,7 @@
         </div>
       </div>
       <div class="right">
-        <div class="setup">
-          <img
-            class="set"
-            src="../../assets/images/ic-设置.png"
-            alt="系统设置"
-            @click="setup"
-          />
-        </div>
+        <div class="setup"><img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup" /></div>
       </div>
     </div>
     <div class="tab-body">
@@ -256,6 +252,42 @@ export default {
         }
       });
     },
+    //上架
+    putaway() {
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要上架的商品')
+      let t = this;
+      let codearr = [];
+      _.forEach(
+        JSON.parse(JSON.stringify(t.multipleSelection)),
+        function (item, key) {
+          codearr.push(item.barcode);
+        }
+      );
+      // console.log(codearr);  //要进行数据转换，把数组变为字符串
+      codearr = codearr.toString();
+      let params = {
+        barcode: codearr,commodityState:1
+      };
+      httpreques(
+        "post",
+        {params},
+        "/realbrand-management-service/CommodityMgt/ChangeCommodityState"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code == "SUCCESS") {
+          // _.forEach(res.data.data, function (item, key) {
+          //   item.index = key + 1; //加入index
+          // });
+          // console.log(res.data)
+          // t.total = res.data.total;
+          // t.pages = res.data.pages;
+          // t.tabledata = res.data.data;
+          // t.tabledata.reverse()
+        } else {
+          this.$message(res.data.msg);
+        }
+      });
+    },
     //分页
     changeCurrentPage(val) {
       this.pageNum = val;
@@ -338,9 +370,6 @@ export default {
       this.multipleSelection = val;
     },
   
-    // handleCurrentChange(val) {
-    //   this.currentRow = val;
-    // },
     scan() {
       this.centerDialogVisible = true;
     },

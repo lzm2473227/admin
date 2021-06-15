@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="$router.push('/systemUser/bank')">
+        <div class="print" @click="$router.push('/systemUser/insurance')">
           <img class="icon" src="../../assets/images/back.png" alt="" /><span class="axis">返回列表</span>
         </div>
         <div class="print" @click="addstore()">
@@ -36,6 +36,8 @@
             <td class="table-right mini">
               <select type="checkout" v-model="item">
                 <option :value="item.value" v-for="item in ruleForm.h" :key="item.id">{{item.value}}</option>
+                <!-- <option value="小海王">小海王</option>
+                <option value="大海王">大海王</option> -->
               </select>
             </td>
           </tr>
@@ -77,9 +79,9 @@
             </td>
           </tr>
 
-        <tr style="vertical-align: top">
-            <td class="table-left" style="padding-top:28px">门店地址</td>
-            <td class="table-right" colspan="3" style="padding: 6px;height:615px">
+        <tr>
+            <td class="table-left">门店地址</td>
+            <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
                 :options="options"
                 v-model="selectedOptions"
@@ -98,6 +100,58 @@
             </td>
           </tr>
 
+           <!-- <tr>
+            <td class="table-left">重置密码</td>
+            <td class="table-right" colspan="3"> 
+              <input
+                style="width:100%;height:40px"
+                type="text"
+                placeholder="请输入新的密码"
+                v-model="ruleForm.g"
+              />
+            </td>
+           
+          </tr> -->
+
+          <!-- <tr style="vertical-align: top;">
+            <td class="table-left" style="padding: 12px;">证件照</td>
+            <td class="table-right" colspan="3" style="padding-top: 12px;">
+              <div style="display: flex; height:368px">
+              <el-upload  
+                action="http://14.29.162.130:6602/image/imageUpload"
+                list-type="picture-card"
+                :on-success="handleAvatarSuccess"
+                :file-list="imgArr" 
+                :on-preview="handlePictureCardPreview"
+                :limit="1"
+              >
+                <template #default >
+                  <div class="imgs-title">
+                    <i class="el-icon-upload"></i>
+                    <div>请上传身份证正面</div> 
+                  </div>
+                </template>
+              </el-upload>
+              <el-upload  
+                action="http://14.29.162.130:6602/image/imageUpload"
+                list-type="picture-card"
+                :on-success="handleAvatarSuccess"
+                :on-preview="handlePictureCardPreview"
+              
+              >
+                <template #default>
+                  <div class="imgs-title" >
+                    <i class="el-icon-upload"></i>
+                    <div>请上传身份证反面</div> 
+                  </div>
+                </template>
+              </el-upload>
+              </div>
+            </td>
+          </tr> -->
+          <!-- <el-dialog v-model="dialogVisible">
+            <img style="width:100%" :src='ruleForm.frontId' alt="">
+          </el-dialog> -->
         </table>
       </form>
     </div>

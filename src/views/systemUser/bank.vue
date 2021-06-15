@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="$router.push('/systemUser/newbank')"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增银行</span></div>
+        <div class="print" @click="scan"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">新增单位</span></div>
         <div class="print"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除单位</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
@@ -13,52 +13,40 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="storelist">
       <el-table
-      :row-class-name="tableRowClassName"
-    
-      ref="singleTable"
-      :data="tableData"
-      style="width: 100%"
-      highlight-current-row
-      @current-change="handleCurrentChange"
-      :default-sort="{ prop: 'date', order: 'descending' }"
+        border
+        :data="enterpriseItemList"
+        stripe="true"
+        header-cell-style="background:#f6faff"
+        style="width: 100%"
+         :default-sort="{ prop: 'index', order: 'descending' }" 
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="commodityCode" label="机构代码" align="center" sortable width="150"></el-table-column>
-        <el-table-column prop="barcode" label="单位名称" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="单位地址" sortable width="400"></el-table-column>
-        <el-table-column prop="brandName" label="法人代表" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="代理人" sortable width="160"></el-table-column>
-        <el-table-column prop="price" label="代理人身份证" sortable width="420">
-          <template v-slot="scope">
-						￥{{ scope.row.price }}
-					</template>
+        <el-table-column prop="index" label="序号" align="center" width="50">
         </el-table-column>
-        <el-table-column prop="time" label="代理人手机号" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="2" align="center" label="机构代码" width="150">
+        </el-table-column>
+        <el-table-column prop="enterpriseName" align="center" label="单位名称" width="150">
+        </el-table-column>
+        <el-table-column prop="city" align="center" label="单位地址" width="150">
+        </el-table-column>
+        <el-table-column prop="1" align="center" label="法人代表" width="150">
+        </el-table-column>
+        <el-table-column prop="legalPerson" align="center" label="代理人" width="150">
+        </el-table-column>
+        <el-table-column prop="1" align="center" label="代理人身份证号" width="150">
+        </el-table-column>
+        <el-table-column prop="userMobile" align="center" label="代理人手机号" width="150">
+        </el-table-column>
       </el-table>
-    </div>
-    <div class="bot">
-      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
-    </div>
-    <!-- <div class="total">
-      <div>待收货单品编码数量：<span>{{totalNum}}</span></div>
-      <div>待收货商品种类：<span>{{totalNum}}</span></div>
-      <div>待收货商品金额：<span class="small">￥</span><span>0</span></div>
-    </div> -->
-    <div class="inp-bot">
+      <div class="bot">
+        <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
+      </div>
+      <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="单位名称" prop="name" class="name-search">
           <el-input v-model="ruleForm.name"></el-input>
-          <!-- <img @click="scan" src="@/assets/images/ic-code.png" alt=""> -->
-        </el-form-item>
-        <el-form-item label="系统用户类别">
-          <el-select v-model="ruleForm.region">
-          <el-option label="经销商" value="shanghai"></el-option>
-          <el-option label="物流配送" value="beijing"></el-option>
-          <el-option label="银行" value="shenzhen"></el-option>
-        </el-select>
         </el-form-item>
         <el-form-item>
           <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
@@ -66,143 +54,43 @@
         </el-form-item>
       </el-form>
     </div>
+    </div>
   </div>
 </template>
-
 <script>
+import _ from "lodash";
 import Page from '@/components/Pagination/page.vue'
-import httpreques from '@/utils/httpreques';
+import ListTile from "../../layouts/IndexLayout/components/ListTitle";
+import httpreques from "../../utils/httpreques";
+import moment from "moment";
 export default {
-  name: "Userlist",
-  components: {
-    Page
-  },
   data() {
     return {
-      total: 0,
-      pageSize: 15,
-      pageNum: 1,
-      tabs: ['当日', '当周', '当月'],
-      active: 0,
-      // centerDialogVisible: false,
-      textarea: '',
-      tabledata: [],
-      totalNum: 0,
-      ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-      },
+      enterpriseItemList: [],
+      total:0,
+      pageSize:10,
+      pageNum:1,
+      ruleForm:{
+        name:"",
+      }
     };
   },
-  methods: {
-    currentchange(val){
-      this.pageNum = val
-    },
-    //添加class样式
-    tableRowClassName({row, rowIndex}){
-      if (rowIndex === 0) {
-        return 'warning-row';
-      }
-      return '';
-    },
-    formatter(row, column) {
-      return row.address;
-    },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      },
-    handleCurrentChange(val) {
-        this.currentRow = val;
-      },
-    // scan(){
-    //   this.centerDialogVisible = true
-    // },
+  created() {
+    // this.ObtainenterpriseItemList();
   },
+  methods: {
+    scan(){
+      this.$router.push("/systemUser/newbank")
+    },
+    
+    
+  },
+  components: { ListTile ,Page},
 };
 </script>
-
 <style lang="scss" scoped>
-@import '@/assets/css/reset';
-.header {
-  height: 42px;
-  line-height: 44px;
-  background: #ecf3fb;
-  border: 1px solid #b8d0f2;
-  font-size: 14px;
-  font-family: Source Han Sans CN;
-  font-weight: 400;
-  color: #222222;
-  ul {
-    display: flex;
-    height: 44px;
-    line-height: 44px;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    li {
-      width: 112px;
-      height: 16px;
-      line-height: 16px;
-      list-style: none;
-      text-align: center;
-      border-right: 1px solid #99bbe8;
-      display: flex;
-      justify-content: center;
-      cursor: pointer;
-      // align-items: center;
-      img {
-        margin-right: 4px;
-      }
-      &:last-child {
-        border-right: none;
-      }
-    }
-  }
-}
-.main {
-  border: 1px solid #cccccc;
-  padding: 28px;
-  box-sizing: border-box;
-  margin-top: 16px;
-}
-table {
-  border: 1px solid #b8d0f2;
-  border-collapse: collapse;
-  font-size: 12px;
-  font-family: Source Han Sans CN;
-  font-weight: 400;
-}
-td {
-  padding-left: 20px;
-}
-.bg {
-  background: #ecf3fb;
-}
-.clerk-imgs {
-  display: flex;
-}
-.imgs-title {
-  display: flex;
-  flex-direction: column;
-}
-/deep/.el-form-item--small.el-form-item {
-  margin-bottom: 0px;
-}
-/deep/.el-input__inner {
-  background-color: #fff;
-  background-image: none;
-  border-radius: 4px;
-  border: none;
-  color: #333;
-  font-size: 14px;
-  font-family: Source Han Sans CN;
-  border: 1px solid #ddd !important;
+@import '@/assets/css/reset.scss';
+/deep/.el-pagination.is-background .el-pager li:not(.disabled).active{
+  color:#409eff
 }
 </style>

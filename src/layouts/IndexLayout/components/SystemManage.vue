@@ -295,7 +295,7 @@ export default {
 }
 .index-stroe-title {
   height: 38px;
-  background: #ecf3fb;
+  // background: #ecf3fb;
   font-size: 14px;
   font-family: Source Han Sans CN;
   font-weight: 500;

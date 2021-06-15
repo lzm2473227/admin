@@ -31,6 +31,7 @@
         <el-table-column prop="barcode" label="姓名" align="center" sortable width="180"></el-table-column>
         <el-table-column prop="commodityName" label="手机号码" sortable width="300" align="center"></el-table-column>
         <el-table-column prop="brandName" label="岗位" sortable width="240" align="center"></el-table-column>
+        <el-table-column prop="brandName" label="创建时间" sortable width="240" align="center"></el-table-column>
       </el-table>
     </div>
     <div class="bot">
