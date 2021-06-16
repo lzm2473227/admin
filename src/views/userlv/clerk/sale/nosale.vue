@@ -160,8 +160,8 @@
           </div>
         </div>
         <div class="dialog-bottom">
-          <botton class="sure" @click="onSure">确定</botton>
-          <botton @click="onCancel">取消</botton>
+          <button class="sure" @click="onSure">确定</button>
+          <button @click="onCancel">取消</button>
         </div>
       </div>
       <!-- 付款弹窗 -->
@@ -596,7 +596,7 @@ export default {
   padding: 20px 0;
   background: #F8F8F8;
   border-top: 1px solid #DEDEDE;
-  botton{
+  button{
     padding: 12px 46px;
     background: #FAFCFE;
     border-radius: 2px;

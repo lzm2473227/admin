@@ -15,13 +15,13 @@
     </div>
     <div class="table-main">
       <div class="table-title">
-          <p>新增机具</p>
+          <p>{{msg}}机具</p>
         </div>
       <form action="">
       <table border="1" class="">
         <tr>
           <td class="table-left">机具编码</td>
-          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.meid"></td>
+          <td class="table-right"><input type="text" placeholder="请输入机具编码" v-model="form.meid" :disabled="$route.query.meid"></td>
           <td class="table-left">机具型号</td>
           <td class="table-right"><input type="text" placeholder="请输入机具型号" v-model="form.type"></td>
         </tr>
@@ -34,7 +34,7 @@
         <tr>
             <td class="table-left">所属门店</td>
             <td class="table-right">
-              <select placeholder="请选择所属门店" v-model="form.storeName">
+              <select placeholder="请选择所属门店" v-model="form.storeName" @change="changeStore">
                 <option :value=item.storeName v-for="(item, index) in storeName" :key="index">{{item.storeName}}</option>
               </select>
             </td>
@@ -43,7 +43,7 @@
         </tr>
         <tr>
             <td class="table-left">门店地址</td>
-            <td class="table-right" colspan="3"><input type="text" placeholder="请输入门店详细地址" v-model="form.address" style="width: 100%;"></td>
+            <td class="table-right" colspan="3"><input type="text" placeholder="请选择所属门店" v-model="form.address" style="width: 100%;" :disabled="true"></td>
         </tr>
         <tr style="vertical-align: top;">
             <td class="table-left" style="padding-top: 12px;">机具功能</td>
@@ -93,12 +93,13 @@ export default {
         gongneng: "",
         filePath:""
       },
-      storeName: []
+      storeName: [],
+      msg: ''
     };
   },
   mounted() {
     this.StoreNameList()
-    this.getdata();
+    this.getdata()
   },
   methods: {
     getdata() {
@@ -106,6 +107,9 @@ export default {
       let meid = "";
       if (t.$route.query.meid) {
         meid = t.$route.query.meid;
+        this.msg = '编辑'
+      }else{
+        this.msg = '新增'
       }
       if (meid) {
         let params = {
@@ -121,6 +125,7 @@ export default {
             //对象数据处理
             let storeobj = res.data.data;
             storeobj.storetype = storeobj.storeType;
+            storeobj.address = storeobj.province+storeobj.city+storeobj.county+storeobj.address
             delete storeobj.storeType;
             // t.selectedOptions =
             //   TextToCode[storeobj.province][storeobj.city][
@@ -200,11 +205,29 @@ export default {
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"
       ).then((result) => {
-        console.log(result);
         if (result.data.code === "SUCCESS") {
-          this.storeName = result.data.data.storeNameItemList;
+          this.storeName = result.data.data;
         } else {
           this.$message.error(result.data.msg);
+        }
+      });
+    },
+    // 获取门店地址
+    changeStore(){
+      httpreques(
+        "post",
+        {
+          "pageNum": 1,
+          "pageSize": 15,
+          "storeName": this.form.storeName,
+          "storeType": ""
+        },
+        "/realbrand-management-service/StoreMgt/StoreInfo"
+      ).then((res) => {
+        if (res.data.code === "SUCCESS") {
+          this.form.address = res.data.data.province+res.data.data.city+res.data.data.county+res.data.data.address
+        } else {
+          this.$message.error(res.data.msg);
         }
       });
     },

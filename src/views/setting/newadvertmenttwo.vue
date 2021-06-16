@@ -30,19 +30,25 @@
   </div>
   <div class="table-main">
     <div class="table-title">
-          <p>新增广告</p>
+          <p>{{msg}}广告</p>
         </div>
     <form>
       <table border="1">
         <tr>
           <td class="table-left">广告编码</td>
-          <td class="table-right"><input type="text" placeholder="请输入广告编码" v-model="ruleForm.advertisementNumber"></td>
+          <td class="table-right"><input type="text" placeholder="广告编码" v-model="ruleForm.advertisementNumber" :disabled="true"></td>
           <td class="table-left">广告名称</td>
           <td class="table-right"><input type="text" placeholder="请输入广告名称" v-model="ruleForm.advertisementName"></td>
         </tr>
         <tr>
           <td class="table-left">广告类型</td>
-          <td class="table-right"><input type="text" placeholder="请输入广告类型" v-model="ruleForm.type"></td>
+          <td class="table-right">
+            <select v-model="ruleForm.type">
+              <option value="图片">图片</option>
+              <option value="视频">视频</option>
+              <option value="文字">文字</option>
+            </select>
+          </td>
           <td class="table-left">广告位置</td>
           <td class="table-right">     
               <select
@@ -87,7 +93,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-left">广告状态</td>
+          <!-- <td class="table-left">广告状态</td>
           <td class="table-right">
             <el-radio v-model="ruleForm.enableState" label="1">启用</el-radio>
             <el-radio
@@ -96,9 +102,9 @@
               label="0"
               >禁用</el-radio
             >
-          </td>
+          </td> -->
           <td class="table-left">广告描述</td>
-          <td class="table-right"><textarea class="table-item" placeholder="请输入广告描述" v-model="ruleForm.advertisementDescribe"></textarea></td>
+          <td class="table-right" colspan="3"><textarea class="table-item" placeholder="请输入广告描述" v-model="ruleForm.advertisementDescribe"></textarea></td>
         </tr>
         <tr style="vertical-align: top;">
           <td class="table-left" style="padding-top: 12px;">广告图片</td>
@@ -166,22 +172,19 @@ export default {
       linkPosition: "", //默认选中显示
       positions: [],
       idNumber: "",
+      msg: ''
     };
   },
   mounted() {
-    this.getdata();
-    // console.log( new Date().getTime());
-    // this.aad()
+    this.getpositionlist()
+    this.getdata()
   },
   methods: {
     aad(){
-      console.log(new Date().getTime(this.value1));
-      // console.log(timestamp);
+      console.log(new Date().getTime(this.value1))
     },
     //图片
     handleAvatarSuccess(res, file) {
-      // console.log(file);
-      // console.log(res);
       if (res.code === "Success") {
         this.dialogImageUrl = res.data;
         this.ruleForm.linkPosition = res.data;
@@ -196,12 +199,11 @@ export default {
     },
     getdata() {
       let t = this;
-      t.getpositionlist();
-      // t.handleChange();
-      let advertmentid = t.$route.query.advertmentid;
+      let advertmentid = t.$route.query.advertmentid
+      advertmentid ? this.msg = '编辑' : '新增'
       if (advertmentid) {
         let params = {
-          id: advertmentid,
+          advertisementNumber: advertmentid,
         };
         httpreques(
           "post",
@@ -227,6 +229,7 @@ export default {
         });
       }
     },
+    // 获取广告位置
     getpositionlist() {
       let t = this;
       httpreques(
@@ -245,8 +248,8 @@ export default {
     },
     addadv() {
       let t = this;
-      // console.log(t.ruleForm.enableState);
-      this.ruleForm.enableState = parseInt(this.ruleForm.enableState);
+      // this.ruleForm.enableState = parseInt(this.ruleForm.enableState);
+      this.ruleForm.enableState = 0
       let params = t.ruleForm;
       params.id = t.$route.query.advertmentid;
 
@@ -287,6 +290,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+/deep/.el-date-picker__editor-wrap .el-input__inner{
+  width: 161px;
+}
 @import "../../assets/css/reset.scss";
 @import "@/assets/css/image2.scss";
 /deep/.el-date-editor.el-input, .el-date-editor.el-input__inner, .table-right .el-input__inner{

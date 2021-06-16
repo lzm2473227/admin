@@ -3,7 +3,7 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="addStore"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增门店</span></div>
-        <div class="print" @click="editstore"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑门店</span></div>
+        <div class="print" @click="editstore()"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑门店</span></div>
         <div class="print" @click="delstore"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除门店</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
@@ -26,11 +26,15 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="门店机构代码" align="center" sortable width="330"></el-table-column>
+        <el-table-column label="门店机构代码" align="center" sortable width="330">
+          <template v-slot="scope">
+            <span class="detail-info" @click="editstore(scope.row)">{{scope.row.orgCode}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="storeName" label="门店名称" sortable width="350"></el-table-column>
         <el-table-column prop="address" label="门店地址" sortable width="480"></el-table-column>
         <el-table-column prop="storeType" label="门店类别" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="门店许可证" align="center" width="243" >
+        <el-table-column label="证件照" align="center" width="243" >
           <template v-slot="scope">
             <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
           </template>
@@ -48,8 +52,8 @@
         </el-form-item>
         <el-form-item label="门店类别:" prop="name">
           <el-select v-model="ruleForm.storeType" placeholder="请选择门店类别">
-            <el-option label="直营" value="直营">直营</el-option>
-            <el-option label="加盟" value="加盟">加盟</el-option>
+            <el-option label="直营店" value="直营">直营店</el-option>
+            <el-option label="加盟店" value="加盟">加盟店</el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -158,9 +162,14 @@ export default {
         }
       });
     },
-    editstore() {
-      if(this.multipleSelection.length !== 1) return this.$message('请选择一个需要编辑的门店')
-      let storename = this.multipleSelection[0].storeName
+    editstore(data) {
+      let storename = ''
+      if(data){
+        storename = data.storeName
+      }else{
+        if(this.multipleSelection.length != 1) return this.$message('请选择一个需要编辑的门店')
+        storename = this.multipleSelection[0].storeName
+      }
       this.$router.push({
         path: "/setting/newstore",
         query: {

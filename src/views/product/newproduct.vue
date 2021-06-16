@@ -220,7 +220,7 @@ export default {
         price: "", //销售价格/默认为0
         specsParameter: "", // 规格参数
         commodityCode: "", // 单品编码
-        categoryId:"",   //三级分类id
+        categoryId:"95",   //三级分类id
         storeId:""
       },
       dialogImageUrl:"",
@@ -240,42 +240,51 @@ export default {
     this.threedirectories();
   },
   methods: {
-    // getdata() {
-    //   let t = this;
-    //   let barcode = t.$route.query.barcode;
-    //   if (barcode) {
-    //     let params = {
-    //       barcode: barcode,
-    //     };
-    //     httpreques(
-    //       "post",
-    //       params,
-    //       "/realbrand-management-service/CommodityMgt/BarcodeInfo"
-    //     ).then((res) => {
-    //       console.log(res);
-    //       if (res.data.code == "SUCCESS") {
-    //         //对象数据处理
-    //         console.log(res);
-    //         let commobj = res.data.data;
-    //         this.imgArr.push({url: commobj.filePath})
-    //         this.dialogImageUrl = commobj.filePath;
-    //         t.form = commobj;
-    //       } else {
-    //         //接口错误处理
-    //         t.$message.error(res.data.msg);
-    //       }
-    //     });
-    //   }
+    getdata() {
+      let t = this;
+      let barcode = t.$route.query.barcode;
+      if (barcode) {
+        let params = {
+          barcode: barcode,
+        };
+        httpreques(
+          "post",
+          params,
+          "/realbrand-management-service/CommodityMgt/BarcodeInfo"
+        ).then((res) => {
+          // console.log(res);
+          if (res.data.code == "SUCCESS") {
+            //对象数据处理
+            // console.log(res);
+            let commobj = res.data.data;
+            this.imgArr.push({url: commobj.filePath})
+            this.dialogImageUrl = commobj.filePath;
+            t.form = commobj;
+          } else {
+            //接口错误处理
+            t.$message.error(res.data.msg);
+          }
+        });
+      }
+    },
+    // handleRemove(file, fileList) {
+    //   // console.log(file, fileList);
     // },
-    handleRemove(file, fileList) {
-      // console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      // console.log(file.url);
-      this.dialogImageUrl = file.url;
-      // this.dialogVisible = true;
-    },
+    // handlePictureCardPreview(file) {
+    //   // console.log(file.url);
+    //   this.dialogImageUrl = file.url;
+    //   // this.dialogVisible = true;
+    // },
     //提交
+    // 图片
+    handleAvatarSuccess(res, file) {
+      console.log(file);
+      console.log(res);
+      if (res.code === "Success") {
+        this.dialogImageUrl = res.data;
+        this.form.filePath = res.data;
+      }
+    },
     addcomm() {
       let ip = []
       let ib = []
@@ -387,15 +396,6 @@ export default {
             }
         }
         return data;
-    },
-    handleAvatarSuccess(res, file) {
-      console.log(file);
-      console.log(res);
-      // return
-      if (res.code === "Success") {
-        this.dialogImageUrl = res.data;
-        this.form.filePath = res.data;
-      }
     },
     cancelbtn() {
       let t = this;

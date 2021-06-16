@@ -20,7 +20,7 @@
         </div>
         <table border="1" class="">
           <tr>
-            <td class="table-left">门店机构代码</td>
+            <td class="table-left">机构代码</td>
             <td class="table-right">
               <input type="text" placeholder="请输入门店机构代码" v-model="form.orgCode" />
             </td>
@@ -28,29 +28,15 @@
             <td class="table-right">
               <select placeholder="请选择门店类型" v-model="form.storeType">
                 <option value="" disabled style="display:none; color: #ddd">请选择门店类型</option>
-                <option value="直营">直营</option>
-                <option value="加盟">加盟</option>
+                <option value="直营店">直营店</option>
+                <option value="加盟店">加盟店</option>
               </select>
             </td>
           </tr>
           <tr>
-            <td class="table-left">法人代表姓名</td>
+            <td class="table-left">法人姓名</td>
             <td class="table-right">
               <input type="text" placeholder="请输入法人代表姓名" v-model="form.name" />
-            </td>
-            <td class="table-left">电话号码</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入电话号码" v-model="form.tel" />
-            </td>
-          </tr>
-          <tr>
-            <td class="table-left">法人身份证号</td>
-            <td class="table-right">
-              <input
-                type="text"
-                placeholder="请输入法人身份证号"
-                v-model="form.code"
-              />
             </td>
             <td class="table-left">门店名称</td>
             <td class="table-right">
@@ -62,7 +48,21 @@
             </td>
           </tr>
           <tr>
-            <td class="table-left">门店地址</td>
+            <td class="table-left">身份证号</td>
+            <td class="table-right">
+              <input
+                type="text"
+                placeholder="请输入法人身份证号"
+                v-model="form.code"
+              />
+            </td>
+            <td class="table-left">联系号码</td>
+            <td class="table-right">
+              <input type="text" placeholder="请输入电话号码" v-model="form.tel" />
+            </td>
+          </tr>
+          <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top: 12px">门店地址</td>
             <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
                 :options="options"
@@ -82,8 +82,36 @@
               />
             </td>
           </tr>
-          <tr>
-            <td class="table-left">门店简介</td>
+          <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top: 12px">营业时间</td>
+            <td class="table-right" colspan="3">
+              <div class="time">
+                <span>营业日期：</span>
+                <el-checkbox-group v-model="checkList">
+                  <el-checkbox label="周一"></el-checkbox>
+                  <el-checkbox label="周二"></el-checkbox>
+                  <el-checkbox label="周三"></el-checkbox>
+                  <el-checkbox label="周四"></el-checkbox>
+                  <el-checkbox label="周五"></el-checkbox>
+                  <el-checkbox label="周六"></el-checkbox>
+                  <el-checkbox label="周日"></el-checkbox>
+                </el-checkbox-group>
+              </div>
+              <div class="time">
+                <span>营业时段：</span>
+                <el-time-picker
+                  is-range
+                  v-model="date"
+                  range-separator="至"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  placeholder="选择时间范围">
+                </el-time-picker>
+              </div>
+            </td>
+          </tr>
+          <tr style="vertical-align: top">
+            <td class="table-left" style="padding-top: 12px">门店简介</td>
             <td class="table-right" colspan="3">
               <textarea
                 class="table-item"
@@ -153,7 +181,9 @@ export default {
       },
       dialogImageUrl: "",
       dialogVisible: false,
-      imgArr: []
+      imgArr: [],
+      checkList: [],
+      date: []
     };
   },
   mounted() {
@@ -308,6 +338,23 @@ export default {
 }
 /deep/.el-cascader .el-input__inner::-ms-input-placeholder {
   color: #ddd;
+}
+.time{
+  display: flex;
+  align-items: center;
+  margin: 8px 0 10px 0;
+  span{
+    color: #384F71;
+  }
+  /deep/.el-checkbox{
+    margin-right: 12px;
+    .el-checkbox__input{
+      margin-right: 4px;
+    }
+  }
+  /deep/input{
+    border: none
+  }
 }
 @import "../../assets/css/reset.scss";
 @import "@/assets/css/image2.scss";

@@ -68,7 +68,7 @@ export default {
     return {
       enterpriseItemList: [],
       total:0,
-      pageSize:10,
+      pageSize:15,
       pageNum:1,
       ruleForm:{
         name:"",
@@ -92,8 +92,8 @@ export default {
          params,
         "/realbrand-management-service//EnterpriseMgt/EnterpriseList"
       );
-      // console.log(res)
-      console.log(params);
+      console.log(res)
+      // console.log(params);
       _.forEach(
             res.data,
             function (item, key) {
@@ -102,15 +102,21 @@ export default {
               ):"";
                item.index = key +1;
               // item.endTime = moment(item.endTime).format("YYYY-MM-DD HH:mm:ss");
-              console.log(item.registertime)
+              // console.log(item.registertime)
             }
           
           );
           this.total = res.total;
-          console.log(res.total)
+          this.pageNum = res.pageNum;
+          this.pageSize = res.pageSize;
+          // console.log(res.total)
       this.enterpriseItemList = res.data;
     },
-
+    //分页
+    changeCurrentPage(val) {
+      this.pageNum = val;
+      this.ObtainenterpriseItemList();
+    },
     scan(){
       this.$router.push("/storeapproval")
     },

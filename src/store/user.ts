@@ -121,7 +121,7 @@ const StoreModel: ModuleType = {
           //门店管理员基础权限
           userDetails.roles = ['md', 'productlist', 'purchase', 'product', 'inventory', 'sale', 'setting', 'user', 'noreceive', 'receive', 'checkproduct', 'nocheckproduct', 'sales', 'nosale', 'storelist', 'machine',
         , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew',
-        ,'public','file','nobank','bank','commodity1','commodity2','integralrule','integralobj','memberset','newintegralrule','newintegralobj','newmemberset',
+        ,'public','file','nobank','bank','commodity1','commodity2','integralrule','integralobj','memberset','newintegralrule','newintegralobj','newmemberset',"theme","themenew"
         ]
           let rolelv = ["clerk","shopowner",'citydistributor','sysuser'];//角色多重身份 【与indexlayouts下的index组件菜单对应。否则有权限，无菜单。只能手动输入路由】
  
@@ -148,7 +148,6 @@ const StoreModel: ModuleType = {
               userDetails.roles.push('countrydistributor','countrydistributornoreceive','countrydistributorreceive','countrydistributornocheckproduct','countrydistributornosale','countrydistributorsales','countrydistributorcheckproduct');
             }
           })
- 
           };
           function logistics(){
             userDetails.roles =['productlist','userlv']

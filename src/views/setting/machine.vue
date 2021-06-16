@@ -26,13 +26,17 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="meid" label="机具编码（MEID）" align="center" sortable width="200"></el-table-column>
+        <el-table-column label="机具编码（MEID）" align="center" sortable width="200">
+          <template v-slot="scope">
+            <span class="detail-info" @click="addMachine('2', scope.row)">{{scope.row.meid}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="machinecode" label="机具型号" align="center" sortable width="150"></el-table-column>
         <el-table-column prop="name" label="机具名称" align="center" sortable width="160"></el-table-column>
         <el-table-column prop="frontId" label="机具供应商" sortable width="150"></el-table-column>
-        <el-table-column prop="storeName" label="所属门店"  sortable width="160" ></el-table-column>
-        <el-table-column prop="address" label="门店地址" width="300"></el-table-column>
-        <el-table-column prop="imgs" label="机具图片" width="150">
+        <el-table-column prop="storeName" label="所属门店" sortable width="160" ></el-table-column>
+        <el-table-column prop="address" label="门店地址" sortable width="300"></el-table-column>
+        <el-table-column prop="imgs" label="机具图片" sortable width="150">
           <template v-slot="scope">
             <img :src="scope.row.filePath" alt="" style="height: 20px;">
           </template>
@@ -115,8 +119,7 @@ export default {
       ).then((res) => {
         console.log(res);
         let { data } = res.data;
-        this.total = res.data.data? res.data.total:0;
-        console.log(res.data);
+        this.total = res.data.data? res.data.total:0
         data.forEach((item) => {
           item.bindingTime = moment(item.bindingTime).format(
             "YYYY-MM-DD HH:mm:ss"
@@ -157,10 +160,15 @@ export default {
           })
     },
     // 新增机具
-    addMachine(val) {
-      if(val === '1'){
-        if(this.multipleSelection.length != 1) return this.$message('请选择一项需要编辑的机具')
-        let meid = this.multipleSelection[0].meid
+    addMachine(val, data) {
+      if(val){
+        let meid = ''
+        if(data){
+          meid = data.meid
+        }else{
+          if(this.multipleSelection.length != 1) return this.$message('请选择一项需要编辑的机具')
+          meid = this.multipleSelection[0].meid
+        }
         this.$router.push({
           path: "/setting/machinenew",
           query: {
@@ -178,7 +186,6 @@ export default {
       this.ruleForm = {}
     },
     handleSelectionChange(val){
-      console.log(val)
       this.multipleSelection = val
     },
     changeCurrentPage(val) {

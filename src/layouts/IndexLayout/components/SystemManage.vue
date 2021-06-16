@@ -46,7 +46,7 @@ export default {
           label: "商品配置",
           key: "commodity",
           children:[
-                {
+            {
               id: 11,
               label: "商品类别设置",
               key: "commodity1",
@@ -78,7 +78,12 @@ export default {
           label: "活动管理",
           key: "promotion",
           children:[
-                {
+            {
+              id: 18,
+              label: "主题设置",
+              key: "theme",
+            },
+            {
               id: 8,
               label: "活动列表",
               key: "promotion",
@@ -95,7 +100,7 @@ export default {
           label: "积分管理",
           key: "integralrule",
           children:[
-                {
+            {
               id: 15,
               label: "规则设置",
               key: "integralrule",
@@ -186,6 +191,9 @@ export default {
             case "integralobj":
               key = 17; 
               break;
+            case "theme":
+              key = 18; 
+              break;
             default:
               key = 4;
               break;
@@ -263,6 +271,9 @@ export default {
           break;
         case "integralobj":
           path = "/setting/integral/integralobj";
+          break;
+        case "theme":
+          path = "/setting/theme";
           break;
         default:
           break;
@@ -369,7 +380,7 @@ export default {
 }
 .index-manage-content {
   background: #fff;
-  padding: 10px 0 10px 0;
+  // padding: 10px 0 10px 0;
 }
 .contenthidden {
   display: none !important;

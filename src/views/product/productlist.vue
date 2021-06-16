@@ -73,12 +73,12 @@
           width="180"
         ></el-table-column>
         <el-table-column
-          prop="b"
+          prop="p"
           label="商品二级类别"
           width="180"
         ></el-table-column>
         <el-table-column
-          prop="b"
+          prop="m"
           label="商品一级类别"
           width="180"
         ></el-table-column>

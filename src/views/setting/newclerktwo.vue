@@ -62,51 +62,12 @@
           </tr>
 
           <tr>
-            <td class="table-left">出生年月</td>
-            <td class="table-right mini">
-              <el-date-picker
-                v-model="value1"
-                type="date"
-                
-              >
-              </el-date-picker>
-            </td>
-            <td class="table-left">身高</td>
-            <td class="table-right mini">
-              <input
-                type="text"
-                placeholder="请输入身高"
-                v-model="ruleForm.a"
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="table-left">体重</td>
-            <td class="table-right mini">
-              <input
-                type="text"
-                placeholder="请输入体重"
-                v-model="ruleForm.b"
-              />
-            </td>
             <td class="table-left">籍贯</td>
             <td class="table-right mini">
               <input
                 type="text"
                 placeholder="请输入籍贯"
                 v-model="ruleForm.d"
-              />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="table-left">联系号码</td>
-            <td class="table-right mini">
-              <input
-                type="text"
-                placeholder="请输入联系号码"
-                v-model="ruleForm.telNum"
               />
             </td>
             <td class="table-left">民族</td>
@@ -118,30 +79,30 @@
           </tr>
 
           <tr>
-            <td class="table-left">学历</td>
-            <td class="table-right mini">
-              <select type="checkout" v-model="ruleForm.h">
-                <option value="本科">本科</option>
-                <option value="大专">大专</option>
-              </select>
-            </td>
-            <td class="table-left">专业</td>
-            <td class="table-right" colspan="3">
-              <input
-                type="text"
-                placeholder="请输入专业"
-                v-model="ruleForm.j"
-              />
-            </td>
-          </tr>
-
-          <tr>
             <td class="table-left">政治面貌</td>
             <td class="table-right">
               <select type="checkout" v-model="ruleForm.k">
                 <option value="群众">群众</option>
                 <option value="党团">党团</option>
               </select>
+            </td>
+            <td class="table-left">出生年月</td>
+            <td class="table-right mini">
+              <el-date-picker
+                v-model="value1"
+                type="date"
+              >
+              </el-date-picker>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">联系号码</td>
+            <td class="table-right mini">
+              <input
+                type="text"
+                placeholder="请输入联系号码"
+                v-model="ruleForm.telNum"
+              />
             </td>
             <td class="table-left">身份证号</td>
             <td class="table-right">
@@ -154,12 +115,19 @@
           </tr>
 
           <tr>
-            <td class="table-left">户口所在地</td>
+            <td class="table-left">最高学历</td>
+            <td class="table-right mini">
+              <select type="checkout" v-model="ruleForm.h">
+                <option value="本科">本科</option>
+                <option value="大专">大专</option>
+              </select>
+            </td>
+            <td class="table-left">所学专业</td>
             <td class="table-right" colspan="3">
               <input
                 type="text"
-                placeholder="请输入户口所在地"
-                v-model="ruleForm.g" style="width:100%"
+                placeholder="请输入专业"
+                v-model="ruleForm.zhuanye"
               />
             </td>
           </tr>
@@ -170,29 +138,11 @@
               <input
                 type="text"
                 placeholder="请输入毕业院校"
-                v-model="ruleForm.j" style="width:100%"
+                v-model="ruleForm.school" style="width:100%"
               />
             </td>
           </tr>
-
-          <tr> 
-            <td class="table-left">所属门店</td>
-            <td class="table-right" colspan="3">
-              <select
-                v-model="ruleForm.storeName"
-                placeholder="请选择所属门店" style="width:100%"
-              >
-                <option 
-                  v-for="item in storeNameItemList"
-                  :key="item.value"
-                  :label="item.storeName"
-                  :value="item.storeName"
-                ></option>
-              </select>
-            </td>
-          </tr>
-
-        <tr>
+          <tr>
             <td class="table-left">居住地址</td>
             <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
@@ -212,18 +162,34 @@
               />
             </td>
           </tr>
-          
+          <tr> 
+            <td class="table-left">所属门店</td>
+            <td class="table-right" colspan="3">
+              <select
+                v-model="ruleForm.storeName"
+                placeholder="请选择所属门店" style="width:100%"
+                @change="changeStore(ruleForm.storeName)"
+              >
+                <option 
+                  v-for="item in storeNameItemList"
+                  :key="item.value"
+                  :label="item.storeName"
+                  :value="item.storeName"
+                ></option>
+              </select>
+            </td>
+          </tr>
           <tr>
             <td class="table-left">所属岗位</td>
             <td class="table-right" colspan="3" style="padding: 6px;">
-              <el-checkbox-group v-model="station">
+              <el-checkbox-group v-model="station" style="margin-top: -8px">
                 <el-checkbox
-                  style="margin-right: 6px"
-                  v-for="item in clerkroles"
-                  :label="item.label"
-                  :key="item.value"
-                  @change="station1(item.label)"
-                  >{{ item.label }}</el-checkbox
+                  style="margin-right: 10px"
+                  v-for="(item, index) in clerkroles"
+                  :key="index"
+                  :label="item.name"
+                  @change="changeStation"
+                  >{{ item.name }}</el-checkbox
                 >
               </el-checkbox-group>
             </td>
@@ -272,14 +238,14 @@
             action="http://14.29.162.130:6602/image/imageUpload"
             list-type="picture-card"
             :on-success="handleAvatarSuccess"
-            :file-list="imgArr" 
+            :file-list="imgArr"
             :on-preview="handlePictureCardPreview"
             :limit="1"
           >
             <template #default >
               <div class="imgs-title">
                 <i class="el-icon-upload"></i>
-                <div>请上传身份证正面</div> 
+                <div>请上传个人证件照</div> 
               </div>
             </template>
           </el-upload>
@@ -318,45 +284,18 @@ export default {
         sex: "1",
         a:"",
         b:"",
-        c:"汉族",
+        c:"",
         d:"",
-        k:"群众",
-        h:"本科",
+        k:"",
+        h:"",
         g:"",
+        zhuanye: '',
+        school: '',
         address: "",   //省地址
         province: "",  //地址
       },
       station: [],
-      clerkroles: [
-        {
-          label: "店长",
-          value: "1",
-        },
-        {
-          label: "进货员",
-          value: "2",
-        },
-        {
-          label: "销售员",
-          value: "3",
-        },
-        {
-          label: "盘货员",
-          value: "4",
-        },
-        {
-          label: "市级经销商",
-          value: "5",
-        },
-        {
-          label: "省级经销商",
-          value: "6",
-        },
-        {
-          label: "全国总经销",
-          value: "7",
-        },
-      ],
+      clerkroles: [],
       //民族
       nation:[
         {id:1 ,name:'汉族'},
@@ -417,14 +356,23 @@ export default {
         {id:56,name:'基诺族'},
       ],
       storeNameItemList: [],
-      imgArr: []
+      imgArr: [],
+      roleUuid: '',
+      groupUuid: '',
+      uuidArr: []
     };
   },
   mounted() {
     this.getdata();
     this.StoreNameList();
+    this.getRoleUuid()
   },
   methods: {
+    changeStore(data){
+      let index = this.storeNameItemList.map(item => item.storeName).indexOf(data)
+      this.groupUuid = this.storeNameItemList[index].groupUuid
+      console.log(this.groupUuid)
+    },
     //选择省市区
     handleChange(value) {
       let t = this;
@@ -479,12 +427,31 @@ export default {
       }
     },
     addstore() {
+      if(!this.ruleForm.name) return this.$message('姓名不能为空')
+      if(!this.ruleForm.d) return this.$message('籍贯不能为空')
+      if(!this.ruleForm.k) return this.$message('政治面貌不能为空')
+      if(!this.value1) return this.$message('出生年月不能为空')
+      if(!this.ruleForm.telNum) return this.$message('联系号码不能为空')
+      if(!this.ruleForm.idNumber) return this.$message('身份证号不能为空')
+      if(!this.ruleForm.province) return this.$message('居住地址不能为空')
+      if(!this.ruleForm.storeName) return this.$message('所属门店不能为空')
+      if(this.station.length === 0) return this.$message('所属岗位不能为空')
+      if(!this.ruleForm.frontId) return this.$message('身份证正面照不能为空')
+      let identityItems = []
+      this.uuidArr.forEach(data => {
+        identityItems.push({
+          "createSubGroup": false,
+          "groupUuid": this.groupUuid,
+          "roleUuid": data
+        })
+      })
       let params = {
         idNumber: this.ruleForm.idNumber, // 身份证号
+        identityItems: identityItems,
         name: this.ruleForm.name,
         frontId: this.ruleForm.frontId, // 身份证正面照
-        reverseId: "", // 身份证反面照
-        station: this.station, // 岗位名称
+        reverseId: this.ruleForm.frontId, // 身份证反面照
+        profilePicture: this.ruleForm.frontId, // 头像
         storeName: this.ruleForm.storeName, // 店铺名称
         telNum: this.ruleForm.telNum,
       };
@@ -517,6 +484,18 @@ export default {
         });
       }
     },
+    // 新增人员需要获取的 roleUuid
+    getRoleUuid(){
+      httpreques(
+        "post", {}, "/realbrand-org-service/Role/findRoleList"
+      ).then((res) => {
+        if (res.data.code === "SUCCESS") {
+          this.clerkroles = res.data.data
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
     // 门店名称列表
     StoreNameList() {
       httpreques(
@@ -528,16 +507,25 @@ export default {
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"
       ).then((res) => {
-        // console.log(res);
-        if (res.data.code == "SUCCESS") {
-          this.storeNameItemList = res.data.data.storeNameItemList;
+        if (res.data.code === "SUCCESS") {
+          this.storeNameItemList = res.data.data;
         } else {
           this.$message.error(res.data.msg);
         }
       });
     },
-    station1(val) {
-      // this.station = val
+    // 获取岗位
+    changeStation() {
+      this.identityItems = []
+      let obj = {}
+      for(let i in this.clerkroles){
+        obj[this.clerkroles[i].name] = this.clerkroles[i]
+      }
+      for(let item of this.station){
+        if(obj[item]){
+          this.uuidArr.push(obj[item].uuid)
+        }
+      }
     },
     cancelbtn() {
       let t = this;
@@ -600,5 +588,16 @@ export default {
 .el-icon-upload{
     top: 40px;
     left: 55px;
+}
+/deep/ .personal .el-upload--picture-card{
+  width: 120px;
+  height: 121px;
+  border: none;
+  background: #F8F8F8;
+  border-left: 1px solid #DADBDF;
+  border-radius: 0;
+}
+.table-right .el-checkbox{
+  margin-top: 8px;
 }
 </style>

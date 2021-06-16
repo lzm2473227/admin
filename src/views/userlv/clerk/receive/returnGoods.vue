@@ -2,23 +2,20 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">增加销售退货</span></div>
-        <div class="print" @click="refund"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">销售退货</span></div>
-        <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
+        <div class="print" @click="goBack"><img class="icon" src="@/assets/images/back.png" alt=""><span class="axis">返回列表</span></div>
+        <div class="print" @click="add"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">增加商品</span></div>
+        <div class="print" @click="add"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除商品</span></div>
+        <div class="print" @click="backCommodity"><img class="icon" src="@/assets/images/back-commodity.png" alt=""><span class="axis">确认退回</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
-        <!-- <el-radio-group v-model="radio1" size="mini">
-          <el-radio-button label="按商品69编码统计"></el-radio-button>
-          <el-radio-button label="按单品编码统计"></el-radio-button>
-        </el-radio-group> -->
         <div class="setup">
           <img class="set" src="@/assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
       </div>
     </div>
-    <div class="tab-body">
+        <div class="tab-body">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -30,45 +27,41 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column label="单品编码" align="center" sortable width="200">
+        <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200">
           <template v-slot="scope">
             <span class="detail-info" @click="codeDetail(scope.row)">{{scope.row.commodityCode}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="350"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column>
-        <!-- <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column> -->
-        <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="200"></el-table-column> -->
-        <el-table-column label="销售单价" sortable width="120">
+        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
+        <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
-          </template>
+						￥{{ scope.row.price }}
+					</template>
         </el-table-column>
-        <el-table-column prop="time" label="售出时间" align="center"  sortable width="160" ></el-table-column>
-        <el-table-column label="订单号" align="center"  sortable width="160" >
-          <template v-slot="scope">
-            <span @click="onDetail(scope.row)" class="table-button">{{ scope.row.dealNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="time" label="订单类型" align="center"  sortable width="130" ></el-table-column>
-        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="173" ></el-table-column>
+        <el-table-column prop="time" label="收货时间" align="center"  sortable width="183" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div class="statistic-item1">已售出单品编码数量：<span>{{sum}}</span></div>
-      <div class="statistic-item2">已售出商品种类：<span>{{sku}}</span></div>
-      <div class="statistic-item3">已售出商品金额：<span class="small">￥</span><span>{{total}}</span></div>
+      <div class="statistic-item1">退回商品单品编码数量：<span>{{codeCount}}</span></div>
+      <div class="statistic-item2">退回商品种类：<span>{{barcodeCount}}</span></div>
+      <div class="statistic-item3">退回商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
-      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+      <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <div class="search-item">
-          <el-input v-model="ruleForm.name" placeholder="请输入商品名称或扫69码"></el-input>
+          <el-input v-model="form.commodityName" placeholder="请输入商品名称或扫69码"></el-input>
           <img @click="scan" src="@/assets/images/ic-code.png" alt="">
         </div>
+        <!-- <el-form-item label="收货人:" prop="name">
+          <el-input v-model="form.name" placeholder="请输入收货人"></el-input>
+        </el-form-item> -->
         <el-form-item label="统计时间:">
           <div class="date-status">
             <span
@@ -79,7 +72,7 @@
             >{{item}}</span>
           </div>
           <el-date-picker
-            v-model="value1"
+            v-model="date"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -87,8 +80,8 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
-          <el-button class="a" type="primary" @click="resetForm('ruleForm')">重置</el-button>
+          <el-button class="a" type="primary" @click="submitForm()">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm()">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -100,18 +93,17 @@
           v-model="codeInfo">
         </el-input>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addCommodify">确 定</el-button>
+        <el-button type="primary" @click="backCommodity('1')">确 定</el-button>
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
   </div>
 </template>
- 
+
 <script>
 import Page from '@/components/Pagination/page.vue'
 import httpreques from '@/utils/httpreques';
 import moment from "moment";
- 
 export default {
   name: "tab",
   components: {
@@ -128,20 +120,17 @@ export default {
       centerDialogVisible: false,
       codeInfo: '',
       tabledata: [],
-      sku: 0, // 商品种类
-      sum: 0, // 销售数量
-      total: 0, // 销售总计
-      ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+      barcodeCount: 0, // 条形码总数
+      codeCount: 0, // 单品编码总数
+      price: 0, // 总金额
+      form: {
+          commodityName: '',
+          barcode: '',
+          date: '',
+          codeState: '',
+          commodityCode: ''
       },
-      multipleSelection: []
+      multipleSelection : []
     };
   },
   created() {
@@ -150,12 +139,16 @@ export default {
   },
   methods: {
     getdata(){
-      let param = {
+      let parame = {
+        "barcode": this.form.barcode,
+        "codeState": this.form.codeState,
+        "commodityCode": this.form.commodityCode,
+        "commodityName": this.form.commodityName,
         "pageNum": this.pageNum,
-        "pageSize": 15,
+        "pageSize": this.pageSize
       }
       this.tabledata = []
-      httpreques('post', param, '/realbrand-management-service/CommodityMgt/SaleCommodityList').then(res => {
+      httpreques('post', parame, '/realbrand-management-service/CommodityMgt/queryReceivedCommodityList').then(res => {
         console.log(res)
         if(res.data.code === "SUCCESS"){
           let data = res.data.data
@@ -196,49 +189,23 @@ export default {
       })
     },
     getTotal(){
-      httpreques('post', { }, '/realbrand-management-service/CommodityMgt/SaleStatistics').then(res => {
-        if(res.data.code === "SUCCESS"){
-          this.sum = res.data.data.sum
-          this.sku = res.data.data.sku
-          this.total = res.data.data.total
-        }else{
-          this.$message(res.data.msg)
-        }
-      })
-    },
-    addCommodify(){
-      let commodityCodeList = []
-      commodityCodeList = this.codeInfo.split(',')
       let params = {
-        "commodityList": commodityCodeList,
-        "pageNum": this.pageNum,
-        "pageSize": this.pageSize
-      } 
-      httpreques("post", params, "/realbrand-store-service/Commodity/batchQueryCommodity").then((res) => {
-        console.log(res);
-        if (res.data.code === "SUCCESS") {
-          this.centerDialogVisible = false
-          this.codeInfo = ''
-          let data = res.data.data
-          data.forEach((item, index) => {
-            item.index = this.tabledata.length+1
-            item.scanTime = moment(item.scanTime).format(
-              "YYYY-MM-DD HH:mm:ss"
-            )
-            this.tabledata.unshift(item) // 数组最前面新增数据
-          })
+        "barcode": this.form.barcode,
+        "codeState": 0,
+        "commodityCode": this.form.commodityCode,
+        "commodityName": this.form.commodityName,
+        "pageNum": 0,
+        "pageSize": 0
+      }
+      httpreques('post', params, '/realbrand-management-service/CommodityMgt/queryReceivedCommodityStatistics').then(res => {
+        if(res.data.code === "SUCCESS"){
+          this.barcodeCount = res.data.data.barcodeCount
+          this.codeCount = res.data.data.codeCount
+          this.price = res.data.data.price
         }else{
           this.$message(res.data.msg)
         }
       })
-    },
-    // 销售退货
-    refund(){
-      if(this.multipleSelection.length <= 0) return this.$message('请选择需要退货的商品')
-    },
-    changeCurrentPage(val){
-      this.pageNum = val
-      this.getdata()
     },
     // 单品编码详情
     codeDetail(data){
@@ -249,6 +216,51 @@ export default {
         }
       })
     },
+    // 退回商品
+    backCommodity(val){
+      let commodityCodeList = []
+      if(val === '1'){
+        commodityCodeList = this.codeInfo.split(',')
+        this.centerDialogVisible = false
+      }else{
+        if(this.multipleSelection.length <= 0) return this.$message('请选择需要退回的商品')
+        _.forEach(
+          JSON.parse(JSON.stringify(this.multipleSelection)),
+          function (item, key) {
+            commodityCodeList.push(item.commodityCode);
+          }
+        )
+      }
+      httpreques(
+        "post",
+        {
+          commodityCodeList: commodityCodeList,
+        },
+        "/realbrand-store-service/Receipt/returnCommodity"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.$message.success("退回商品成功!");
+          this.getdata()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    toReturnGoods(){
+      this.$router.push('/clerk/receive/returnGoods')
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
+    submitForm(){
+      this.getdata()
+      this.getTotal()
+    },
+    changeCurrentPage(val){
+      this.pageNum = val
+      this.getdata()
+    },
     //添加class样式
     tableRowClassName({row, rowIndex}){
       if (rowIndex === 0) {
@@ -256,19 +268,19 @@ export default {
       }
       return '';
     },
-    formatter(row, column) {
-      return row.address;
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    statistics(){
-      this.$router.push('/clerk/sale/saleStatistics')
-    },
+    handleCurrentChange(val) {
+        this.currentRow = val;
+      },
     scan(){
       this.centerDialogVisible = true
-    }
-  },
+    },
+    statistics(){
+      this.$router.push('/clerk/receive/receiveStatistics')
+    },
+    goBack(){
+        this.$router.go(-1)
+    },
+  }
 };
 </script>
 

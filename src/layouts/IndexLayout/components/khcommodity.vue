@@ -265,7 +265,7 @@ export default {
 }
 .index-manage-content {
   background: #fff;
-  padding: 10px 0 10px 0;
+  // padding: 10px 0 10px 0;
 }
 .contenthidden {
   display: none !important;

@@ -187,6 +187,18 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         hidden: true,
       },
       {
+        title: "主题设置",
+        path: "/setting/theme",
+        roles: ["theme"],
+        component: () => import("@/views/setting/theme.vue"),
+      },
+      {
+        title: "新增活动主题",
+        path: "/setting/themenew",
+        roles: ["themenew"],
+        component: () => import("@/views/setting/themenew.vue"),
+      },
+      {
         title: "积分管理",
         path: "/setting/integral",
         redirect: "/setting/integral/integralrule",
@@ -650,6 +662,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 roles: ["clerkreceive"],
                 component: () =>
                   import("@/views/userlv/clerk/receive/receive.vue"),
+              },
+              {
+                title: "退回商品",
+                path: "/clerk/receive/returnGoods",
+                roles: ["clerkreceive"],
+                component: () =>
+                  import("@/views/userlv/clerk/receive/returnGoods.vue"),
               },
               {
                 title: "已收货统计",

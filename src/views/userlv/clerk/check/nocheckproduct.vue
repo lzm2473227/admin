@@ -30,7 +30,11 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="commodityCode" label="单品编码" align="center" sortable width="200"></el-table-column>
+        <el-table-column label="单品编码" align="center" sortable width="200">
+          <template v-slot="scope">
+            <span class="detail-info" @click="codeDetail(scope.row)">{{scope.row.commodityCode}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
         <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
         <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
@@ -262,6 +266,15 @@ export default {
           
         }else{
           this.$message(res.data.msg)
+        }
+      })
+    },
+    // 单品编码详情
+    codeDetail(data){
+      this.$router.push({
+        path: '/clerk/receive/codeDetail',
+        query: {
+          commodityCode: data.commodityCode
         }
       })
     },

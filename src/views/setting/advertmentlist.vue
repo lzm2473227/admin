@@ -3,8 +3,8 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="addAdvert()"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增广告</span></div>
-        <div class="print" @click="editadvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑广告</span></div>
-        <div class="print" @click="deladvertment(scope.row.storeName)"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除广告</span></div>
+        <div class="print" @click="editadvertment()"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑广告</span></div>
+        <div class="print" @click="deladvertment()"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除广告</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
@@ -22,20 +22,24 @@
       :data="tabledata"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="advertisementNumber" label="广告编码" align="center" sortable width="230"></el-table-column>
-        <el-table-column prop="advertisementName" label="广告名称" align="center" width="200"></el-table-column>
-        <el-table-column prop="type" label="广告类型" align="center" width="200"></el-table-column>
+        <el-table-column label="广告编码" align="center" sortable width="230">
+          <template v-slot="scope">
+            <span class="detail-info" @click="editadvertment(scope.row)">{{scope.row.advertisementNumber}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="advertisementName" label="广告名称" sortable align="center" width="200"></el-table-column>
+        <el-table-column prop="type" label="广告类型" align="center" sortable width="200"></el-table-column>
         <el-table-column label="广告描述" align="center" sortable width="250">
           <template v-slot="scope">
             <img :src="scope.row.linkPosition" alt="" style="height: 20px;">
           </template>
         </el-table-column>
-        <el-table-column prop="positionName" label="广告位置" align="center" width="170" ></el-table-column>
+        <el-table-column prop="positionName" label="广告位置" sortable align="center" width="170" ></el-table-column>
         <el-table-column prop="startTime" label="起始时间" align="center" sortable width="210" ></el-table-column>
         <el-table-column prop="endTime" label="截止时间" align="center" sortable width="210" ></el-table-column>
         <el-table-column label="状态" align="center"  sortable width="123" >
@@ -52,16 +56,16 @@
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
         <el-form-item label="广告名称:" prop="name" class="name-search">
-          <el-input v-model="ruleForm.name" placeholder="请输入广告名称"></el-input>
+          <el-input v-model="ruleForm.advertisementName" placeholder="请输入广告名称"></el-input>
         </el-form-item>
         <el-form-item label="广告类型:" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入广告类型"></el-input>
+          <el-input v-model="ruleForm.type" placeholder="请输入广告类型"></el-input>
         </el-form-item>
         <el-form-item label="广告位置:" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入广告位置"></el-input>
+          <el-input v-model="ruleForm.positionName" placeholder="请输入广告位置"></el-input>
         </el-form-item>
         <el-form-item label="状态:" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入状态"></el-input>
+          <el-input v-model="ruleForm.enableState" placeholder="请输入状态"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="a" type="primary" @click="submitForm('ruleForm')">查询</el-button>
@@ -91,15 +95,12 @@ export default {
       tabledata: [],
       totalNum: 0,
       ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          advertisementName: '',
+          enableState: '',
+          positionName: '',
+          type: ''
       },
+      multipleSelection: []
     };
   },
   created() {
@@ -109,9 +110,13 @@ export default {
     getdata() {
       let t = this;
       let params = {
-        pageNum: t.pageNum,
-        pageSize: t.pageSize,
-      };
+            "advertisementName": this.ruleForm.advertisementName,
+            "enableState": this.ruleForm.enableState,
+            "pageNum": this.pageNum,
+            "pageSize": this.pageSize,
+            "positionName": this.ruleForm.positionName,
+            "type": this.ruleForm.type
+          }
       httpreques(
         "post",
         params,
@@ -137,21 +142,18 @@ export default {
       });
     },
     addAdvert() {
-      let t = this;
-      t.$router.push({ path: "/setting/newadvertmenttwo" });
+      this.$router.push({ path: "/setting/newadvertmenttwo" });
     },
-    deladvertment(id) {
+    deladvertment() {
+      if(this.multipleSelection.length <= 0) return this.$message.error({message: '请选择需要删除的广告'})
       let t = this;
       httpreques(
         "post",
-        { id: id },
+        { advertisementNumber: this.multipleSelection[0].advertisementNumber },
         "/realbrand-management-service/AdvertisementMgt/DeleteAdvertisement"
       ).then((res) => {
         if (res.data.code === "SUCCESS") {
-          t.$message({
-            message: "广告已删除",
-            type: "success",
-          });
+          t.$message.success("广告已删除")
           t.getdata();
         } else {
           //接口错误处理
@@ -159,12 +161,18 @@ export default {
         }
       });
     },
-    editadvertment(id) {
-      let t = this;
-      t.$router.push({
-        path: "/setting/newadvertment",
+    editadvertment(data) {
+      let advertisementNumber = ''
+      if(data){
+        advertisementNumber = data.advertisementNumber
+      }else{
+        if(this.multipleSelection.length !== 1) return this.$message('请选择一个需要编辑的广告')
+        advertisementNumber = this.multipleSelection[0].advertisementNumber
+      }
+      this.$router.push({
+        path: "/setting/newadvertmenttwo",
         query: {
-          advertmentid: id,
+          advertmentid: advertisementNumber,
         },
       });
     },
@@ -207,10 +215,9 @@ export default {
     formatter(row, column) {
       return row.address;
     },
-    //选中你选择的条件列表
-    setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      }
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
   },
 };
 </script>
