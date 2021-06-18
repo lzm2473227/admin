@@ -151,10 +151,12 @@
             <td class="table-left">商品分类</td>
             <td class="table-right" colspan="3">
               <el-cascader
+              ref="demoCascader"
                   v-model="value"
                   clearable 
                   :options="categoriesCatalog"
                   :props="setKesLabel"
+                   @change="handleChange"
               ></el-cascader>
             </td>
           </tr>
@@ -208,6 +210,7 @@ export default {
   name: "Newproduct",
   data() {
     return {
+      multipleSelection:[],
        i:[],
        item:[],
       form: {
@@ -220,7 +223,7 @@ export default {
         price: "", //销售价格/默认为0
         specsParameter: "", // 规格参数
         commodityCode: "", // 单品编码
-        categoryId:"95",   //三级分类id
+        categoryId:"",   //三级分类id
         storeId:""
       },
       dialogImageUrl:"",
@@ -236,10 +239,17 @@ export default {
     };
   },
   mounted() {
-    // this.getdata();
+    this.getdata();
     this.threedirectories();
   },
   methods: {
+    //联动触发事件
+    handleChange(){
+      const obj = this.$refs['demoCascader'].getCheckedNodes()
+      console.log(obj[0].data)  // 打印出当前选择的value所对应的对象
+      // console.log(obj[0].data.categoryId)  
+      this.form.categoryId = obj[0].data.categoryId
+    },
     getdata() {
       let t = this;
       let barcode = t.$route.query.barcode;
@@ -286,54 +296,6 @@ export default {
       }
     },
     addcomm() {
-      let ip = []
-      let ib = []
-      let io = []
-      let id = []
-
-      _.forEach(
-        JSON.parse(JSON.stringify(this.categoriesCatalog)),
-        function (item, key) {
-          ip.push(item.subItemList);
-        }
-      )
-    console.log(ip);
-
-      for(var i =0;i<ip.length;i++){
-          _.forEach(
-          JSON.parse(JSON.stringify(ip[i])),
-          function (items, key) {
-            console.log(items);
-            // if(items!=undefined){
-              ib.push(items.subItemList) 
-            // }
-          }
-        )
-      }
-      console.log(ib);
-
-      _.forEach(
-        JSON.parse(JSON.stringify(ib)),
-        function (items, key) {
-        console.log(items);
-        if(items!=undefined){
-          io.push(items) 
-        }
-      }
-    )
-
-    for(var a =0;a<io.length;a++){
-        _.forEach(
-        JSON.parse(JSON.stringify(io[a])),
-        function (items, key) {
-          console.log(items);
-            id.push(items.categoryId) 
-        }
-      )
-    }
-    console.log(id[0]);
-
-      id = id.toString()
       let params = {
         barcode: this.form.barcode, //条形码
         brandName: this.form.brandName, //品牌名称
@@ -344,7 +306,7 @@ export default {
         price: this.form.price, //销售价格/默认为0
         specsParameter: this.form.specsParameter, // 规格参数
         commodityCode: this.form.commodityCode, // 单品编码
-        categoryId:id[0],
+        categoryId:this.form.categoryId,
       };
 
       let url = this.$route.query.barcode
@@ -352,7 +314,7 @@ export default {
         : "/realbrand-management-service/CommodityMgt/InsertCommodity";
       // console.log(params);
       // console.log(this.categoriesCatalog);
-        console.log(id);
+        // console.log(id);
 
       httpreques("post", params, url).then((res) => {
         if (res.data.code == "SUCCESS") {
@@ -365,7 +327,7 @@ export default {
         } else {
           //接口错误处理
           this.$message.error(res.data.msg);
-        }
+        }0.
       });
     },
     //三级目录

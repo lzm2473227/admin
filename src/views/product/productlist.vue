@@ -53,39 +53,45 @@
         <el-table-column
           prop="specsParameter"
           label="规格"
+          sortable
           width="120"
         ></el-table-column>
         <el-table-column
           prop="brandName"
           label="品牌"
           align="center"
+          sortable
           width="120"
         ></el-table-column>
         <el-table-column
           prop="manufacturer"
           label="生产厂商"
           width="150"
+          sortable
           align="center"
         ></el-table-column>
         <el-table-column
           prop="b"
           label="商品三级类别"
           width="180"
+          sortable
         ></el-table-column>
         <el-table-column
           prop="p"
           label="商品二级类别"
           width="180"
+          sortable
         ></el-table-column>
         <el-table-column
           prop="m"
           label="商品一级类别"
           width="180"
+          sortable
         ></el-table-column>
         <el-table-column label="商品单价" align="center" sortable width="120">
           <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
-        <el-table-column prop="time" label="图片" align="center" width="150">
+        <el-table-column prop="time" label="图片" sortable align="center" width="150">
           <template v-slot="scope">
             <img :src="scope.row.filePath" alt="" style="height: 20px;">
           </template>

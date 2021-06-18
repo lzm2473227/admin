@@ -2,11 +2,23 @@ const {
     VUE_APP_APIHOST
 } = process.env
 import axios from 'axios';
-//http请求封装  
+// import router from 'router.js';
+// import store from '../store';
+//http请求封装     //router.push(/login)
 //1.请求类型 2.传入对象 3.路径
 export default function httpreques(type, params, path) {
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('loginuser') ? ('Bearer '+JSON.parse(localStorage.getItem('loginuser')).token ): '';
+
+    // axios.interceptors.response.use(function (response) {
+    //     if (response.data.msg === 'TOKEN无效或已过期') {
+    //         Storage.localRemove('token') // 删除已经失效或过期的token（不删除也可以，因为登录后覆盖）
+    //         router.replace({path: '/login'})}
+    // })
+    // console.log(store);
+    // console.log(path);
+    // window.location.href = 'login';
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('loginuser') ? ('Bearer '+JSON.parse(localStorage.getItem('loginuser')).token ): "";
     path = VUE_APP_APIHOST +path;// 线下api
+    
        
     //获取localStroage值
     // let token = localStorage.getItem('loginuser') ? JSON.parse(localStorage.getItem('loginuser')).token : '';

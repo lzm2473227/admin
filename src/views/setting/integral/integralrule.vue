@@ -28,7 +28,7 @@
         <el-table-column prop="storeName" label="规则名称" sortable width="350"></el-table-column>
         <el-table-column prop="address" label="规则类型" sortable width="480"></el-table-column>
         <el-table-column prop="storeType" label="规则描述" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="积分有效期" align="center" width="243" >
+        <el-table-column label="积分有效期" align="center" sortable width="243" >
           <template v-slot="scope">
             <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
           </template>

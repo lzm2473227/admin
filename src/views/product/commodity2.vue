@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="delproduct()">
+        <div class="print" @click="soldout()">
           <img class="icon" src="../../assets/images/delete.png" alt="" /><span class="axis">线上商城下架</span>
         </div>
         <div class="print">
@@ -37,16 +37,16 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="150"></el-table-column>
         <el-table-column prop="commodityName" label="商品名称" align="center" sortable width="240"></el-table-column>
-        <el-table-column prop="specsParameter" label="规格" width="120"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" width="120"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂商" width="150"></el-table-column>
-        <el-table-column prop="classifyRsp.b" label="商品三级类别" width="180"></el-table-column>
-        <el-table-column prop="classifyRsp.p" label="商品二级类别" width="180"></el-table-column>
-        <el-table-column prop="classifyRsp.m" label="商品一级类别" width="180"></el-table-column>
+        <el-table-column prop="specsParameter" label="规格" width="120" sortable></el-table-column>
+        <el-table-column prop="brandName" label="品牌" width="120" sortable></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂商" width="150" sortable></el-table-column>
+        <el-table-column prop="classifyRsp.b" label="商品三级类别" width="180" sortable></el-table-column>
+        <el-table-column prop="classifyRsp.p" label="商品二级类别" width="180" sortable></el-table-column>
+        <el-table-column prop="classifyRsp.m" label="商品一级类别" width="180" sortable></el-table-column>
         <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope"> ￥{{ scope.row.price }} </template>
         </el-table-column>
-        <el-table-column prop="time" label="图片" align="center" width="150">
+        <el-table-column prop="time" label="图片" align="center" sortable width="150">
           <template v-slot="scope"><img :src="scope.row.filePath" alt="" style="height: 20px;"></template>
         </el-table-column>
       </el-table>
@@ -173,6 +173,16 @@ export default {
         }
       });
     },
+    //下架
+    soldout(){
+
+    },
+    //获取表格的所有值
+    handleSelectionChange(val){
+      this.multipleSelection = val
+      console.log(this.multipleSelection);
+      console.log(val);
+    },  
     //分页
     changeCurrentPage(val) {
       this.pageNum = val;

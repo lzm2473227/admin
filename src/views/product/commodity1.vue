@@ -3,7 +3,7 @@
     <div class="tab-title">
       <div class="left">
         <div class="print" @click="dialogtrue"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">添加类别</span></div>
-        <div class="print" @click="edit"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑类别</span></div>
+        <div class="print" @click="edit(bid)"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑类别</span></div>
         <div class="print" @click="del()"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除类别</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
@@ -88,13 +88,54 @@
         </template>         
       </el-upload>
       </el-form-item>
-      
     </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="add"
           >确 定</el-button
         >
         <el-button @click="centerDialogVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="编辑类别"
+      v-model="centerDialogVisible2"
+      width="30%"
+      center
+      :close-on-click-modal="false"
+    >
+    <el-form :model="ruleForm">
+      <el-form-item label="上级类别：" style="display:flex">
+        <el-cascader
+            ref="demoCascader"
+            v-model="value"
+            clearable 
+            :options="categoriesCatalog"
+            :props="setKesLabel"
+            @change="handleChange"
+        ></el-cascader>
+      </el-form-item>
+      <el-form-item label="活动名称：" style="display:flex">
+        <el-input v-model="ruleForm.b"></el-input>
+      </el-form-item>
+      <el-form-item label="类别图片：" style="display:flex">
+        <el-upload
+        action="http://14.29.162.130:6602/image/imageUpload"
+        list-type="picture-card"
+        :on-success="handleAvatarSuccess"
+        :on-preview="handlePictureCardPreview" >
+        <template #default >
+          <div  class="imgs-title">
+            <i class="el-icon-plus"></i>
+          </div>
+        </template>         
+      </el-upload>
+      </el-form-item>
+    </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="add2"
+          >确 定</el-button
+        >
+        <el-button @click="centerDialogVisible2 = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -110,6 +151,7 @@ export default {
       pageSize: 15,
       pageNum: 1,
       centerDialogVisible: false,  //弹出框开关
+      centerDialogVisible2: false,  //弹出框开关
       textarea: "",
       tabledata: [],   //列表数据
       categoriesCatalog:[],//三级目录
@@ -126,6 +168,8 @@ export default {
         price: "",
         sort:"",
         sortName:"",
+        b:"",
+        bid:"",
         categoryImage:"",//图片
         parentId: "1"
       },
@@ -143,9 +187,15 @@ export default {
     // this.handleSelectionChange()
   },
   methods:{
-    //开关
     dialogtrue(){
       this.centerDialogVisible = true
+    },
+    edit(bid){    
+      if(this.multipleSelection.length != 1) return this.$message('请选择一个需要编辑的商品')
+      this.centerDialogVisible2 = true
+      console.log(this.multipleSelection[0].bid);
+      this.ruleForm.bid = this.multipleSelection[0].bid
+      console.log(this.ruleForm.bid);
     },
     //联动触发事件
     handleChange(){
@@ -153,14 +203,15 @@ export default {
       console.log(obj[0].data)  // 打印出当前选择的value所对应的对象
       console.log(obj[0].data.parentId)  
       this.ruleForm.parentId = obj[0].data.parentId
+      this.ruleForm.b = obj[0].data.b
+      this.ruleForm.bid = obj[0].data.bid
     },
     //获取表格的所有值
     handleSelectionChange(val){
       this.multipleSelection = val
       console.log(this.multipleSelection);
       console.log(val);
-    },
-    // 删除类别   
+    },  
     del(){
       let id = []
       let ip = []
@@ -208,11 +259,10 @@ export default {
           console.log(im);
           t.getdata();
         } else {
-          t.$message.error(res.data.msg);
+          t.$message.error("只能单个删除");
         }
       });
     },
-    // 类别列表
     getdata() {
       let t = this;
       httpreques(
@@ -238,7 +288,6 @@ export default {
         }
       });
     },
-    // 新增类别
     add() {
       let params = {
         categoryName: this.ruleForm.sortName, //分类名字
@@ -254,6 +303,28 @@ export default {
             type: "success",
           });
           this.centerDialogVisible = false
+          this.getdata()
+        } else {
+          //接口错误处理
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    add2() {
+      let params = {
+        name: this.ruleForm.b, //分类名字
+        id: this.ruleForm.bid
+      };
+      // console.log(value);
+      httpreques("post", params,"/realbrand-management-service/Classify/UpdateClassify")
+      .then((res) => {
+        // console.log(res.data.data);
+        if (res.data.code == "SUCCESS") {
+          this.$message({
+            message:"编辑成功",
+            type: "success",
+          });
+          this.centerDialogVisible2 = false
           this.getdata()
         } else {
           //接口错误处理
@@ -290,7 +361,6 @@ export default {
         }
         return data;
     },
-    //图片
     handleAvatarSuccess(res, file) {
       // console.log(file);
       // console.log(res);

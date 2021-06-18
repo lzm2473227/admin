@@ -34,7 +34,7 @@
         <el-table-column prop="storeName" label="门店名称" sortable width="350"></el-table-column>
         <el-table-column prop="address" label="门店地址" sortable width="480"></el-table-column>
         <el-table-column prop="storeType" label="门店类别" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="证件照" align="center" width="243" >
+        <el-table-column label="证件照" sortable align="center" width="243" >
           <template v-slot="scope">
             <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
           </template>
@@ -170,6 +170,7 @@ export default {
         if(this.multipleSelection.length != 1) return this.$message('请选择一个需要编辑的门店')
         storename = this.multipleSelection[0].storeName
       }
+      // console.log(data);
       this.$router.push({
         path: "/setting/newstore",
         query: {

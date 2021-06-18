@@ -220,7 +220,7 @@ export default {
                 storeobj.county
               ].code;
             t.form = storeobj;
-            this.imgArr.push({url: storeobj.storeLicence})
+            // this.imgArr.push({url: storeobj.storeLicence})
             this.dialogImageUrl = storeobj.storeLicence;
           } else {
             //接口错误处理
@@ -240,9 +240,7 @@ export default {
       if(!params.storeName) return this.$message.error('门店名称不能为空')
       if(!params.province) return this.$message.error('门店地址不能为空')
       if(!params.jianjie) return this.$message.error('门店简介不能为空')
-      if(!params.storeLicence) return this.$message.error('请上传证件照')
       params.id = this.form.id;
-      params.storeLicence = this.form.storeLicence;
       params.orgCode = this.form.orgCode;
       delete params.storeaccount;
       delete params.storepsw;
@@ -289,10 +287,8 @@ export default {
       console.log(file);
       console.log(res);
       // return
-      if (res.code === "Success") {
-        this.dialogImageUrl = res.data;
-        this.form.storeLicence = res.data;
-      }
+      this.dialogImageUrl = res.data;
+      this.form.storeLicence = res.data;
     },
     handleRemove(file, fileList) {
         console.log(file, fileList);

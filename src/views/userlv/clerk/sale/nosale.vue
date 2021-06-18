@@ -34,8 +34,8 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
         <el-table-column prop="commodityName" label="商品名称" sortable width="260"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" width="130"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" width="100"></el-table-column>
+        <el-table-column prop="specsParameter" sortable label="商品规格" width="130"></el-table-column>
+        <el-table-column prop="brandName" sortable label="品牌" width="100"></el-table-column>
         <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="210"></el-table-column> -->
         <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope">
