@@ -15,7 +15,7 @@
     </div>
     <div class="table-main">
       <div class="table-title">
-        <p>新增折扣活动</p>
+        <p>新增买赠活动</p>
       </div>
       <form action="#">
         <table border="1" class="">
@@ -86,7 +86,9 @@
             <td class="table-left" >活动规则</td>
             <td class="table-right" colspan="3" >
             <div style="display:flex; align-items: center;">
-              折扣比例<input type="text"  style="width:90%">
+              买<input type="text"/>个同品类商品，赠送<input type="text"/>个商品。
+              赠送的商品名称<input type="text" placeholder="请单击进行选择商品"/>
+              赠送的商品编码<input type="text" placeholder="选择好商品后，商品编码将自动填写"/>
             </div>
           </td>
           </tr>

@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column label="商品单价" align="center" sortable width="240" class="underline">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="scanTime" label="盘货时间" align="center"  sortable width="240" >

@@ -231,7 +231,7 @@
     }
     
     /deep/.el-input__inner {
-        width: 220px;
+        width: 260px;
         padding-left: 6px;
         background: #fff;
         border: 1px solid #ddd;
@@ -286,12 +286,12 @@
         }
     }
     
-    /deep/.el-table--small td {
-        padding: 6px 0;
-    }
-    
+    // /deep/.el-table--small td {
+    //     padding: 6px 0;
+    // }
     /deep/.el-table .cell {
         line-height: 24px;
+        color: #384F71;
     }
     
     /deep/.tab-body .el-table thead tr .cell {
@@ -333,7 +333,7 @@
     
     /deep/.el-table--small th,
     .el-table--small td {
-        padding: 5px 0;
+        padding: 3px 0;
     }
     
     input:focus {
@@ -635,4 +635,9 @@
                 color: #fff;
             }
         }
+    }
+    
+    .table-price {
+        padding-right: 4px;
+        color: #F53836;
     }

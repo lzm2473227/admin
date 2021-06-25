@@ -6,16 +6,10 @@
     <div class="indexlayout-newbot">
       <div class="indexlayout-bot-left">
         <div class="index-user">
-          <span class="index-user-title">{{ systitle }}</span>
+          <span class="index-user-title">{{ lvname }}</span>
           <div class="index-user-content">
-            <el-avatar :size="50" :src="circleUrl"></el-avatar>
-            <span class="index-user-lvname"
-              ><img
-                @click="edituser()"
-                src="../../assets/images/edit.png"
-                alt=""
-              />{{ lvname }}</span
-            >
+            <el-avatar :size="56" :src="circleUrl"></el-avatar>
+            <span class="index-user-lvname" @click="edituser()"><img src="../../assets/images/edit.png" alt="" />个人设置</span>
           </div>
         </div>
         <div class="roles" :key="indexkey">
@@ -71,13 +65,16 @@
         <div class="modal-top">
           <div class="modal-title">个人设置</div>
           <div class="modalbtns">
-            <div class="modalbtn" @click="saveuser">
+            <div class="modalbtn" @click="saveuser()">
               <img src="../../assets/images/ic-save.png" class="modalben-img" />
               <span>应用</span>
             </div>
-            <div class="modalbtn" style="margin-left:20px" @click="escclick">
+            <div class="modalbtn" style="margin-left:20px" @click="loginout">
               <img src="../../assets/images/ic-esc.png" class="modalben-img" />
-              <span @click="remove">退出</span>
+              <span>退出</span>
+            </div>
+            <div class="modalbtn" style="margin-left:20px" @click="onClose">
+              <span>关闭</span>
             </div>
           </div>
         </div>
@@ -139,7 +136,7 @@
                     <input
                       class="baseinfo-input"
                       disabled="disabled"
-                      v-model="userinfo.username"
+                      v-model="userinfo.idNumber"
                     />
                   </div>
                 </div>
@@ -365,7 +362,8 @@ export default defineComponent({
         break;
       case "STORE":
         rolename = "门店";
-        systitle = "门店管理系统";
+        // systitle = "门店管理系统";
+        systitle = "海王集团业务管理系统";
         break;
       case "LOGISTICS":
         rolename = "物流配送";
@@ -389,14 +387,16 @@ export default defineComponent({
         break;
       case "KAIHUA":
         rolename = "凯华公司";
-        systitle = "凯华内部管理系统";
+        systitle = "凯华内部管理";
         break;
       default:
         break;
     }
     this.rolename = "系统用户：  " + rolename;
-    this.systitle = "用户：   " + systitle;
+    this.systitle = systitle;
     this.lvname = this.$store.state.user.currentUser.name;
+    console.log(this.$store);
+    
     // if(rolename == 'KAIHUA'){
     //   console.log(rolename+"11111");
     // }
@@ -409,29 +409,30 @@ export default defineComponent({
       localStorage.removeItem('loglevel:webpack-dev-server')
       this.$router.replace('/user/login')
     },
-    async loginout() {
+    loginout() {
       let t = this;
-      await t.$store.dispatch("user/logout");
-      t.$router.replace({ path: "/user/login" });
+      store.dispatch("logout")
+      localStorage.removeItem('loginuser')
+      t.$router.push({ path: "/user/login" })
+      // await t.$store.dispatch("user/logout");
+      // t.$router.replace({ path: "/user/login" });
     },
     getdata(){
          let t = this;
-         const loginuser = JSON.parse(localStorage.getItem('loginuser'));
+         const loginuser = JSON.parse(localStorage.getItem('loginuser')).uuid;
 
          let params ={
-           idCard:loginuser.userDetails.username
+           uuid:loginuser
          };
          httpreques(
           "post",
           params,
           "/realbrand-management-service/StoreUserMgt/StoreUser"
         ).then((res) => {
-          // console.log(res);
+          console.log(res);
           if (res.data.code == "SUCCESS") {
-            //对象数据处理
-            t.userinfo = res.data.data;
+            if(res.data.data) t.userinfo = res.data.data;
           } else {
-            //接口错误处理
             t.$message.error(res.data.msg);
           }
         });
@@ -480,9 +481,8 @@ export default defineComponent({
         });
     },
     //退出
-    escclick(){
-        let t = this;
-      t.dialogVisible = false;
+    onClose(){
+      this.dialogVisible = false;
     },
     //
     jumpurl(params){
@@ -629,16 +629,15 @@ export default defineComponent({
 .indexlayout-newbot {
   display: flex;
   flex-direction: row;
-  padding-top: 10px;
   flex: 1;
   position: fixed;
-  top: 42px;
+  top: 60px;
   left: 0;
   width: 100vw;
 }
 .indexlayout-bot-left {
   position: relative;
-  margin: 0 10px;
+  margin-right: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -650,15 +649,14 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
-  border: 1px solid #b8d0f2;
+  // border: 1px solid #b8d0f2;
 }
 .index-user-title {
   width: 100%;
-  height: 38px;
-  line-height: 38px;
-  background: #F1F2F4;
+  padding: 20px 0;
+  background: #E7E8EC;
   font-size: 14px;
-  border-bottom: 1px solid #b8d0f2;
+  // border-bottom: 1px solid #b8d0f2;
   font-family: Source Han Sans CN;
   font-weight: 500;
   color: #333333;
@@ -668,8 +666,8 @@ export default defineComponent({
 }
 .index-user-content {
   width: 100%;
-  padding: 20px 0;
-  background: #F1F2F4;
+  padding: 0 20px 20px;
+  background: #E7E8EC;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -680,13 +678,13 @@ export default defineComponent({
   display: flex;
   font-size: 14px;
   font-family: Source Han Sans CN;
-  color: #222222;
+  color: #666;
   font-weight: bold;
   padding-top: 10px;
+  cursor: pointer;
   img {
     width: 14px;
     margin-right: 6px;
-    cursor: pointer;
   }
 }
 .indexlayout-bot-right {
@@ -695,6 +693,7 @@ export default defineComponent({
   box-sizing: border-box;
   // padding: 0 10px 10px 0;
   background-color: #fff;
+  width: 0;
 }
 
 .indexlayout-newsup {
@@ -759,7 +758,6 @@ export default defineComponent({
 .modalbtn {
   font-size: 16px;
   font-family: Source Han Sans CN;
-
   color: #333333;
   display: flex;
   align-items: center;
@@ -787,7 +785,6 @@ export default defineComponent({
 .modalbot-menu {
   height: 38px;
   width: 124px;
-
   font-size: 14px;
   font-family: Source Han Sans CN;
   text-align: center;
@@ -838,7 +835,7 @@ export default defineComponent({
 .roles {
   height: 700px;
   overflow: auto;
-  border: 1px solid #b8d0f2;
+  // border: 1px solid #b8d0f2;
   background: #F1F2F4;
 }
 /deep/.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content{
@@ -847,12 +844,12 @@ export default defineComponent({
 }
 
 /deep/.index-stroe-title:hover{
-  background: #fff;
+  background: #eee;
 }
 /deep/.index-stroe-title:active{
   background: #fff;
 }
 /deep/.el-tree{
-  background: #F1F2F4;
+  background: #E7E8EC;
 }
 </style>

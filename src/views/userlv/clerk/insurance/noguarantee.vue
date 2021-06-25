@@ -34,12 +34,18 @@
           </template>
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="370"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="200"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
-        <el-table-column prop="time" label="保单单号" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column label="商品单价" sortable width="120">
+          <template v-slot="scope">
+						{{ scope.row.price }} 元
+					</template>
+        </el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="保单单号" align="center"  sortable width="180" ></el-table-column>
         <el-table-column prop="time" label="保单生效起始时间" align="center"  sortable width="200" ></el-table-column>
+        <el-table-column label="" align="center" width="40" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">

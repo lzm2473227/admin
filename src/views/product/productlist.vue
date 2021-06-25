@@ -5,7 +5,7 @@
         <div class="print" @click="addProduct">
           <img class="icon" src="../../assets/images/add.png" alt="" /><span class="axis">新增商品</span>
         </div>
-        <div class="print" @click="editproduct">
+        <div class="print" @click="editproduct('', '1')">
           <img class="icon" src="../../assets/images/edit.png" alt="" /><span class="axis">编辑商品</span>
         </div>
         <div class="print" @click="delproduct()">
@@ -25,7 +25,7 @@
         <div class="setup"><img class="set" src="../../assets/images/ic-设置.png" alt="系统设置" @click="setup" /></div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
         :row-class-name="tableRowClassName"
         ref="multipleTable2"
@@ -37,65 +37,68 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column
-          prop="barcode"
-          label="商品69编码"
-          align="center"
-          sortable
-          width="150"
-        ></el-table-column>
+        <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="150">
+          <template v-slot="scope">
+            <span class="detail-info" @click="editproduct(scope.row, '2')">{{scope.row.barcode}}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="commodityName"
           label="商品名称"
           sortable
-          width="240"
+          width="180"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="specsParameter"
           label="规格"
           sortable
           width="120"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="brandName"
           label="品牌"
-          align="center"
           sortable
           width="120"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="manufacturer"
           label="生产厂商"
-          width="150"
           sortable
-          align="center"
+          width="200"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="b"
-          label="商品三级类别"
-          width="180"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="p"
-          label="商品二级类别"
-          width="180"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="m"
+          prop="classifyRsp.m"
           label="商品一级类别"
-          width="180"
+          width="160"
           sortable
         ></el-table-column>
-        <el-table-column label="商品单价" align="center" sortable width="120">
-          <template v-slot="scope"> ￥{{ scope.row.price }} </template>
+        <el-table-column
+          prop="classifyRsp.p"
+          label="商品二级类别"
+          width="160"
+          align="center"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="classifyRsp.b"
+          label="商品三级类别"
+          width="160"
+          align="center"
+          sortable
+        ></el-table-column>
+        <el-table-column label="商品单价" sortable width="120">
+          <template v-slot="scope"><span class="table-price"> {{ scope.row.price }} </span>元</template>
         </el-table-column>
-        <el-table-column prop="time" label="图片" sortable align="center" width="150">
+        <el-table-column label="图片" sortable align="center" width="150">
           <template v-slot="scope">
-            <img :src="scope.row.filePath" alt="" style="height: 20px;">
+            <el-image style="height: 20px" :src="scope.row.filePath" :preview-src-list="srcList"></el-image>
           </template>
         </el-table-column>
+        <el-table-column label="" align="center" width="85" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -110,10 +113,10 @@
         label-width="100px"
         class="input-with-select"
       >
-        <el-form-item label="商品名称:" prop="commodityName" class="name-search">
-          <el-input v-model="ruleForm.commodityName" placeholder="请输入商品名称或扫描69码"></el-input>
-          <img @click="scan" src="../../assets/images/ic-code.png" alt="" />
-        </el-form-item>
+        <div class="search-item">
+          <el-input v-model="ruleForm.commodityName" placeholder="请输入商品名称或扫69码"></el-input>
+          <img @click="scan" src="@/assets/images/ic-code.png" alt="">
+        </div>
         <el-form-item label="商品单价:" prop="price">
           <el-input v-model="ruleForm.price" placeholder="请输入商品单价"></el-input>
         </el-form-item>
@@ -169,7 +172,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       radio1: "按商品69编码统计",
       centerDialogVisible: false,
@@ -183,6 +186,7 @@ export default {
         brand:"",
         category:""
       },
+      srcList: []
     };
   },
   created() {
@@ -205,6 +209,8 @@ export default {
         if (res.data.code == "SUCCESS") {
           _.forEach(res.data.data, function (item, key) {
             item.index = key + 1; //加入index
+            item.price = item.price.toFixed(2)
+            // if(item.filePath) this.srcList.push(item.filePath)
           });
           // console.log(res.data)
           t.total = res.data.total;
@@ -219,9 +225,14 @@ export default {
     addProduct() {
       this.$router.replace("/newproduct");
     },
-    editproduct() {
-      if(this.multipleSelection.length !== 1) return this.$message('请选择一项需要编辑的商品')
-      let barcode = this.multipleSelection[0].barcode
+    editproduct(data, val) {
+      let barcode = ''
+      if(val === '2'){
+        barcode = data.barcode
+      }else{
+        if(this.multipleSelection.length <= 0) return this.$message('请选择一项需要编辑的商品')
+        barcode = this.multipleSelection[0].barcode
+      }
       this.$router.push({
         path: "/newproduct",
         query: {
@@ -271,6 +282,8 @@ export default {
       );
       // console.log(codearr);  //要进行数据转换，把数组变为字符串
       codearr = codearr.toString();
+      // console.log(t.multipleSelection);
+      // console.log(codearr);
       let params = {
         barcode: codearr,commodityState:1
       };
@@ -281,14 +294,7 @@ export default {
       ).then((res) => {
         console.log(res);
         if (res.data.code == "SUCCESS") {
-          // _.forEach(res.data.data, function (item, key) {
-          //   item.index = key + 1; //加入index
-          // });
-          // console.log(res.data)
-          // t.total = res.data.total;
-          // t.pages = res.data.pages;
-          // t.tabledata = res.data.data;
-          // t.tabledata.reverse()
+          this.$message.success("上架成功!");
         } else {
           this.$message(res.data.msg);
         }
@@ -386,4 +392,13 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/css/reset.scss";
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

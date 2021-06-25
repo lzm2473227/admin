@@ -91,6 +91,7 @@
               <el-date-picker
                 v-model="value1"
                 type="date"
+                prefix-icon="false"
               >
               </el-date-picker>
             </td>
@@ -198,8 +199,33 @@
           <tr style="vertical-align: top;">
             <td class="table-left" style="padding: 12px;">证件照</td>
             <td class="table-right" colspan="3" style="padding-top: 6px;">
-              <div style="display: flex; height:345px">
-              <el-upload  
+              <div style="display: flex; height:412px">
+                <el-upload
+                  class="avatar-uploader photos-card"
+                  action="http://14.29.162.130:6602/image/imageUpload"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess1"
+                  :before-upload="beforeAvatarUpload">
+                  <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
+                  <i v-else class="avatar-uploader-icon">
+                    <img src="../../assets/images/upload.png" alt="">
+                    <span>请上传身份证正面</span>
+                  </i>
+                </el-upload>
+                <el-upload
+                  class="avatar-uploader photos-card"
+                  action="http://14.29.162.130:6602/image/imageUpload"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess2"
+                  :before-upload="beforeAvatarUpload"
+                  style="margin-left: 10px;">
+                  <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
+                  <i v-else class="avatar-uploader-icon">
+                    <img src="../../assets/images/upload.png" alt="">
+                    <span>请上传身份证反面</span>
+                  </i>
+                </el-upload>
+              <!-- <el-upload  
                 action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"
                 :on-success="handleAvatarSuccess"
@@ -213,8 +239,8 @@
                     <div>请上传身份证正面</div> 
                   </div>
                 </template>
-              </el-upload>
-              <el-upload  
+              </el-upload> -->
+              <!-- <el-upload  
                 action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"
                 :on-success="handleAvatarSuccess"
@@ -227,14 +253,26 @@
                     <div>请上传身份证反面</div> 
                   </div>
                 </template>
-              </el-upload>
+              </el-upload> -->
               </div>
             </td>
           </tr>
-          <el-dialog v-model="dialogVisible">
+          <el-upload
+            class="avatar-uploader personal-portrait"
+            action="http://14.29.162.130:6602/image/imageUpload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess3"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl3" :src="imageUrl3" class="avatar">
+            <i v-else class="avatar-uploader-icon">
+              <img src="../../assets/images/upload.png" alt="">
+              <span>请上传个人照</span>
+            </i>
+          </el-upload>
+          <!-- <el-dialog v-model="dialogVisible">
             <img style="width:100%" :src='ruleForm.frontId' alt="">
-          </el-dialog>
-          <el-upload  style="position: absolute;top:0px;left:456px"
+          </el-dialog> -->
+          <!-- <el-upload class="personal" style="position: absolute;top:0px;left:473px"
             action="http://14.29.162.130:6602/image/imageUpload"
             list-type="picture-card"
             :on-success="handleAvatarSuccess"
@@ -245,10 +283,10 @@
             <template #default >
               <div class="imgs-title">
                 <i class="el-icon-upload"></i>
-                <div>请上传个人证件照</div> 
+                <div class="upload-tip">请上传个人证件照</div> 
               </div>
             </template>
-          </el-upload>
+          </el-upload> -->
         </table>
       </form>
     </div>
@@ -272,6 +310,8 @@ export default {
       dialogVisible:false,
       options: regionData,   //地址相关
       selectedOptions: [],    //地址相关
+      pageSize:"",
+      total:"",
       ruleForm: {
         name: "",
         idNumber: "",
@@ -359,7 +399,12 @@ export default {
       imgArr: [],
       roleUuid: '',
       groupUuid: '',
-      uuidArr: []
+      uuidArr: [],
+      msg: '',
+      imageUrl1: '', // 正面
+      imageUrl2: '', // 反面
+      imageUrl3: '', // 个人照
+      value1: ''
     };
   },
   mounted() {
@@ -371,7 +416,6 @@ export default {
     changeStore(data){
       let index = this.storeNameItemList.map(item => item.storeName).indexOf(data)
       this.groupUuid = this.storeNameItemList[index].groupUuid
-      console.log(this.groupUuid)
     },
     //选择省市区
     handleChange(value) {
@@ -387,22 +431,49 @@ export default {
       this.dialogVisible = true;
       this.ruleForm.frontId = res.response.data;
     },
-    handleAvatarSuccess(res, file) {
-      if (res.code === "Success") {
-        console.log(res);
+    handleAvatarSuccess1(res, file) {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
-        this.ruleForm.frontId = res.data;
+        this.imageUrl1 = res.data; // 身份证正面
       }
     },
+    handleAvatarSuccess2(res, file) {
+      if (res.code === "SUCCESS") {
+        this.dialogImageUrl = res.data;
+        this.imageUrl2 = res.data; // 身份证反面
+      }
+    },
+    handleAvatarSuccess3(res, file) {
+      if (res.code === "SUCCESS") {
+        this.dialogImageUrl = res.data;
+        this.imageUrl3 = res.data; // 个人照
+      }
+    },
+    beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (file.type != 'image/jpeg' && file.type != 'image/png') {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+          return false
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+          return false
+        }
+      },
     getdata() {
       let t = this;
-      let idNumber = "";
-      if (t.$route.query.idNumber) {
-        idNumber = t.$route.query.idNumber;
+      let uuid = "";
+      if (t.$route.query.uuid) {
+        uuid = t.$route.query.uuid;
+        this.msg = '编辑人员'
+      }else{
+        this.msg = '新增人员'
       }
-      if (idNumber) {
+      if (uuid) {
         let params = {
-          idCard: idNumber // 身份证号
+          uuid: uuid // 身份证号
         };
         httpreques(
           "post",
@@ -436,7 +507,9 @@ export default {
       if(!this.ruleForm.province) return this.$message('居住地址不能为空')
       if(!this.ruleForm.storeName) return this.$message('所属门店不能为空')
       if(this.station.length === 0) return this.$message('所属岗位不能为空')
-      if(!this.ruleForm.frontId) return this.$message('身份证正面照不能为空')
+      if(!this.imageUrl1) return this.$message('请上传身份证正面')
+      if(!this.imageUrl2) return this.$message('请上传身份证反面')
+      if(!this.imageUrl3) return this.$message('请上传个人照')
       let identityItems = []
       this.uuidArr.forEach(data => {
         identityItems.push({
@@ -449,9 +522,9 @@ export default {
         idNumber: this.ruleForm.idNumber, // 身份证号
         identityItems: identityItems,
         name: this.ruleForm.name,
-        frontId: this.ruleForm.frontId, // 身份证正面照
-        reverseId: this.ruleForm.frontId, // 身份证反面照
-        profilePicture: this.ruleForm.frontId, // 头像
+        frontId: this.imageUrl1, // 身份证正面照
+        reverseId: this.imageUrl2, // 身份证反面照
+        profilePicture: this.imageUrl3, // 头像
         storeName: this.ruleForm.storeName, // 店铺名称
         telNum: this.ruleForm.telNum,
       };
@@ -490,7 +563,10 @@ export default {
         "post", {}, "/realbrand-org-service/Role/findRoleList"
       ).then((res) => {
         if (res.data.code === "SUCCESS") {
-          this.clerkroles = res.data.data
+          let data = res.data.data
+          data.forEach(item => {
+            if(item.module === 'STORE') this.clerkroles.push(item)
+          })
         } else {
           this.$message.error(res.data.msg);
         }
@@ -502,13 +578,17 @@ export default {
         "post",
         {
           pageNum: 1,
-          pageSize: 15,
+          pageSize: 100,
           storeName: this.ruleForm.storeName,
+          storeType: '',
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"
       ).then((res) => {
         if (res.data.code === "SUCCESS") {
           this.storeNameItemList = res.data.data;
+          console.log(res);
+          console.log(res.data.total);
+          this.pageSize = res.data.total;
         } else {
           this.$message.error(res.data.msg);
         }
@@ -537,6 +617,9 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/css/reset.scss";
 @import "@/assets/css/image2.scss";
+.table-main table{
+  border-bottom: none;
+}
 /deep/.el-date-editor.el-input, .el-date-editor.el-input__inner {
     width: 196px;
 }
@@ -592,6 +675,7 @@ export default {
 /deep/ .personal .el-upload--picture-card{
   width: 120px;
   height: 121px;
+  line-height: 120px;
   border: none;
   background: #F8F8F8;
   border-left: 1px solid #DADBDF;
@@ -600,4 +684,63 @@ export default {
 .table-right .el-checkbox{
   margin-top: 8px;
 }
+.personal .el-icon-upload{
+    top: 20px;
+    left: 50px;
+}
+
+.personal-portrait{
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-left: 1px solid #DADBDF;
+  background: #F8F8F8;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    color: #8c939d;
+    width: 120px;
+    height: 125px;
+    // line-height: 120px;
+    span{
+      padding-top: 10px;
+      font-style:normal;
+      font-size: 12px;
+      color: #999;
+    }
+  }
+  .photos-card{
+    width: 140px;
+    height: 96px;
+    background: #F8F8F8;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+    .avatar-uploader-icon{
+      width: 140px;
+      height: 96px;
+    }
+    .avatar {
+      width: 138px;
+      height: 94px;
+      display: block;
+  }
+  }
+  .avatar {
+    width: 120px;
+    height: 125px;
+    display: block;
+  }
 </style>

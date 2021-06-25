@@ -20,14 +20,29 @@
         </div>
         <table border="1" class="">
           <tr>
-            <td class="table-left">开户类型</td>
+            <td class="table-left">业务编号</td>
             <td class="table-right" colspan="3">
-              <input
-                type="text"
-                placeholder="开户业务编号由系统随机生成"
-                style="width: 100%"
-                v-model="form.address"
-              />
+              <input type="text" placeholder="开户业务编号由系统随机生成" style="width: 100%" v-model="form.address" disabled/>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">开户银行</td>
+            <td class="table-right">
+              <select placeholder="请选择开户银行" v-model="form.storeType">
+                <option value="" disabled style="display:none; color: #ddd">请选择开户银行</option>
+                <option value="广州银行">广州银行</option>
+                <option value="天府银行">天府银行</option>
+                <option value="徽商银行">徽商银行</option>
+                <option value="贵州银行">贵州银行</option>
+              </select>
+            </td>
+            <td class="table-left">开卡类型</td>
+            <td class="table-right">
+              <select placeholder="请选择开卡类型" v-model="form.storeType">
+                <option value="" disabled style="display:none; color: #ddd">请选择开卡类型</option>
+                <option value="储蓄卡">储蓄卡</option>
+                <option value="信用卡">信用卡</option>
+              </select>
             </td>
           </tr>
           <tr>
@@ -41,23 +56,10 @@
             </td>
           </tr>
           <tr>
-            <td class="table-left">开户银行</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入法人代表姓名" v-model="form.name" />
-            </td>
-            <td class="table-left">开卡类型</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入电话号码" v-model="form.tel" />
-            </td>
-          </tr>
-          <tr>
             <td class="table-left">开户人性别</td>
             <td class="table-right">
-              <input
-                type="text"
-                placeholder="请输入法人身份证号"
-                v-model="form.code"
-              />
+              <el-radio v-model="radio" label="1" style="margin-left: 8px;">男</el-radio>
+              <el-radio v-model="radio" label="2" style="margin-left: 20px;">女</el-radio>
             </td>
             <td class="table-left">手机号码</td>
             <td class="table-right">
@@ -66,6 +68,13 @@
           </tr>
           <tr>
             <td class="table-left">开户类型</td>
+            <td class="table-right" colspan="3">
+              <el-radio v-model="radio1" label="1" style="margin: 5px 0 0 8px; display: flex; align-items: center;">一类账户<span style="margin-left: 8px; color: #aaa;">（主要用于投资理财、贷款、缴费、支付）</span></el-radio>
+              <el-radio v-model="radio1" label="2" style="margin: 10px 0 4px 8px; display: flex; align-items: center;">二类账户<span style="margin-left: 8px; color: #aaa;">（主要用于小额支付）</span></el-radio>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">所在地区</td>
             <td class="table-right" colspan="3" style="padding: 6px;">
               <el-cascader
                 :options="options"
@@ -85,8 +94,38 @@
               />
             </td>
           </tr>
+          <tr>
+            <td colspan="4" style="height: 20px;"></td>
+          </tr>
+          <tr>
+            <td class="table-left">开户邀请人</td>
+            <td class="table-right">
+              <input type="text" placeholder="开户邀请人" v-model="form.name" />
+            </td>
+            <td class="table-left">所属门店</td>
+            <td class="table-right">
+              <input type="text" placeholder="所属门店" v-model="form.tel" />
+            </td>
+          </tr>
+          <tr>
+            <td class="table-left">手机号码</td>
+            <td class="table-right">
+              <input type="text" placeholder="手机号码" v-model="form.name" />
+            </td>
+            <td class="table-left">所属经销商</td>
+            <td class="table-right">
+              <input type="text" placeholder="所属经销商" v-model="form.tel" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <button class="guangzhou">点击进入广州银行系统开户界面</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" style="height: 365px;"></td>
+          </tr>
         </table>
-        <button class="guangzhou">点击进入广州银行系统开户界面</button>
       </form>
     </div>
   </div>
@@ -124,7 +163,9 @@ export default {
       },
       dialogImageUrl: "",
       dialogVisible: false,
-      imgArr: []
+      imgArr: [],
+      radio: '1',
+      radio1: '1',
     };
   },
   mounted() {
@@ -221,7 +262,7 @@ export default {
       console.log(file);
       console.log(res);
       // return
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.form.storeLicence = res.data;
       }
@@ -272,7 +313,7 @@ export default {
   color: #ddd;
 }
 .guangzhou{
-    width: 599px;
+    width: 100%;
     text-align: center;
     margin-top: 40px;
     padding: 10px 0;
@@ -281,6 +322,7 @@ export default {
     font-size: 16px;
     color: #3377FF;
     cursor: pointer;
+    outline: none;
 }
 @import "@/assets/css/reset.scss";
 </style>

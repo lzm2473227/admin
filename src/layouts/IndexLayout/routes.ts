@@ -68,6 +68,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import("@/views/setting/clerklist.vue"),
       },
       {
+        title: "消费者管理",
+        path: "/setting/consumerlist",
+        roles: ["consumerlist"],
+        component: () => import("@/views/setting/consumerlist.vue"),
+      },
+      {
         title: "新增店员",
         path: "/setting/newclerktwo",
         roles: ["newclerktwo"],
@@ -163,6 +169,22 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         roles: ["newactivity"],
         component: () => import("@/views/setting/newactivity.vue"),
         selectLeftMenu: "/setting/newactivity",
+        hidden: true,
+      },
+      {
+        title: "新增买赠活动",
+        path: "/setting/newactivity2",
+        roles: ["newactivity2"],
+        component: () => import("@/views/setting/newactivity2.vue"),
+        selectLeftMenu: "/setting/newactivity2",
+        hidden: true,
+      },
+      {
+        title: "新增满赠活动",
+        path: "/setting/newactivity3",
+        roles: ["newactivity3"],
+        component: () => import("@/views/setting/newactivity3.vue"),
+        selectLeftMenu: "/setting/newactivity3",
         hidden: true,
       },
       {
@@ -412,20 +434,20 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
     component: BlankLayout,
     children: [
       {
-        title: "盘货",
+        title: "佣金规则",
         path: "commissionrule",
         roles: ["commissionrule"],
         component: BlankLayout,
         children: [
           {
-            title: "待盘货",
+            title: "已设置",
             path: "set",
             roles: ["set"],
             component: () =>
               import("@/views/systembank/commissionrule/set.vue"),
           },
           {
-            title: "待盘货统计",
+            title: "未设置",
             path: "noset",
             roles: ["noset"],
             component: () =>
@@ -434,68 +456,68 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         ],
       },
       {
-        title: "盘货",
-        path: "commissionrule",
-        roles: ["commissionrule"],
+        title: "银行开户",
+        path: "bank",
+        roles: ["bank"],
         component: BlankLayout,
         children: [
           {
-            title: "待盘货",
-            path: "set",
-            roles: ["set"],
+            title: "已开户",
+            path: "account",
+            roles: ["account"],
             component: () =>
-              import("@/views/systembank/commissionrule/set.vue"),
+              import("@/views/systembank/bank/account.vue"),
           },
           {
-            title: "待盘货统计",
-            path: "noset",
-            roles: ["noset"],
+            title: "待开户",
+            path: "noaccount",
+            roles: ["noaccount"],
             component: () =>
-            import("@/views/systembank/commissionrule/noset.vue"),
+            import("@/views/systembank/bank/noaccount.vue"),
           },
         ],
       },
       {
-        title: "盘货",
-        path: "commissionrule",
-        roles: ["commissionrule"],
+        title: "佣金拨款",
+        path: "commissionfunding",
+        roles: ["commissionfunding"],
         component: BlankLayout,
         children: [
           {
-            title: "待盘货",
-            path: "set",
-            roles: ["set"],
+            title: "已拨款",
+            path: "appropriation",
+            roles: ["appropriation"],
             component: () =>
-              import("@/views/systembank/commissionrule/set.vue"),
+              import("@/views/systembank/commissionfunding/appropriation.vue"),
           },
           {
-            title: "待盘货统计",
-            path: "noset",
-            roles: ["noset"],
+            title: "未拨款",
+            path: "noappropriation",
+            roles: ["noappropriation"],
             component: () =>
-            import("@/views/systembank/commissionrule/noset.vue"),
+            import("@/views/systembank/commissionfunding/noappropriation.vue"),
           },
         ],
       },
       {
-        title: "盘货",
-        path: "commissionrule",
-        roles: ["commissionrule"],
+        title: "佣金核算",
+        path: "commissioncheck",
+        roles: ["commissioncheck"],
         component: BlankLayout,
         children: [
           {
-            title: "待盘货",
-            path: "set",
-            roles: ["set"],
+            title: "已核算",
+            path: "chexk",
+            roles: ["chexk"],
             component: () =>
-              import("@/views/systembank/commissionrule/set.vue"),
+              import("@/views/systembank/commissioncheck/chexk.vue"),
           },
           {
-            title: "待盘货统计",
-            path: "noset",
-            roles: ["noset"],
+            title: "未核算",
+            path: "nochexk",
+            roles: ["nochexk"],
             component: () =>
-            import("@/views/systembank/commissionrule/noset.vue"),
+              import("@/views/systembank/commissioncheck/nochexk.vue"),
           },
         ],
       }, 
@@ -602,6 +624,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                   import(
                     "@/views/userlv/clerk/check/nocheckproductStatistics.vue"
                   ),
+              },
+              {
+                title: "新增退回商品",
+                path: "/clerk/check/addCheck",
+                roles: ["clerknocheckproduct"],
+                component: () =>
+                  import("@/views/userlv/clerk/check/addCheck.vue"),
               },
               {
                 title: "已盘货",
@@ -711,6 +740,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 component: () => import("@/views/userlv/clerk/sale/sales.vue"),
               },
               {
+                title: "销售退货",
+                path: "/clerk/sale/saleReturnGoods",
+                roles: ["clerksale"],
+                component: () =>
+                  import("@/views/userlv/clerk/sale/saleReturnGoods.vue"),
+              },
+              {
                 title: "已售出统计",
                 path: "/clerk/sale/saleStatistics",
                 roles: ["clerksale"],
@@ -744,13 +780,13 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
                 component: () =>
                   import("@/views/userlv/clerk/bank/openAccount.vue"),
               },
-              {
-                title: "待开户统计",
-                path: "/clerk/bank/nobankStatistics",
-                roles: ["clerkbankStatistics"],
-                component: () =>
-                  import("@/views/userlv/clerk/bank/nobankStatistics.vue"),
-              },
+              // {
+              //   title: "待开户统计",
+              //   path: "/clerk/bank/nobankStatistics",
+              //   roles: ["clerkbankStatistics"],
+              //   component: () =>
+              //     import("@/views/userlv/clerk/bank/nobankStatistics.vue"),
+              // },
               {
                 title: "已开户",
                 path: "/clerk/bank/bank",

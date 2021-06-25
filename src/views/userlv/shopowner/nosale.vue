@@ -38,7 +38,7 @@
         <el-table-column prop="manufacturer" label="生产厂家" sortable width="210"></el-table-column>
         <el-table-column label="销售单价" sortable width="120">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            {{ scope.row.price }} 元
           </template>
         </el-table-column>
         <el-table-column prop="time" label="待售出数量"  sortable width="140" ></el-table-column>

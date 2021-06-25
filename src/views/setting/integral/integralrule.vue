@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -22,17 +22,12 @@
       @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="规则编号" align="center" sortable width="330"></el-table-column>
-        <el-table-column prop="storeName" label="规则名称" sortable width="350"></el-table-column>
-        <el-table-column prop="address" label="规则类型" sortable width="480"></el-table-column>
-        <el-table-column prop="storeType" label="规则描述" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="积分有效期" align="center" sortable width="243" >
-          <template v-slot="scope">
-            <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
-          </template>
-        </el-table-column>
+        <el-table-column prop="ruleId" label="规则编号" align="center" sortable width="160"></el-table-column>
+        <el-table-column prop="ruleName" label="规则名称" sortable width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="ruleType" label="规则类型" sortable width="150"></el-table-column>
+        <el-table-column prop="ruleDescribe" label="规则描述"  sortable width="320" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="validityPeriod" align="center" width="85" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -52,7 +47,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -80,8 +75,11 @@ export default {
         },
         "/realbrand-management-service/IntegralMgt/IntegralRuleList"
       ).then((res) => {
-        console.log(res.data.code);
+        // console.log(res.data.code);
         if (res.data.code == "SUCCESS") {
+          _.forEach(res.data.data, function (item, key) {
+            item.index = key + 1; //加入index
+          });
           console.log(res.data)
           this.total = res.data.total;
           this.tabledata = res.data.data;
@@ -91,6 +89,15 @@ export default {
         }
       });
     },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+      // console.log(this.multipleSelection);
+      console.log(val);
+    }, 
+    changeCurrentPage(val){
+      this.pageNum = val
+      this.getdata()
+    },
   },
 };
 </script>
@@ -98,4 +105,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../../assets/css/reset.scss';
 @import "@/assets/css/image3.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

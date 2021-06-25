@@ -86,7 +86,11 @@
             <td class="table-left" >活动规则</td>
             <td class="table-right" colspan="3" >
             <div style="display:flex; align-items: center;">
-              折扣比例<input type="text"  style="width:90%">
+             <div>
+              <div>购满<input type="text" style="width:70px"/>元商品，赠送<input style="width:70px" type="text"/>个商品。</div>
+              <div style="display:flex">赠送的商品名称<input style="width:200px;align-items: center;" type="text" placeholder="请单击进行选择商品"/></div>
+              <div style="display:flex">赠送的商品编码<input style="width:200px" type="textp;align-items: center;" placeholder="选择好商品后，商品编码将自动填写"/></div>
+            </div>
             </div>
           </td>
           </tr>
@@ -221,5 +225,6 @@ export default {
 }
 /deep/.el-dialog__body{
   height: 400px;
+  
 }
 </style>

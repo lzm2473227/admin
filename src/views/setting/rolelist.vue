@@ -9,7 +9,6 @@
     <div class="role-list">
       <el-table
         :data="storeUserItemList"
-        stripe
         border
         style="width: 100%"
         fit="true"

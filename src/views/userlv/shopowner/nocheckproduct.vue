@@ -39,7 +39,7 @@
         <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="time" label="盘货时间" align="center"  sortable width="183" ></el-table-column>

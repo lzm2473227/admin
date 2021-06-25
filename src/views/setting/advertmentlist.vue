@@ -14,10 +14,9 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
-    
       ref="singleTable"
       :data="tabledata"
       style="width: 100%"
@@ -27,27 +26,28 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column label="广告编码" align="center" sortable width="230">
+        <el-table-column label="广告编码" align="center" sortable width="180">
           <template v-slot="scope">
             <span class="detail-info" @click="editadvertment(scope.row)">{{scope.row.advertisementNumber}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="advertisementName" label="广告名称" sortable align="center" width="200"></el-table-column>
-        <el-table-column prop="type" label="广告类型" align="center" sortable width="200"></el-table-column>
-        <el-table-column label="广告描述" align="center" sortable width="250">
+        <el-table-column prop="advertisementName" label="广告名称" sortable align="center" width="180"></el-table-column>
+        <el-table-column prop="type" label="广告类型" align="center" sortable width="130" show-overflow-tooltip></el-table-column>
+        <el-table-column label="广告描述" align="center" sortable width="250" show-overflow-tooltip>
           <template v-slot="scope">
             <img :src="scope.row.linkPosition" alt="" style="height: 20px;">
           </template>
         </el-table-column>
-        <el-table-column prop="positionName" label="广告位置" sortable align="center" width="170" ></el-table-column>
-        <el-table-column prop="startTime" label="起始时间" align="center" sortable width="210" ></el-table-column>
-        <el-table-column prop="endTime" label="截止时间" align="center" sortable width="210" ></el-table-column>
+        <el-table-column prop="positionName" label="广告位置" sortable align="center" width="150" ></el-table-column>
+        <el-table-column prop="startTime" label="起始时间" align="center" sortable width="160" ></el-table-column>
+        <el-table-column prop="endTime" label="截止时间" align="center" sortable width="160" ></el-table-column>
         <el-table-column label="状态" align="center"  sortable width="123" >
           <template #default="scope">
             <span v-if="scope.row.enableState == '0'">禁用</span>
             <span v-else>启用</span>
           </template>
         </el-table-column>
+        <el-table-column label="" align="center" width="275" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -55,9 +55,9 @@
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="广告名称:" prop="name" class="name-search">
+        <div class="search-item">
           <el-input v-model="ruleForm.advertisementName" placeholder="请输入广告名称"></el-input>
-        </el-form-item>
+        </div>
         <el-form-item label="广告类型:" prop="name">
           <el-input v-model="ruleForm.type" placeholder="请输入广告类型"></el-input>
         </el-form-item>
@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -223,9 +223,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/.el-table--small td{
-  padding: 0;
-}
+// /deep/.el-table--small td{
+//   padding: 0;
+// }
 @import '../../assets/css/reset.scss';
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

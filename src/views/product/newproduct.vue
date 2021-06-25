@@ -40,7 +40,7 @@
       </div>
       <div class="table-main">
         <div class="table-title">
-          <p>商品基本信息</p>
+          <p>{{msg}}</p>
         </div>
         <table border="1" class="">
           <tr>
@@ -108,19 +108,9 @@
             </td>
           </tr>
           <tr>
-            <td class="table-left">商品小类</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入商品小类" />
-            </td>
             <td class="table-left">批准文号</td>
             <td class="table-right">
               <input type="text" placeholder="请输入批准文号" />
-            </td>
-          </tr>
-          <tr>
-            <td class="table-left">商品中类</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入商品中类" />
             </td>
             <td class="table-left">包装类型</td>
             <td class="table-right">
@@ -128,21 +118,11 @@
             </td>
           </tr>
           <tr>
-            <td class="table-left">商品大类</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入商品大类" />
-            </td>
-            <td class="table-left">包装尺寸</td>
-            <td class="table-right">
-              <input type="text" placeholder="请输入包装尺寸" />
-            </td>
-          </tr>
-          <tr>
-            <td class="table-left">商品体积/容积</td>
+            <td class="table-left" style="padding: 6px">商品体积<br>（容积）</td>
             <td class="table-right">
               <input type="text" placeholder="请输入商品体积/容积" />
             </td>
-            <td class="table-left">商品重量/质量</td>
+            <td class="table-left">商品重量<br>（质量）</td>
             <td class="table-right">
               <input type="text" placeholder="请输入商品重量/质量" />
             </td>
@@ -180,7 +160,7 @@
           </tr>
           <tr style="vertical-align: top;">
             <td class="table-left" style="padding-top: 16px;">商品图片</td>
-            <td class="table-right" colspan="3" style="height: 320px; padding-top: 6px;">
+            <td class="table-right" colspan="3" style="height: 334px; padding-top: 6px;">
             <el-upload
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"
@@ -236,6 +216,7 @@ export default {
               children:'subItemList',
               checkStrictly: true
       },//自定义  级联选择器value label
+      msg: ''
     };
   },
   mounted() {
@@ -253,6 +234,7 @@ export default {
     getdata() {
       let t = this;
       let barcode = t.$route.query.barcode;
+      this.msg = barcode ? '编辑商品' : '新增商品'
       if (barcode) {
         let params = {
           barcode: barcode,
@@ -290,7 +272,7 @@ export default {
     handleAvatarSuccess(res, file) {
       console.log(file);
       console.log(res);
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.form.filePath = res.data;
       }

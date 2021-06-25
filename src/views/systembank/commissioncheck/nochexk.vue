@@ -2,8 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="confirm"><img class="icon" src="@/assets/images/confirm.png" alt=""><span class="axis">佣金核算</span></div>
-        <div class="print"><img class="icon" src="../../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
+                 <div class="print" @click="confirm"><img class="icon" src="@/assets/images/confirm.png" alt=""><span class="axis">确认核算</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="../../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
         <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计数据</span></div>
       </div>
@@ -27,15 +26,18 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="commodityCode" label="开户业务编号" align="center" sortable width="130"></el-table-column>
         <el-table-column prop="barcode" label="开户银行" align="center" sortable width="240"></el-table-column>
+        <el-table-column prop="barcode" label="佣金核准信号" align="center" sortable width="240"></el-table-column>
         <el-table-column prop="commodityName" label="开卡类型" sortable width="140"></el-table-column>
         <el-table-column prop="brandName" label="身份证号码" sortable width="140"></el-table-column>
         <el-table-column prop="manufacturer" label="开户人姓名" sortable width="140"></el-table-column>
         <el-table-column prop="manufacturer" label="手机号码" sortable width="150"></el-table-column>
         <el-table-column prop="manufacturer" label="地址" sortable width="160"></el-table-column>
-        <el-table-column prop="manufacturer" label="审核结果" sortable width="150"></el-table-column>
-        <el-table-column prop="manufacturer" label="申请时间" sortable width="150"></el-table-column>
+        <el-table-column prop="manufacturer" label="开户时间" sortable width="150"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金状态" sortable width="150"></el-table-column>
         <el-table-column prop="manufacturer" label="店员姓名" sortable width="180"></el-table-column>
         <el-table-column prop="manufacturer" label="店员手机号" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金收款银行" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金收款账号" sortable width="180"></el-table-column>
         <el-table-column prop="manufacturer" label="门店名称" sortable width="180"></el-table-column>
         <el-table-column prop="manufacturer" label="经销商名称" sortable width="180"></el-table-column>
       </el-table>

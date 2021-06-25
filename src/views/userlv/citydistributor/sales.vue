@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column align="center" label="商品单价" width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="time" label="售出时间" align="center"  sortable width="240" >

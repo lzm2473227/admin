@@ -17,7 +17,7 @@
       <!-- <el-table
         border
         :data="enterpriseItemList"
-        stripe="true"
+        
         header-cell-style="background:#f6faff"
         style="width: 100%"
          :default-sort="{ prop: 'index', order: 'descending' }" 

@@ -13,9 +13,10 @@
         <div class="table-title">
           <p>编辑积分规则</p>
         </div>
-        <div class="addintegral">
-          <div class="addintegralrule"><p>规则类型</p><p>积分增加</p></div>
-          <div class="addintegraltime"><p>积分有效期</p><p>从积分获取开始至</p>
+         <div class="addintegral">
+          <div class="addintegralrule">积分增加规则</div>
+          <div class="addintegraltime">积分有效期，从积分获取开始至</div>
+          <div>
             <el-select v-model="val" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -24,10 +25,78 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            <p>12月31日 23:59:59</p>
           </div>  
+          <div>12月31日 23:59:59</div>
         </div>
-        <div class="addintegralchild">
+        <table border="1" >
+          <tr>
+            <td>序号</td>
+            <td>规则编码</td>
+            <td>规则名称</td>
+            <td>规则描述</td>
+            <td>启用否</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>JFGZ-A01</td>
+            <td>注册得积分</td>
+            <td>新用户输入手机号完成注册流程，得<input type="text" v-model="tabledata[0]">积分</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>JFGZ-A02</td>
+            <td>登录签到得积分</td>
+            <td>用户登录APP后完成签到，得<input type="text">积分</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>JFGZ-A03</td>
+            <td>线上首次下单得积分</td>
+            <td>用户线上完成首次下单，得<input type="text">积分</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>JFGZ-A04</td>
+            <td>线上下单得积分</td>
+            <td>用户线上下单每消费<input type="text">元，得<input type="text">积分</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>JFGZ-A05</td>
+            <td>生日当天得N倍积分</td>
+            <td>用户生日当天得倍数积分，倍数为<input type="text">倍</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+        </table>
+        <div class="addintegralrule2">积分减少规则</div>
+        <table border="1">
+          <tr>
+            <td>序号</td>
+            <td>规则编码</td>
+            <td>规则名称</td>
+            <td>规则描述</td>
+            <td>启用否</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>JFGZ-B01</td>
+            <td>线上支付订单积分抵现金</td>
+            <td>线上支付订单<input type="text">积分，抵现金<input type="text">元，最多抵扣订单金额的<input type="text">%</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>JFGZ-B02</td>
+            <td>线上订单退款积分扣减</td>
+            <td>与规则【线上下单消费得积分】关联</td>
+            <td><input type="checkbox" name="..." value="..." checked /></td>
+          </tr>
+        </table>
+        <!-- <div class="addintegralchild">
           <div class="addintegralrule"><p>规则编号</p>
           <div class="system">
             <p><input class="inp" type="text" v-model="ruleId"></p><p>系统生成</p>
@@ -80,7 +149,7 @@
           </div>
           <div class="addintegraltime"><p>规则描述</p><p>与规则【202100004线上下单消费得积分】关联</p>
           </div>  
-        </div>
+        </div>  -->
       </div>
     </div>
   </div>
@@ -91,8 +160,6 @@ export default {
   name: "Newintegralrule",
   data() {
     return {
-      dialogImageUrl: "",
-      dialogVisible: false,
       val:"第1年",
       options: [{
           value: '选项1',
@@ -100,156 +167,143 @@ export default {
         }, {
           value: '选项2',
           label: '第2年'
+// enableState: 0
+// endTime: Moment {_isAMomentObject: true, _i: Fri Jun 25 2021 14:58:43 GMT+0800 (中国标准时间), _isUTC: false, _pf: {…}, _locale: Locale, …}
+// linkPosition: "http://hwpicture.realbrand.net/ccab4117f8e746c1aa948d6d3b820c02.jpg"
+// positionName: "待销售"
+// startTime: Moment {_isAMomentObject: true, _i: Fri Jun 25 2021 14:58:41 GMT+0800 (中国标准时间), _isUTC: false, _pf: {…}, _locale: Locale, …}
+// advertisementNumber: ""
+// advertisementName: "1111"
+// type: "视频"
+// advertisementDescribe: "1111111"
+// id: 0
       }],
+      tabledata:[],
       ruleId:["1111"],
       money:[10],
       points:[1],
-      ruleDescribe:["adghagdh"],
+      ruleDescribe:["	新用户输入手机号完成注册流程，得新用户输入手机号完成注册流程，得" + this.points +"积分"],
       validityPeriod:1
     };
   },
   mounted() {
-    // this.getdata();
+    this.getdata();
   },
   methods: {
     toBackList(){
       this.$router.go(-1)
     },
-    // 新增类别
-    add() {
-      let params = {
-        points: this.points,
-        money: this.money,
-        ruleDescribe: this.ruleDescribe,
-        ruleId: this.ruleId,
-        validityPeriod: this.validityPeriod,
-        // parenId: this.ruleForm.parenId
-      };
-      httpreques("post", params,"/realbrand-management-service/IntegralMgt/UpdateIntegralRule")
-      .then((res) => {
-        console.log(res.data.data);
+    getdata() {
+      console.log(this.ruleDescribe);
+      httpreques(
+        "post",
+        {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        },
+        "/realbrand-management-service/IntegralMgt/IntegralRuleList"
+      ).then((res) => {
+        // console.log(res.data.code);
         if (res.data.code == "SUCCESS") {
-          console.log(res.data.data);
-          this.$message({
-            message:"添加成功",
-            type: "success",
+          _.forEach(res.data.data, function (item, key) {
+            item.index = key + 1; //加入index
           });
+          // console.log(res.data)
+          this.total = res.data.total;
+          this.tabledata = res.data.data;
+          this.ruleDescribe = res.data.data[0].ruleDescribe;
+          this.tabledata.reverse()
+          console.log(this.tabledata);
+          console.log(this.ruleDescribe);
         } else {
-          //接口错误处理
-          this.$message.error(res.data.msg);
+          this.$message(res.data.msg);
         }
       });
     },
+    // 编辑积分
+    add(){
+
+       httpreques(
+        "post",
+        {},
+        "/realbrand-management-service/IntegralMgt/UpdateIntegralRule"
+      ).then((res) => {
+        console.log(res);
+        if (res.data.code == "SUCCESS") {
+          _.forEach(res.data.data, function (item, key) {
+            item.index = key + 1; //加入index
+          });
+          console.log(res.data)
+          this.$message("编辑积分规则成功");
+        } else {
+          this.$message(res.data.msg);
+        }
+      });
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.tab-title {
-    height: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-image: linear-gradient(#F5FAFD, #E0EDF6);
-    border: 1px solid #D0DDE5;
-    padding: 0 15px;
-    margin-bottom: 10px;
-    .left {
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-        color: black;
-        font-weight: 400;
-        .derive {
-            display: flex;
-            align-items: center;
-        }
-        .print {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-    }
-}
-.table-title {
-    width: 599px;
-    height: 36px;
-    line-height: 36px;
-    background: #288DFF;
-    text-align: center;
-    font-size: 14px;
-    color: #fff;
-}
-.icon {
-    height: 18px;
-    padding-left: 14px;
-    padding-right: 4px;
-  }
-  .print:first-child .icon {
-    padding-left: 0;
-}
-.axis {
-    padding-right: 14px;
-    border-right: 1px solid #B8D0F2;
-}
-.print:last-child .axis {
-    border-right: 0;
-}
+@import '../../../assets/css/reset.scss';
+@import "@/assets/css/image3.scss";
 .addintegral{
   display: flex;
-  flex-direction: column;
-  background-color: rgb(136, 136, 136);
-  padding:0px 0 10px 0;
-  width: 599px;
-  p{
-    margin: 12px;
-  }
-}
-.mini{
-  height: 50px;
-}
-.addintegralrule{
-  display: flex;
-  margin-top: 8px;
-}
-.addintegraltime{
-  display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  div input{
-    width: 60px;
-    height: 22px;
-    border: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 10px;
+  margin-top: 5px;
+  div{
+    margin-right: 5px;
   }
 }
 /deep/.el-input__inner{
-  width: 90px;
-  background-color: #fff;
-  color: black;
+  width: 80px;
+  height: 26px;
 }
-.addintegralchild{
-  border: 1px solid rgb(200, 200, 200);
-  width: 599px;
-  margin: 10px 0;
-  background: rgb(242,242,242);
-  p{
-    margin: 12px;
+input{
+  width: 60px;
+  height: 22px;
+}
+.addintegralrule{
+  font-size:12px ;
+  font-weight: bold;
+  color: #3060a7;
+  margin: 20px 0 20px 20px;
+
+}
+.addintegralrule2{
+  color: #3060a7;
+  font-size:12px ;
+  font-weight: bold;
+  margin: 20px 0 20px 20px;
+}
+/deep/.el-table{
+  padding: 15px;
+}
+.table-main table{
+  width: 560px;
+  margin: 0 auto;
+  tr td:nth-of-type(1) {
+    width: 40px;
+    text-align: center;
+  }
+  tr td:nth-of-type(2) {
+    width: 76px;
+    text-align: center;
+  }
+  tr td:nth-of-type(3) {
+    width: 140px;
+    text-align: center;
+  }
+  tr td:nth-of-type(4) {
+    width: 270px;
+    padding: 8px;
+  }
+  tr td:nth-of-type(5) {
+    text-align: center;
   }
 }
-.system{
-  display: flex;
-  align-items: center;
+.right{
+  width: 602px;
+  height: 808px;
   border: 1px solid #ccc;
-  height: 38px;
-}
-.inp{
-  width: 120px;
-  
-}
-.el-select{
-  width: 80px;
 }
 </style>

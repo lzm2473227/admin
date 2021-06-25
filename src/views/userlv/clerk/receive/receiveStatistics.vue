@@ -29,16 +29,17 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barCode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" sortable width="180"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
-        <el-table-column prop="quantity" label="已收货数量" sortable width="160"></el-table-column>
-        <el-table-column prop="scanTime" label="收货时间" align="center"  sortable width="203" ></el-table-column>
+        <el-table-column prop="quantity" label="已收货数量" sortable width="120"></el-table-column>
+        <el-table-column prop="scanTime" label="收货时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column label="" align="center" width="535" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">

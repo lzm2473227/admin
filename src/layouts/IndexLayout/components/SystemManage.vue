@@ -40,6 +40,18 @@ export default {
           id: 2,
           label: "人员配置",
           key: "user",
+          children:[
+            {
+              id: 2,
+              label: "人员管理",
+              key: "user",
+            },
+            {
+              id: 19,
+              label: "消费者管理",
+              key: "consumerlist",
+            }
+          ]
         },
         {
           id: 3,
@@ -194,6 +206,9 @@ export default {
             case "theme":
               key = 18; 
               break;
+            case "consumerlist":
+              key = 19; 
+              break;
             default:
               key = 4;
               break;
@@ -275,6 +290,9 @@ export default {
         case "theme":
           path = "/setting/theme";
           break;
+        case "consumerlist":
+          path = "/setting/consumerlist";
+          break;
         default:
           break;
       }
@@ -300,8 +318,8 @@ export default {
 */
 .index-manage {
   width: 160px;
-  border-top: 1px solid #b8d0f2;
-  border-bottom: 1px solid #b8d0f2;
+  // border-top: 1px solid #b8d0f2;
+  // border-bottom: 1px solid #b8d0f2;
   // padding-top: 16px;
 }
 .index-stroe-title {

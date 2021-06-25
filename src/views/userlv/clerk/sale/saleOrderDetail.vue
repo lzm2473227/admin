@@ -38,12 +38,12 @@
         <el-table-column prop="brandName" label="品牌" sortable width="160"></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="price" label="促销价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="brandName" label="小活动名称" sortable width="203"></el-table-column>

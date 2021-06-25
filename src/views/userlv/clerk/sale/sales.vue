@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="scan"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">增加销售退货</span></div>
+        <div class="print" @click="toReturnGoods"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">增加销售退货</span></div>
         <div class="print" @click="refund"><img class="icon" src="@/assets/images/sale-return.png" alt=""><span class="axis">销售退货</span></div>
         <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
@@ -36,23 +36,29 @@
           </template>
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="350"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column>
-        <!-- <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column> -->
+        <el-table-column prop="commodityName" label="商品名称" sortable width="210" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="140" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="brandName" label="品牌" sortable width="120" show-overflow-tooltip></el-table-column> -->
         <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="200"></el-table-column> -->
-        <el-table-column label="销售单价" sortable width="120">
+        <el-table-column label="销售单价" sortable width="110">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            {{ scope.row.price }} 元
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="售出时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column prop="zengpin" label="是否赠品" align="center" sortable width="110" ></el-table-column>
+        <el-table-column label="促销价" align="center" sortable width="100" >
+          <template v-slot="scope">
+            {{ scope.row.price }} 元
+          </template>
+        </el-table-column>
+        <el-table-column prop="time" label="售出时间" align="center" sortable width="150" ></el-table-column>
         <el-table-column label="订单号" align="center"  sortable width="160" >
           <template v-slot="scope">
             <span @click="onDetail(scope.row)" class="table-button">{{ scope.row.dealNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="订单类型" align="center"  sortable width="130" ></el-table-column>
-        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="173" ></el-table-column>
+        <el-table-column prop="time" label="订单类型" align="center"  sortable width="120" ></el-table-column>
+        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="170" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -161,34 +167,16 @@ export default {
           let data = res.data.data
           this.totalNum = res.data.total
           this.total = res.data.total
-          for(let i = 0; i < data.length; i++){
-            this.tabledata.push({
-              index: i+1,
-              barcode: data[i].barcode,
-              brandName: data[i].brandName,
-              commodityCode: data[i].commodityCode,
-              commodityName: data[i].commodityName,
-              filePath: data[i].filePath,
-              id: data[i].id,
-              manufacturer: data[i].manufacturer,
-              policyNo: data[i].policyNo,
-              price: data[i].price,
-              specsParameter: data[i].specsParameter,
-              guigemignc: '-',
-              size: '-',
-              productstandard: '-',
-              weight: '-',
-              volume: '-',
-              type1: '-',
-              type2: '-',
-              type3: '-',
-              baozhuangleixing: '-',
-              baozhuangsize: '-',
-              jianjie: '-',
-              name: '-',
-              time: '-',
-            })
-          }
+          data.forEach((item, index) => {
+            item.index = index+1
+            if(item.price) item.price = item.price.toFixed(2)
+            item.createTime = moment(item.createTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+            if(item.dealType === 0) item.dealType = '门店销售'
+            if(item.dealType === 1) item.dealType = '线上商城'
+          })
+          this.tabledata = data
           this.tabledata.reverse()
         }else{
           this.$message(res.data.msg)
@@ -248,6 +236,9 @@ export default {
           commodityCode: data.commodityCode
         }
       })
+    },
+    toReturnGoods(){
+      this.$router.push('/clerk/sale/saleReturnGoods')
     },
     //添加class样式
     tableRowClassName({row, rowIndex}){

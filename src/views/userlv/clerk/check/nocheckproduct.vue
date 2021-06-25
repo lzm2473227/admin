@@ -36,16 +36,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
-        <el-table-column prop="time" label="盘货时间" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="checkTime" label="盘货时间" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column label="" align="center" width="232" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -160,35 +161,43 @@ export default {
         if(res.data.code === "SUCCESS"){
           let data = res.data.data
           data.length == 0 ? this.total = 0 : this.total = res.data.total
-          for(let i = 0; i < data.length; i++){
-            this.tabledata.push({
-              index: i+1,
-              barcode: data[i].barcode,
-              brandName: data[i].brandName,
-              commodityCode: data[i].commodityCode,
-              commodityName: data[i].commodityName,
-              filePath: data[i].filePath,
-              id: data[i].id,
-              manufacturer: data[i].manufacturer,
-              policyNo: data[i].policyNo,
-              price: data[i].price,
-              specsParameter: data[i].specsParameter,
-              guigemignc: '-',
-              size: '-',
-              productstandard: '-',
-              weight: '-',
-              volume: '-',
-              type1: '-',
-              type2: '-',
-              type3: '-',
-              baozhuangleixing: '-',
-              baozhuangsize: '-',
-              jianjie: '-',
-              name: '-',
-              time: '-',
-            })
-          }
+          data.forEach((item, index) => {
+            item.index = index+1
+            if(item.price) item.price = item.price.toFixed(2)
+            item.checkTime = moment(item.time).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+          })
+          this.tabledata = data
           this.tabledata.reverse()
+          // for(let i = 0; i < data.length; i++){
+          //   this.tabledata.push({
+          //     index: i+1,
+          //     barcode: data[i].barcode,
+          //     brandName: data[i].brandName,
+          //     commodityCode: data[i].commodityCode,
+          //     commodityName: data[i].commodityName,
+          //     filePath: data[i].filePath,
+          //     id: data[i].id,
+          //     manufacturer: data[i].manufacturer,
+          //     policyNo: data[i].policyNo,
+          //     price: data[i].price,
+          //     specsParameter: data[i].specsParameter,
+          //     guigemignc: '-',
+          //     size: '-',
+          //     productstandard: '-',
+          //     weight: '-',
+          //     volume: '-',
+          //     type1: '-',
+          //     type2: '-',
+          //     type3: '-',
+          //     baozhuangleixing: '-',
+          //     baozhuangsize: '-',
+          //     jianjie: '-',
+          //     name: '-',
+          //     time: '-',
+          //   })
+          // }
         }else{
           this.$message(res.data.msg)
         }
@@ -241,29 +250,28 @@ export default {
     // 确认货物
     confirm(){
       if(this.multipleSelection.length <= 0) return this.$message('请选择需要确认的货物')
+      let arr = []
+      let timestamp = new Date().getTime()
+      this.multipleSelection.forEach((item, index) => {
+        arr.push({
+          "commodityCode": item.commodityCode,
+          "scanTime": timestamp,
+        })
+      })
       let parame = {
-        "flag": "1",
-        "scanTime": "",
-        "storeInventoryRecordDtos": [
-          {
-            "barCode": "string",
-            "commodityCode": "string",
-            "cumulativeSum": 0,
-            "iDNumber": "string",
-            "id": 0,
-            "inventoryState": 0,
-            "inventoryTime": "",
-            "lastCount": 0,
-            "scanTime": "",
-            "storeId": 0,
-            "storeName": ""
-          }
-        ]
+        "flag": "0", // 1-一键盘货，0-扫码盘货
+        "scanTime": timestamp,
+        "storeInventoryRecordDtos": arr
       }
       httpreques('post', parame, '/realbrand-management-service/Inventory/storeInventListApi').then(res => {
         console.log(res)
         if(res.data.code === "SUCCESS"){
-          
+          if(res.data.data.state === 1){
+            this.$message.success('确认货物成功')
+            this.getdata()
+          }
+          // if(res.data.data.state === '0') this.$message.success('确认货物成功')
+          // if(res.data.data.state === '3') this.$message.success('确认货物成功')
         }else{
           this.$message(res.data.msg)
         }
@@ -300,10 +308,12 @@ export default {
         this.$refs.singleTable.setCurrentRow(row);
       },
     handleSelectionChange(val){
+      console.log(val)
       this.multipleSelection = val
     },
     scan(){
-      this.centerDialogVisible = true
+      this.$router.push('/clerk/check/addCheck')
+      // this.centerDialogVisible = true
     },
     statistics(){
       this.$router.push('/clerk/check/nocheckproductStatistics')

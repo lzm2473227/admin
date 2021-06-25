@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
         :row-class-name="tableRowClassName"
         ref="multipleTable2"
@@ -25,12 +25,13 @@
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="index" label="序号" align="center" sortable width="150"></el-table-column>
-        <el-table-column prop="c" label="类别编号" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="m" label="商品一级类别" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="p" label="商品二级类别" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="b" label="商品三级类别" align="center" sortable width="280"></el-table-column>
-        <el-table-column prop="categoryImage" label="商品三级分类图片" align="center" sortable width="280"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="c" label="类别编号" align="center" sortable width="190"></el-table-column>
+        <el-table-column prop="m" label="商品一级类别" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="p" label="商品二级类别" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="b" label="商品三级类别" sortable width="150"></el-table-column>
+        <el-table-column prop="categoryImage" label="商品三级分类图片" align="center" sortable width="180"></el-table-column>
+        <el-table-column label="" align="center" width="785" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -148,7 +149,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       centerDialogVisible: false,  //弹出框开关
       centerDialogVisible2: false,  //弹出框开关
@@ -364,7 +365,7 @@ export default {
     handleAvatarSuccess(res, file) {
       // console.log(file);
       // console.log(res);
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.ruleForm.categoryImage = res.data;
       }
@@ -381,5 +382,14 @@ export default {
 @import '../../assets/css/reset.scss';
 /deep/.el-form-item--small .el-form-item__content{
  margin-left: 0;
+}
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
 }
 </style>

@@ -74,7 +74,7 @@
           :data="tabledata"
           tooltip-effect="dark"
           style="width: 100%"
-          stripe="true"
+          
           fit="true"
           border
           header-cell-style="background:#F6FAFF"

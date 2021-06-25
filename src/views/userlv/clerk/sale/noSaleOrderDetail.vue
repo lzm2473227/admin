@@ -26,7 +26,7 @@
       :data="tableData"
       style="width: 100%"
       highlight-current-row
-      @current-change="handleCurrentChange"
+      @selection-change="handleSelectionChange"
       :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -38,12 +38,12 @@
         <el-table-column prop="brandName" label="品牌" sortable width="160"></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="price" label="促销价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="brandName" label="小活动名称" sortable width="203"></el-table-column>
@@ -157,6 +157,21 @@
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
+    <div class="pay-dialog" v-show="isDialog">
+      <div class="dialog-content">
+        <div class="dialog-top">
+          <span>新增商品</span>
+          <img @click="onCancel" src="@/assets/images/close.png" alt="">
+        </div>
+        <div class="dialog-body">
+          <input type="text" placeholder="请扫描或输入单品编码" v-model="barcode">
+          <div class="scan-code">
+            <button class="sure" @click="onSure">确定</button>
+            <button @click="onCancel">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -178,7 +193,7 @@ export default {
       radio1: '按商品69编码统计',
       centerDialogVisible: false,
       textarea: '',
-      tabledata: [],
+      tableData: [],
       totalNum: 0,
       ruleForm: {
           name: '',
@@ -190,10 +205,53 @@ export default {
           resource: '',
           desc: ''
       },
-      name: ''
+      name: '',
+      multipleSelection : [],
+      isDialog: false,
+      barcode: '',
+      isBarcode: '',
+      removeValFromIndex: []
     };
   },
   methods: {
+    onSure(){
+      if(this.isBarcode === this.barcode && this.barcode) return this.$message('请勿重复添加商品69编码')
+      // 根据单品编码查询商品信息
+      let params = {
+        "commodityCode": this.barcode // 6922266454295, 6925989489919, 6901826828233, 6959315400247
+      }
+      httpreques("post", params, "/realbrand-management-service/CommodityMgt/CommodityInfo").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+        //   this.isDialog = false
+          this.barcode = ''
+          this.codeObj = res.data.data
+          this.isBarcode = this.codeObj.commodityCode
+          this.tableData.push(this.codeObj)
+          this.tableData.forEach((item, index) => {
+              item.index = index+1
+            // item.scanTime = moment(item.scanTime).format(
+            //     "YYYY-MM-DD HH:mm:ss"
+            // )
+          })
+          this.tableData.reverse()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+      this.removeValFromIndex = []
+        // 获取表格选中的index值
+        val.forEach((val, index) => {
+    　　　　　this.tableData.forEach((v, i) => {
+                if(val.index == v.index){
+                    this.removeValFromIndex.push(i)
+                }
+            })
+        })
+    },
     currentchange(val){
       this.pageNum = val
     },
@@ -211,17 +269,18 @@ export default {
     setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
       },
-    handleCurrentChange(val) {
-        this.currentRow = val;
-      },
       statistics(){
           this.$router.push('/clerk/sale/nosaleStatistics')
       },
     scan(){
-      this.centerDialogVisible = true
+      this.isDialog = true
     },
     goBack(){
         this.$router.go(-1)
+    },
+    onCancel(){
+      this.isDialog = false
+      this.barcode = ''
     }
   },
 };
@@ -229,5 +288,43 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/reset';
-@import '@/assets/css/image1'
+@import '@/assets/css/image1';
+.dialog-top{
+  span{
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+  img{
+    cursor: pointer;
+  }
+}
+.dialog-content .dialog-body{
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  input{
+    width: 380px;
+    height: 44px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    outline: none;
+  }
+  button{
+    height: 44px;
+    padding: 0 28px;
+    background: #FAFCFE;
+    border: 1px solid #BBCBDF;
+    border-radius: 2px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+  }
+  .sure{
+    margin-right: 12px;
+    background: #438AFE;
+    border: 1px solid #438AFE;
+    color: #fff;
+  }
+}
 </style>

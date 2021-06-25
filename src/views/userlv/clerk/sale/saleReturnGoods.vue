@@ -2,17 +2,14 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="toReturnGoods"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">增加退回商品</span></div>
-        <div class="print" @click="backCommodity"><img class="icon" src="@/assets/images/back-commodity.png" alt=""><span class="axis">退回商品</span></div>
-        <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计商品</span></div>
+        <div class="print" @click="goBack"><img class="icon" src="@/assets/images/back.png" alt=""><span class="axis">返回列表</span></div>
+        <div class="print" @click="add('1')"><img class="icon" src="@/assets/images/add.png" alt=""><span class="axis">增加商品</span></div>
+        <div class="print" @click="add('2')"><img class="icon" src="@/assets/images/delete.png" alt=""><span class="axis">删除商品</span></div>
+        <div class="print" @click="backCommodity"><img class="icon" src="@/assets/images/back-commodity.png" alt=""><span class="axis">确认退货</span></div>
         <div class="print"><img class="icon" src="@/assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
         <div class="print" @click="exportExcel"><img class="icon" src="@/assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
       </div>
       <div class="right">
-        <!-- <el-radio-group v-model="radio1" size="mini">
-          <el-radio-button label="按商品69编码统计"></el-radio-button>
-          <el-radio-button label="按单品编码统计"></el-radio-button>
-        </el-radio-group> -->
         <div class="setup">
           <img class="set" src="@/assets/images/ic-设置.png" alt="系统设置" @click="setup">
         </div>
@@ -37,25 +34,25 @@
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
         <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" sortable width="160"></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
         <el-table-column prop="manufacturer" label="生产厂家" sortable width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
 						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
-        <el-table-column prop="time" label="收货时间" align="center"  sortable width="160" ></el-table-column>
-        <el-table-column label="" align="center" width="235" ></el-table-column>
+        <el-table-column prop="time" label="退货时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column label="" align="center" width="255" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
       <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
     </div>
     <div class="total">
-      <div class="statistic-item1">已收货单品编码数量：<span>{{codeCount}}</span></div>
-      <div class="statistic-item2">已收货商品种类：<span>{{barcodeCount}}</span></div>
-      <div class="statistic-item3">已收货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
+      <div class="statistic-item1">退货单品编码数量：<span>{{codeCount}}</span></div>
+      <div class="statistic-item2">退货商品种类：<span>{{barcodeCount}}</span></div>
+      <div class="statistic-item3">退货商品金额：<span class="small">￥</span><span>{{price}}</span></div>
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
@@ -101,6 +98,21 @@
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
+    <div class="pay-dialog" v-show="isDialog">
+      <div class="dialog-content">
+        <div class="dialog-top">
+          <span>新增商品</span>
+          <img @click="onCancel" src="@/assets/images/close.png" alt="">
+        </div>
+        <div class="dialog-body">
+          <input type="text" placeholder="请扫描或输入单品编码" v-model="barcode">
+          <div class="scan-code">
+            <button class="sure" @click="onSure">确定</button>
+            <button @click="onCancel">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -134,11 +146,15 @@ export default {
           codeState: '',
           commodityCode: ''
       },
-      multipleSelection : []
+      multipleSelection : [],
+      isDialog: false,
+      barcode: '',
+      isBarcode: '',
+      removeValFromIndex: []
     };
   },
   created() {
-    this.getdata()
+    // this.getdata()
     this.getTotal()
   },
   methods: {
@@ -158,14 +174,34 @@ export default {
           let data = res.data.data
           this.totalNum = res.data.total
           this.total = res.data.total
-          data.forEach((item, index) => {
-            item.index = index+1
-            if(item.price) item.price = item.price.toFixed(2)
-            item.scanTime = moment(item.scanTime).format(
-              "YYYY-MM-DD HH:mm:ss"
-            )
-          })
-          this.tabledata = data
+          for(let i = 0; i < data.length; i++){
+            this.tabledata.push({
+              index: i+1,
+              barcode: data[i].barcode,
+              brandName: data[i].brandName,
+              commodityCode: data[i].commodityCode,
+              commodityName: data[i].commodityName,
+              filePath: data[i].filePath,
+              id: data[i].id,
+              manufacturer: data[i].manufacturer,
+              policyNo: data[i].policyNo,
+              price: data[i].price,
+              specsParameter: data[i].specsParameter,
+              guigemignc: '-',
+              size: '-',
+              productstandard: '-',
+              weight: '-',
+              volume: '-',
+              type1: '-',
+              type2: '-',
+              type3: '-',
+              baozhuangleixing: '-',
+              baozhuangsize: '-',
+              jianjie: '-',
+              name: '-',
+              time: '-',
+            })
+          }
           this.tabledata.reverse()
         }else{
           this.$message(res.data.msg)
@@ -190,6 +226,44 @@ export default {
           this.$message(res.data.msg)
         }
       })
+    },
+    onSure(){
+      if(this.isBarcode === this.barcode && this.barcode) return this.$message('请勿重复添加商品69编码')
+      // 根据单品编码查询商品信息
+      let params = {
+        "commodityCode": this.barcode // 6922266454295, 6925989489919, 6901826828233, 6959315400247
+      }
+      httpreques("post", params, "/realbrand-management-service/CommodityMgt/CommodityInfo").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+        //   this.isDialog = false
+          this.barcode = ''
+          this.codeObj = res.data.data
+          this.isBarcode = this.codeObj.commodityCode
+          this.tabledata.push(this.codeObj)
+          this.tabledata.forEach((item, index) => {
+              item.index = index+1
+            // item.scanTime = moment(item.scanTime).format(
+            //     "YYYY-MM-DD HH:mm:ss"
+            // )
+          })
+          this.tabledata.reverse()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    add(index){
+        if(index === '1'){
+            this.isDialog = true
+        }else{
+            if(this.multipleSelection.length <= 0) return this.$message('请选择需要删除的商品')
+            this.$nextTick(function(){
+              for (let i = this.removeValFromIndex.length -1; i >= 0; i--){
+                this.tabledata.splice(this.removeValFromIndex[i],1);
+              }
+            })
+        }
     },
     // 单品编码详情
     codeDetail(data){
@@ -224,8 +298,12 @@ export default {
       ).then((res) => {
         console.log(res);
         if (res.data.code === "SUCCESS") {
-          this.$message.success("退回商品成功!");
-          this.getdata()
+            this.$message.success("退回商品成功!");
+            this.$nextTick(function(){
+              for (let i = this.removeValFromIndex.length -1; i >= 0; i--){
+                this.tabledata.splice(this.removeValFromIndex[i],1);
+              }
+            })
         }else{
           this.$message(res.data.msg)
         }
@@ -236,6 +314,15 @@ export default {
     },
     handleSelectionChange(val){
       this.multipleSelection = val
+      this.removeValFromIndex = []
+        // 获取表格选中的index值
+        val.forEach((val, index) => {
+    　　　　　this.tabledata.forEach((v, i) => {
+                if(val.index == v.index){
+                    this.removeValFromIndex.push(i)
+                }
+            })
+        })
     },
     submitForm(){
       this.getdata()
@@ -260,12 +347,57 @@ export default {
     },
     statistics(){
       this.$router.push('/clerk/receive/receiveStatistics')
-    }
+    },
+    goBack(){
+        this.$router.go(-1)
+    },
+    onCancel(){
+      this.isDialog = false
+      this.barcode = ''
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/css/reset.scss';
-@import '@/assets/css/image1'
+@import '@/assets/css/image1';
+.dialog-top{
+  span{
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+  img{
+    cursor: pointer;
+  }
+}
+.dialog-content .dialog-body{
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  input{
+    width: 380px;
+    height: 44px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    outline: none;
+  }
+  button{
+    height: 44px;
+    padding: 0 28px;
+    background: #FAFCFE;
+    border: 1px solid #BBCBDF;
+    border-radius: 2px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+  }
+  .sure{
+    margin-right: 12px;
+    background: #438AFE;
+    border: 1px solid #438AFE;
+    color: #fff;
+  }
+}
 </style>

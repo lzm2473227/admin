@@ -16,7 +16,7 @@
     <div class="table-main">
       <form action="">
         <div class="table-title">
-          <p>新增门店</p>
+          <p>{{msg}}</p>
         </div>
         <table border="1" class="">
           <tr>
@@ -122,8 +122,9 @@
           </tr>
           <tr style="vertical-align: top">
             <td class="table-left" style="padding-top: 12px">证件照</td>
-            <td class="table-right" colspan="3" style="height: 516px; padding-top: 6px;">
+            <td class="table-right" colspan="3" style="height: 416px; padding-top: 6px;">
               <el-upload
+              v-model="form.storeLicence"
                 action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"
                 :file-list="imgArr" 
@@ -138,9 +139,9 @@
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
               </el-upload>
-              <el-dialog v-model="dialogVisible">
+              <!-- <el-dialog v-model="dialogVisible">
                 <img style="width:100%" :src='form.storeLicence' alt="">
-              </el-dialog>
+              </el-dialog> -->
             </td>
           </tr>
         </table>
@@ -183,7 +184,8 @@ export default {
       dialogVisible: false,
       imgArr: [],
       checkList: [],
-      date: []
+      date: [],
+      msg: ''
     };
   },
   mounted() {
@@ -199,6 +201,9 @@ export default {
       let storename = "";
       if (t.$route.query.storename) {
         storename = t.$route.query.storename;
+        this.msg = '编辑门店'
+      }else{
+        this.msg = '新增门店'
       }
       if (storename) {
         let params = {
@@ -213,14 +218,14 @@ export default {
           if (res.data.code === "SUCCESS") {
             //对象数据处理
             let storeobj = res.data.data;
-            storeobj.storetype = storeobj.storeType;
-            delete storeobj.storeType;
+            // storeobj.storetype = storeobj.storeType;
+            // delete storeobj.storeType;
             t.selectedOptions =
               TextToCode[storeobj.province][storeobj.city][
                 storeobj.county
               ].code;
             t.form = storeobj;
-            // this.imgArr.push({url: storeobj.storeLicence})
+            this.imgArr.push({url: storeobj.storeLicence})
             this.dialogImageUrl = storeobj.storeLicence;
           } else {
             //接口错误处理

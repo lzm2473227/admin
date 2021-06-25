@@ -17,27 +17,27 @@
       <el-table
         border
         :data="enterpriseItemList"
-        stripe="true"
+        
         header-cell-style="background:#f6faff"
         style="width: 100%"
          :default-sort="{ prop: 'index', order: 'descending' }" 
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="index" label="序号" align="center" width="50">
+        <el-table-column prop="index" label="序号" align="center" width="80" sortable>
         </el-table-column>
-        <el-table-column prop="2" align="center" label="机构代码" width="150">
+        <el-table-column prop="2" align="center" label="机构代码" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="enterpriseName" align="center" label="单位名称" width="150">
+        <el-table-column prop="enterpriseName" align="center" label="单位名称" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="city" align="center" label="单位地址" width="150">
+        <el-table-column prop="city" align="center" label="单位地址" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="1" align="center" label="法人代表" width="150">
+        <el-table-column prop="1" align="center" label="法人代表" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="legalPerson" align="center" label="代理人" width="150">
+        <el-table-column prop="legalPerson" align="center" label="代理人" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="1" align="center" label="代理人身份证号" width="150">
+        <el-table-column prop="1" align="center" label="代理人身份证号" width="150" sortable>
         </el-table-column>
-        <el-table-column prop="userMobile" align="center" label="代理人手机号" width="150">
+        <el-table-column prop="userMobile" align="center" label="代理人手机号" width="150" sortable>
         </el-table-column>
       </el-table>
       <div class="bot">
@@ -90,7 +90,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '@/assets/css/reset.scss';
+@import "@/assets/css/image2.scss";
 /deep/.el-pagination.is-background .el-pager li:not(.disabled).active{
   color:#409eff
+}
+/deep/.el-table .caret-wrapper .sort-caret.ascending,
+/deep/.el-table .caret-wrapper .sort-caret.descending {
+    display: none;
+}
+/deep/.el-table .caret-wrapper {
+    background: url('../../assets/images/sort.png') center no-repeat;
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
 }
 </style>

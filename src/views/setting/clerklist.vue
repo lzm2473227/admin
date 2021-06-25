@@ -9,7 +9,7 @@
             alt=""
           /><span class="axis">新增人员</span>
         </div>
-        <div class="print" @click="editclerk">
+        <div class="print" @click="editclerk('', '1')">
           <img
             class="icon"
             src="../../assets/images/edit.png"
@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
         :row-class-name="tableRowClassName"
         ref="singleTable"
@@ -65,8 +65,12 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="idNumber" label="身份证号码" align="center" sortable width="230"></el-table-column>
-        <el-table-column prop="name" label="姓名" align="center" sortable width="150"></el-table-column>
+        <el-table-column label="身份证号码" align="center" sortable width="200">
+          <template v-slot="scope">
+            <span class="detail-info" @click="editclerk(scope.row, '2')">{{scope.row.idNumber}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" show-overflow-tooltip align="center" sortable width="130"></el-table-column>
         <el-table-column
           prop="telNum"
           label="手机号码"
@@ -81,37 +85,47 @@
           width="160"
         >
         <template v-slot="scope">
-            <img :src="scope.row.frontId" alt="" style="height: 20px;">
-            <img :src="scope.row.reverseId" alt="" style="height: 20px;">
+          <el-image style="height: 20px" :src="scope.row.frontId" :preview-src-list="srcList"></el-image>
+            <!-- <img :src="scope.row.frontId" alt="" style="height: 20px;">
+            <img :src="scope.row.reverseId" alt="" style="height: 20px;"> -->
           </template>
         </el-table-column>
+        <el-table-column
+          prop="address"
+          label="个人住址"
+          sortable
+          width="300"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column
           prop="storeName"
           label="所属门店"
           sortable
-          width="320"
+          width="220"
+          show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="station"
           label="角色"
-          align="center"
           sortable
-          width="150"
+          show-overflow-tooltip
+          width="120"
         ></el-table-column>
         <el-table-column
-          prop="storeName"
-          label="市级经销商"
+          prop="shiji"
+          label="所在市"
           align="center"
           sortable
-          width="210"
+          width="110"
         ></el-table-column>
         <el-table-column
-          prop="storeName"
-          label="省级经销商"
+          prop="shengji"
+          label="所在省"
           align="center"
           sortable
-          width="213"
+          width="110"
         ></el-table-column>
+        <el-table-column label="" align="center" width="100" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -160,7 +174,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabs: ["当日", "当周", "当月"],
       active: 0,
@@ -174,6 +188,7 @@ export default {
         tel: "",
         station: ""
       },
+      srcList: []
     };
   },
   created() {
@@ -196,21 +211,11 @@ export default {
         if ((res.data.code === "SUCCESS")) {
           let { data } = res.data;
           this.total = res.data.total;
-          // this.pages = res.data.pages;
-          // this.tabledata = res.data.data;
-          console.log(data);
-          for (let i = 0; i < data.length; i++) {
-            this.tabledata.push({
-              index: i + 1,
-              idNumber: data[i].idNumber,
-              name: data[i].name,
-              telNum: data[i].telNum,
-              station: data[i].station,
-              frontId: data[i].frontId,
-              reverseId: data[i].reverseId,
-              storeName: data[i].storeName,
-            });
-          }
+          data.forEach((item, key) => {
+            item.index = key + 1
+            if(item.frontId) this.srcList.push(item.frontId)
+          })
+          this.tabledata = data
           this.tabledata.reverse();
         } else {
           this.$message(res.data.msg);
@@ -256,16 +261,18 @@ export default {
       this.$router.push({path: "/setting/newclerktwo",})
     },
     //编辑
-    editclerk() {
-      if(this.multipleSelection.length === 1){
-        let idNumber = this.multipleSelection[0].idNumber
-        this.$router.push({
-          path: "/setting/newclerktwo",
-          query: { idNumber: idNumber },
-        })
-      }else{
-        this.$message('请选择一项数据进行编辑')
+    editclerk(data, val) {
+      let uuid = ''
+      if(val === '1') {
+        if(this.multipleSelection.length != 1) return this.$message('请选择一项数据进行编辑')
+        uuid = this.multipleSelection[0].uuid
+      }else if(val === '2'){
+        uuid = data.uuid
       }
+      this.$router.push({
+        path: "/setting/newclerktwo",
+        query: { uuid: uuid },
+      })
     },
     changeCurrentPage(val) {
       this.pageNum = val;
@@ -294,4 +301,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/css/reset.scss";
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

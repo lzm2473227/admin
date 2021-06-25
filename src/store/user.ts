@@ -9,7 +9,8 @@ export interface CurrentUser {
   idNumber: string;
   name: string; 
   roles: string[];
-  authList: string[],
+  identities: string[],
+  token: string,
  
 }
  
@@ -37,8 +38,8 @@ const initState: StateType = {
     idNumber: '',
     name: '',
     roles: [],
-    authList: [],
- 
+    identities: [],
+    token: "",
   },
   message: 0,
 }
@@ -75,11 +76,15 @@ const StoreModel: ModuleType = {
           idNumber: '',
           name: '',
           roles: [],
+          token:"",
+          identities:[]
         };
         userDetails.
         id = response.uuid;
         userDetails.idNumber = response.idNumber;
         userDetails.name = response.name;
+        userDetails.token = response.token;
+        userDetails.identities = response.identities;
         const rolename = JSON.parse(localStorage.getItem('roleEnum'));
  
         // console.log(userDetails);
@@ -121,7 +126,7 @@ const StoreModel: ModuleType = {
           //门店管理员基础权限
           userDetails.roles = ['md', 'productlist', 'purchase', 'product', 'inventory', 'sale', 'setting', 'user', 'noreceive', 'receive', 'checkproduct', 'nocheckproduct', 'sales', 'nosale', 'storelist', 'machine',
         , 'power', 'newstore', 'clerklist', "newproduct", 'newclerk', 'advertmentlist', 'newadvertment', 'Authority','tab', 'userlv','newclerktwo','newproducttwo','newstoretwo','newadvertmenttwo','machinenew',
-        ,'public','file','nobank','bank','commodity1','commodity2','integralrule','integralobj','memberset','newintegralrule','newintegralobj','newmemberset',"theme","themenew"
+        ,'public','file','nobank','bank','commodity1','commodity2','integralrule','integralobj','memberset','newintegralrule','newintegralobj','newmemberset',"theme","themenew","consumerlist",
         ]
           let rolelv = ["clerk","shopowner",'citydistributor','sysuser'];//角色多重身份 【与indexlayouts下的index组件菜单对应。否则有权限，无菜单。只能手动输入路由】
  
@@ -129,7 +134,7 @@ const StoreModel: ModuleType = {
             if(item=="clerk"){
               //店员身份权限
               userDetails.roles.push('clerk','clerknoreceive','clerkreceive','clerknocheckproduct','clerknosale','clerksale','clerkcheckproduct',
-              'clerkbank','clerkguarantee','clerknoreceive','clerkreceive',"Sellinglist",'promotion',"newactivity","newselling","ruleOutGoods",);
+              'clerkbank','clerkguarantee','clerknoreceive','clerkreceive',"Sellinglist",'promotion',"newactivity","newselling","ruleOutGoods","newactivity2","newactivity3");
             }
             if(item=="shopowner"){
                //店长身份权限
@@ -168,7 +173,8 @@ const StoreModel: ModuleType = {
             userDetails.roles =['kh','product','productinfo','store','storeapproval','rolepower','funcmenu','khset','bank',
           'insurance','factory','warehouse','logistics','customer','sysuser','systemUser','userlist','consumerlist',
             "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","newlogistics",
-          "newconsumerlist","newlogistics","newwarehouse","newfactory","newinsurance",]
+          "newconsumerlist","newlogistics","newwarehouse","newfactory","newinsurance","set","noset","account","noaccount","appropriation","noappropriation",
+          'chexk','nochexk',]
           };
          
         commit('saveCurrentUser', userDetails || {});

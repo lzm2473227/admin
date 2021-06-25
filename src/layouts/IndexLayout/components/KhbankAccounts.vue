@@ -35,68 +35,68 @@ export default {
         {
           id: 1,
           label: "佣金规则",
-          key: "customer",
+          key: "set",
           children:[
                 {
               id: 1,
-              label: "未设置",
-              key: "commodity1",
+              label: "已设置",
+              key: "set",
             },
             {
-              id: 4,
-              label: "已设置",
-              key: "commodity",
+              id: 8,
+              label: "未设置",
+              key: "noset",
             },
           ]
         },
         {
           id: 2,
           label: "银行开户",
-          key: "store",
+          key: "account",
           children:[
                 {
               id: 2,
-              label: "未开户",
-              key: "commodity1",
+              label: "已开户",
+              key: "account",
             },
             {
               id: 5,
-              label: "已开户",
-              key: "commodity",
+              label: "未开户",
+              key: "noaccount",
             },
           ]
         },
         {
           id: 3,
           label: "佣金核算",
-          key: "logistics",
+          key: "chexk",
           children:[
                 {
               id: 3,
-              label: "未核算",
-              key: "commodity1",
+              label: "已核算",
+              key: "chexk",
             },
             {
               id: 6,
-              label: "已核算",
-              key: "commodity",
+              label: "未核算",
+              key: "nochexk",
             },
           ]
         },
         {
           id: 4,
           label: "佣金拨款",
-          key: "warehouse",
+          key: "appropriation",
           children:[
                 {
               id: 4,
               label: "已拨款",
-              key: "commodity1",
+              key: "appropriation",
             },
             {
               id: 7,
               label: "未拨款",
-              key: "commodity",
+              key: "noappropriation",
             },
           ]
         },
@@ -122,17 +122,29 @@ export default {
         this.$nextTick(() => {
           let key = 0;
           switch (selectmenu.pathname) {
-            case "customer":
+            case "set":
               key = 1;
               break;
-            case "store":
+            case "account":
               key = 2;
               break;
-            case "logistics":
+            case "chexk":
               key = 3;
               break;
-            case "warehouse":
+            case "appropriation":
               key = 4;
+              break;
+            case "noaccount":
+              key = 5;
+              break;
+            case "nochexk":
+              key = 6;
+              break;
+            case "noappropriation":
+              key = 7;
+              break;
+            case "noset":
+              key = 8;
               break;
           }
           this.$refs.vueTree2.setCurrentKey(key);
@@ -160,17 +172,29 @@ export default {
       let path = "";
       let pathname = "";
       switch (obj.key) {
-        case "customer":
-          path = "/sysuser/customer";
+        case "set":
+          path = "/systembank/commissionrule/set";
           break;
-        case "store":
-          path = "/sysuser/store";
+        case "noset":
+          path = "/systembank/commissionrule/noset";
           break;
-        case "logistics":
-          path = "/sysuser/logistics";
+        case "account":
+          path = "/systembank/bank/account";
           break;
-        case "warehouse":
-          path = "/sysuser/warehouse";
+        case "noaccount":
+          path = "/systembank/bank/noaccount";
+          break;
+        case "chexk":
+          path = "/systembank/commissioncheck/chexk";
+          break;
+        case "nochexk":
+          path = "/systembank/commissioncheck/nochexk";
+          break;
+        case "appropriation":
+          path = "/systembank/commissionfunding/appropriation";
+          break;
+        case "noappropriation":
+          path = "/systembank/commissionfunding/noappropriation";
           break;
         default:
           break;
@@ -284,5 +308,8 @@ export default {
 }
 /deep/.el-tree-node__content > .el-tree-node__expand-icon{
   padding-left: 20px;
+}
+/deep/.el-tree-node__expand-icon.expanded {
+    transform: none;
 }
 </style>>

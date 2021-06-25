@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -24,10 +24,11 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="等级编号" align="center" sortable width="330"></el-table-column>
-        <el-table-column prop="storeName" label="等级名称" sortable width="350"></el-table-column>
-        <el-table-column prop="address" label="所需成长值" sortable width="480"></el-table-column>
-        <el-table-column prop="storeType" label="等级折扣" align="center" sortable width="190"></el-table-column>
+        <el-table-column prop="orgCode" label="等级编号" align="center" sortable width="140"></el-table-column>
+        <el-table-column prop="storeName" label="等级名称" sortable width="150"></el-table-column>
+        <el-table-column prop="address" label="所需成长值" sortable width="140"></el-table-column>
+        <el-table-column prop="storeType" label="等级折扣" align="center" sortable width="140"></el-table-column>
+        <el-table-column label="" align="center" width="1040" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -47,7 +48,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -73,4 +74,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../../assets/css/reset.scss';
 @import "@/assets/css/image3.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

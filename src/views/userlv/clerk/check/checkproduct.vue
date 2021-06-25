@@ -36,16 +36,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="400"></el-table-column>
-        <el-table-column prop="specsParameter" label="商品规格" sortable width="250"></el-table-column>
-        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
-        <el-table-column prop="manufacturer" label="生产厂家" sortable width="160"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="manufacturer" label="生产厂家" sortable width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="商品单价" sortable width="120">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
-        <el-table-column prop="scanTime" label="盘货时间" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="scanTime" label="盘货时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column label="" align="center" width="255" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -163,42 +164,14 @@ export default {
           let data = res.data.data
           data.length == 0 ? this.total = 0 : this.total = res.data.total
           data.forEach(item => {
+            item.index = index+1
+            if(item.price) item.price = item.price.toFixed(2)
             item.scanTime = moment(item.scanTime).format(
               "YYYY-MM-DD HH:mm:ss"
             );
           })
           this.totalNum = res.data.total
-          for(let i = 0; i < data.length; i++){
-            this.tableData.push({
-              index: i+1,
-              barcode: data[i].barcode,
-              brandName: data[i].brandName,
-              commodityCode: data[i].commodityCode,
-              commodityName: data[i].commodityName,
-              filePath: data[i].filePath,
-              id: data[i].id,
-              manufacturer: data[i].manufacturer,
-              policyNo: data[i].policyNo,
-              price: data[i].price,
-              specsParameter: data[i].specsParameter,
-              guigemignc: '-',
-              size: '-',
-              productstandard: '-',
-              weight: '-',
-              volume: '-',
-              type1: '-',
-              type2: '-',
-              type3: '-',
-              baozhuangleixing: '-',
-              baozhuangsize: '-',
-              jianjie: '-',
-              sellname: '-',
-              selltime: '-',
-              selltype: '-',
-              sellstatus: '-',
-              scanTime: data[i].scanTime
-            })
-          }
+          this.tabledata = data
           this.tableData.reverse()
         }else{
           this.$message(res.data.msg)

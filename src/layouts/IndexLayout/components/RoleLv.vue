@@ -320,14 +320,14 @@ export default {
 */
 .index-store {
   width: 160px;
-  border-top: 1px solid #b8d0f2;
+  // border-top: 1px solid #b8d0f2;
   // padding-top: 16px;
 }
 .index-store:first-child {
   border-top: 0;
 }
 .index-store:last-child {
-  border-bottom: 1px solid #b8d0f2;
+  // border-bottom: 1px solid #b8d0f2;
 }
 .index-stroe-title {
   height: 38px;
@@ -346,6 +346,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
 }
 .index-menu-hidden {
   width: 16px;
@@ -357,6 +358,7 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
+  cursor: pointer;
 }
 .index-menu-hidden::before {
   content: "";
@@ -379,6 +381,7 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
+  cursor: pointer;
 }
 //横
 .index-menu-show::before {

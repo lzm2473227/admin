@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -26,19 +26,24 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column label="门店机构代码" align="center" sortable width="330">
+        <el-table-column label="门店机构代码" align="center" sortable width="200">
           <template v-slot="scope">
             <span class="detail-info" @click="editstore(scope.row)">{{scope.row.orgCode}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="storeName" label="门店名称" sortable width="350"></el-table-column>
-        <el-table-column prop="address" label="门店地址" sortable width="480"></el-table-column>
-        <el-table-column prop="storeType" label="门店类别" align="center" sortable width="190"></el-table-column>
-        <el-table-column label="证件照" sortable align="center" width="243" >
+        <el-table-column prop="storeName" label="门店名称" sortable width="220" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="address" label="门店地址" sortable width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="storeType" label="门店类别" align="center" sortable width="150"></el-table-column>
+        <el-table-column label="证件照" align="center" width="140 " sortable>
           <template v-slot="scope">
-            <img :src="scope.row.storeLicence" alt="" style="height: 20px;">
+            <el-image style="height: 20px" :src="scope.row.storeLicence" :preview-src-list="srcList"></el-image>
+            <!-- <img :src="scope.row.storeLicence" alt="" style="height: 20px;"> -->
           </template>
         </el-table-column>
+        <el-table-column prop="city" label="所在市" align="center" sortable width="120"></el-table-column>
+        <el-table-column prop="province" label="所在省" align="center" sortable width="120"></el-table-column>
+        <el-table-column prop="num" label="对公账户" align="center" sortable width="200"></el-table-column>
+        <el-table-column label="" align="center" width="155" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -52,8 +57,8 @@
         </el-form-item>
         <el-form-item label="门店类别:" prop="name">
           <el-select v-model="ruleForm.storeType" placeholder="请选择门店类别">
-            <el-option label="直营店" value="直营">直营店</el-option>
-            <el-option label="加盟店" value="加盟">加盟店</el-option>
+            <el-option label="直营店" value="直营店">直营店</el-option>
+            <el-option label="加盟店" value="加盟店">加盟店</el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -76,7 +81,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -85,7 +90,8 @@ export default {
           storeName: '',
           storeType: ''
       },
-      multipleSelection: []
+      multipleSelection: [],
+      srcList: []
     };
   },
   created() {
@@ -109,9 +115,10 @@ export default {
         // console.log(res);
         if (res.data.code === "SUCCESS") {
           res.data.data.forEach((item,key) => {
-             item.index = key + 1; //加入index
+            item.index = key + 1; //加入index
             let address = item.province + item.city + item.county;
             item.address = address + item.address;
+            this.srcList.push(item.storeLicence)
           });
           t.tabledata = res.data.data;
           t.total= res.data.total;
@@ -202,4 +209,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/reset.scss';
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

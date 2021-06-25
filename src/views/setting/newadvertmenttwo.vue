@@ -108,7 +108,7 @@
         </tr>
         <tr style="vertical-align: top;">
           <td class="table-left" style="padding-top: 12px;">广告图片</td>
-          <td class="table-right" colspan="3" style="height: 580px; padding-top: 6px;">
+          <td class="table-right" colspan="3" style="height: 566px; padding-top: 6px;">
            <el-upload
               action="http://14.29.162.130:6602/image/imageUpload"
               list-type="picture-card"
@@ -185,7 +185,7 @@ export default {
     },
     //图片
     handleAvatarSuccess(res, file) {
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.ruleForm.linkPosition = res.data;
       }

@@ -123,6 +123,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/reset';
+@import "@/assets/css/image2.scss";
 .header {
   height: 42px;
   line-height: 44px;
@@ -198,4 +199,5 @@ td {
   font-family: Source Han Sans CN;
   border: 1px solid #ddd !important;
 }
+
 </style>

@@ -274,7 +274,7 @@ export default {
       console.log(file);
       console.log(res);
       // return
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.form.filePath = res.data;
       }

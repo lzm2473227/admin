@@ -34,7 +34,7 @@
         <el-table-column prop="manufacturer" label="代理人" sortable width="160"></el-table-column>
         <el-table-column prop="price" label="代理人身份证" sortable width="220">
           <template v-slot="scope">
-						￥{{ scope.row.price }}
+						{{ scope.row.price }} 元
 					</template>
         </el-table-column>
         <el-table-column prop="time" label="代理人手机号" align="center"  sortable width="183" ></el-table-column>
@@ -131,6 +131,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/reset';
+@import "@/assets/css/image2.scss";
 .header {
   height: 42px;
   line-height: 44px;

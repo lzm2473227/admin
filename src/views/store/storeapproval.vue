@@ -22,7 +22,7 @@
           <tr>
             <td class="table-left">机构代码</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入机构代码" v-model="ruleForm.industryName" />
+              <input type="text" placeholder="请输入机构代码" v-model="ruleForm.orgCode" />
             </td>
             <td class="table-left">单位名称</td>
             <td class="table-right">
@@ -32,7 +32,7 @@
           <tr>
             <td class="table-left">法人代表</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入法人代表" v-model="ruleForm.b" />
+              <input type="text" placeholder="请输入法人代表" v-model="ruleForm.legalPerson" />
             </td>
             <td class="table-left">代理人</td>
             <td class="table-right">
@@ -64,7 +64,7 @@
               <input
                 type="text"
                 placeholder="请输入代理人身份证号"
-                v-model="ruleForm.a"
+                v-model="ruleForm.idNumber"
               />
             </td>
             <td class="table-left">联系手机号</td>
@@ -135,7 +135,7 @@ export default {
         county: "",
         enterpriseName: "",
         id: "",
-        idNumber: this.idNumber,
+        idNumber: "",
         industryName: "",
         legalPerson: "",
         province: "",
@@ -207,7 +207,7 @@ export default {
               type: "success",
             });
             // t.cancelbtn();
-            t.$router.push({ path: "/sysuser/store" });
+            t.$router.push({ path: "/systemUser/dealer" });
           } else {
             //接口错误处理
             t.$message.error(res.data.msg);

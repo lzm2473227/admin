@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -27,8 +27,9 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="a" label="主题编号" align="center" sortable width="150"></el-table-column>
-        <el-table-column prop="b" label="活动主题名称" align="center" sortable width="220"></el-table-column>
-        <el-table-column prop="c" label="描述" align="center" sortable width="660"></el-table-column>
+        <el-table-column prop="b" label="活动主题名称" align="center" sortable width="200"></el-table-column>
+        <el-table-column prop="c" label="描述" align="center" sortable width="300"></el-table-column>
+        <el-table-column label="" align="center" width="955" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -64,7 +65,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       filePath:"",
@@ -121,4 +122,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/reset.scss';
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

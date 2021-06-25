@@ -51,7 +51,7 @@
         </tr>
         <tr style="vertical-align: top;">
             <td class="table-left" style="padding-top: 12px;">机具图片</td>
-            <td class="table-right" colspan="3" style="height: 555px; padding-top: 6px;">
+            <td class="table-right" colspan="3" style="height: 542px; padding-top: 6px;">
               <el-upload
                 action="http://14.29.162.130:6602/image/imageUpload"
                 list-type="picture-card"
@@ -151,7 +151,7 @@ export default {
     handleAvatarSuccess(res, file) {
       console.log(file);
       console.log(res);
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         this.dialogImageUrl = res.data;
         this.form.filePath = res.data;
       }

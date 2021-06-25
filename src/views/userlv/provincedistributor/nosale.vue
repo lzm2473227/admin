@@ -21,7 +21,7 @@
         :data="tabledata"
         tooltip-effect="dark"
         style="width: 100%"
-        stripe="true"
+        
         fit="true"
         border
         header-cell-style="background:#F6FAFF"
@@ -54,7 +54,7 @@
           <el-table-column align="center" prop="sellstatus" label="销售状态"></el-table-column>
           <el-table-column align="center" label="销售单价" width="100" fixed="right">
             <template v-slot="scope">
-							￥{{ scope.row.price }}
+							{{ scope.row.price }} 元
 						</template>
           </el-table-column>
         </el-table>

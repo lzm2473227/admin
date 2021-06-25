@@ -2,7 +2,7 @@
   <div class="tab">
     <div class="tab-title">
       <div class="left">
-        <div class="print" @click="addMachine"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增机具</span></div>
+        <div class="print" @click="addMachine()"><img class="icon" src="../../assets/images/add.png" alt=""><span class="axis">新增机具</span></div>
         <div class="print" @click="addMachine('1')"><img class="icon" src="../../assets/images/edit.png" alt=""><span class="axis">编辑机具</span></div>
         <div class="print" @click="delMachine"><img class="icon" src="../../assets/images/delete.png" alt=""><span class="axis">删除机具</span></div>
         <div class="print"><img class="icon" src="../../assets/images/print.png" alt=""><span class="axis">打印列表</span></div>
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -26,23 +26,25 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column label="机具编码（MEID）" align="center" sortable width="200">
+        <el-table-column label="机具编码（MEID）" align="center" sortable width="170">
           <template v-slot="scope">
             <span class="detail-info" @click="addMachine('2', scope.row)">{{scope.row.meid}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="machinecode" label="机具型号" align="center" sortable width="150"></el-table-column>
-        <el-table-column prop="name" label="机具名称" align="center" sortable width="160"></el-table-column>
-        <el-table-column prop="frontId" label="机具供应商" sortable width="150"></el-table-column>
-        <el-table-column prop="storeName" label="所属门店" sortable width="160" ></el-table-column>
-        <el-table-column prop="address" label="门店地址" sortable width="300"></el-table-column>
-        <el-table-column prop="imgs" label="机具图片" sortable width="150">
+        <el-table-column prop="machinecode" label="机具型号" align="center" sortable width="120"></el-table-column>
+        <el-table-column prop="name" label="机具名称" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="frontId" label="机具供应商" sortable width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="storeName" label="所属门店" sortable width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="address" label="门店地址" sortable width="220" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="imgs" label="机具图片" sortable width="110">
           <template v-slot="scope">
-            <img :src="scope.row.filePath" alt="" style="height: 20px;">
+            <el-image style="height: 20px" :src="scope.row.filePath" :preview-src-list="srcList"></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="bindingTime" label="启用时间" align="center"  sortable width="200" ></el-table-column>
-        <el-table-column prop="status" label="状态" align="center"  sortable width="123" ></el-table-column>
+        <el-table-column prop="bindingTime" label="启用时间" align="center"  sortable width="160" ></el-table-column>
+        <el-table-column prop="status" label="状态" align="center"  sortable width="100" ></el-table-column>
+        <el-table-column prop="city" label="所在市" align="center"  sortable width="110" ></el-table-column>
+        <el-table-column prop="province" label="所在省" align="center"  sortable width="110" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -84,7 +86,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -97,6 +99,7 @@ export default {
           gongying: ''
       },
       multipleSelection : [],
+      srcList: []
     };
   },
   created() {
@@ -129,6 +132,7 @@ export default {
           item.index = key + 1; //加入index
           let address = item.province + item.city + item.county;
           item.address = address + item.address;
+          this.srcList.push(item.filePath)
         })
         this.tabledata = res.data.data
         this.tabledata.reverse();
@@ -209,4 +213,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/reset.scss';
 @import "@/assets/css/image2.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

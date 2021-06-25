@@ -19,8 +19,6 @@ const store = new Vuex.Store({
         },
         changeSelectmenu(state, payload) {
             state.selectmenu = payload
-
-
         },
     },
     actions: {
@@ -31,14 +29,13 @@ const store = new Vuex.Store({
         },
         async logout({ commit }) {
             try {
-
-
                 await removeToken();
                 commit('saveCurrentUser', {
                     id: 0,
                     name: '',
                     avatar: '',
                     roles: [],
+                    identities:[]
                 });
                 return true;
             } catch (error) {

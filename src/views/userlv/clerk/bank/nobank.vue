@@ -29,13 +29,15 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="commodityCode" label="开户业务编号" align="center" sortable width="210"></el-table-column>
+        <el-table-column prop="yinhang" label="开户银行" align="center" sortable width="180"></el-table-column>
+        <el-table-column prop="type" label="开卡类型" align="center" sortable width="120"></el-table-column>
         <el-table-column prop="barcode" label="身份证号码" align="center" sortable width="200"></el-table-column>
-        <el-table-column prop="commodityName" label="开户人姓名" sortable width="280"></el-table-column>
-        <el-table-column prop="specsParameter" label="手机号码" align="center" sortable width="210"></el-table-column>
-        <el-table-column prop="brandName" label="状态" sortable width="150"></el-table-column>
-        <el-table-column prop="time" label="申请时间" align="center"  sortable width="180" ></el-table-column>
-        <el-table-column prop="time" label="开户佣金1" align="center"  sortable width="180" ></el-table-column>
-        <el-table-column prop="time" label="开户佣金2" align="center"  sortable width="183" ></el-table-column>
+        <el-table-column prop="commodityName" label="开户人姓名" sortable width="160"></el-table-column>
+        <el-table-column prop="specsParameter" label="手机号码" align="center" sortable width="150"></el-table-column>
+        <el-table-column prop="brandName" label="地址" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="审核结果" align="center" sortable width="140" ></el-table-column>
+        <el-table-column prop="time" label="申请时间" align="center" sortable width="180" ></el-table-column>
+        <el-table-column label="" align="center" width="40" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">

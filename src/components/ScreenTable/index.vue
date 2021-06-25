@@ -11,7 +11,6 @@
                 :data="data"
                 v-loading="loading"
                 :show-header="showHeader"
-                :stripe="stripe"
                 :border="border"
                 :size="size"
                 :class="tableClass"

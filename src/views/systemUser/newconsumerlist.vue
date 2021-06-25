@@ -220,7 +220,7 @@ export default {
       this.ruleForm.frontId = res.response.data;
     },
     handleAvatarSuccess(res, file) {
-      if (res.code === "Success") {
+      if (res.code === "SUCCESS") {
         console.log(res);
         this.dialogImageUrl = res.data;
         this.ruleForm.frontId = res.data;

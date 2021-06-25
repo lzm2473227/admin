@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div class="login-role">
+    <!-- <div class="login-role">
       <div class="role-list">
         <template v-for="(item, key) in roles" :key="key">
           <div
@@ -11,7 +11,7 @@
           </div>
         </template>
       </div>
-    </div>
+    </div> -->
     <div class="login-content">
       <div class="content-form">
         <div class="form-title">
@@ -24,7 +24,29 @@
         </div>
         <div class="form-content">
           <div class="login-info">
-            <el-form ref="form" :model="form" label-width="80px" class="login-form">
+            <form action="">
+              <div class="username">
+                <span>身份证号:</span>
+                <input type="text" v-model="username" placeholder="请输入身份证号">
+                <span class="descfont">（18位身份证号码）</span>
+              </div>
+              <div class="username">
+                <span>登录密码:</span>
+                <input type="password" v-model="userpsw" placeholder="请输入密码">
+                <span class="descfont">（密码为6-16位）</span>
+              </div>
+              <div class="username">
+                <span class="verification-code">验证密码:</span>
+                <input type="text" v-model="verificationCode" placeholder="请输入验证码">
+                <span class="descfont rand-code" @click="sendSMS">（点击随机码）</span>
+                <span class="tip">{{ tip }}</span>
+              </div>
+              <el-checkbox class="save-login" v-model="checked">保存登录信息</el-checkbox>
+              <div class="login-btn">
+                <button @click="loginsystem()">登录</button>
+              </div>
+            </form>
+            <!-- <el-form ref="form" :model="form" label-width="80px" class="login-form">
               <el-form-item label="身份证号:">
                 <el-input v-model="username"></el-input>
                 <span class="descfont">（18位身份证号码）</span>
@@ -46,7 +68,7 @@
               <el-form-item>
                 <el-button class="login-btn" @click="loginsystem" type="primary">登录</el-button>
               </el-form-item>
-            </el-form>
+            </el-form> -->
           </div>
           <div class="dottline"></div>
           <div class="technology-support">
@@ -83,21 +105,25 @@ export default {
       username: "",
       userpsw: "",
       verificationCode: '',
-      tip: ''
+      tip: '',
+      checked: false
     };
   },
    mounted() {
-    //  this.a()
     // 在页面加载时从cookie获取登录信息
-    let t = this;
-    let username = this.getCookie("username");
-    let userpsw = Base64.decode(this.getCookie("userpsw")); //密码进行base64解密 cookie不保存明文，所以需要解密才能赋值
-    // 如果存在赋值给表单，并且将记住密码勾选
-    if (username) {
-      t.username = username;
-      t.userpsw = userpsw;
-      t.isremember = true;
+    if(localStorage.getItem('isChecked') === 'true'){
+      let username = this.getCookie("username");
+      let userpsw = Base64.decode(this.getCookie("userpsw")); //密码进行base64解密 cookie不保存明文，所以需要解密才能赋值
+      this.username = username;
+      this.userpsw = userpsw;
+      this.checked = true
     }
+    // 如果存在赋值给表单，并且将记住密码勾选
+    // if (username) {
+    //   t.username = username;
+    //   t.userpsw = userpsw;
+    //   // t.checked = true;
+    // }
     
   },
   methods: {
@@ -111,7 +137,7 @@ export default {
       let loginparams = {
         username : t.username,
         password: t.userpsw,
-        captcha    : this.verificationCode,
+        captcha: this.verificationCode,
         module : t.rolekey,
       };
       // localStorage.removeItem('roleEnum');
@@ -119,21 +145,23 @@ export default {
         // console.log(res);
         if (res.data.code == "SUCCESS") {
           // console.log(JSON.parse(localStorage.getItem("roleEnum")));
-          localStorage.setItem("roleEnum", JSON.stringify(t.rolekey));//缓存当前的登录成功的角色。接口未返回角色名称
+          // localStorage.setItem("roleEnum", JSON.stringify(t.rolekey));//缓存当前的登录成功的角色。接口未返回角色名称
+          let roleEnum = res.data.data.identities[0].role.module
+          localStorage.setItem("roleEnum", JSON.stringify(roleEnum));//缓存当前的登录成功的角色。接口未返回角色名称
           localStorage.setItem("loginuser", JSON.stringify(res.data.data));
-          store.dispatch("loginsucess", "ok");
-          // console.log(localStorage.getItem('roleEnum'));
-          t.$message({
-            message: "登录成功",
-            type: "success",
-          });
-          // console.log(111);
-          t.$router.push({ path: "/"});
-          // console.log(123);
-          // 储存登录信息
-          t.setUserInfo();
+          localStorage.setItem('isChecked', this.checked)
+          store.dispatch("loginsucess", "ok")
+          t.$message.success("登录成功");
+          t.$router.push({ path: "/product"})
+          //判断复选框是否被勾选 勾选则调用配置cookie方法
+          if(this.checked) {
+            this.setCookie(this.username, this.userpsw, 7) // 传入账号名，密码，和保存天数3个参数
+          }else{
+            this.clearCookies()
+          }
         } else {
-          this.tip = res.data.msg
+          this.clearCookies()
+          return this.tip = res.data.msg
           // t.$message.error(res.data.msg);
         }
       });
@@ -153,17 +181,20 @@ export default {
         }
       });
     },
+    changeCheck(){
+      if(this.checked) this.setUserInfo()
+    },
      // 储存表单信息
     setUserInfo: function () {
       let t = this;
       // 判断用户是否勾选记住密码，如果勾选，向cookie中储存登录信息，
       // 如果没有勾选，储存的信息为空
-      if (t.isremember) {
+      if (t.checked) {
         t.setCookie("username", t.username, 7);
         // base64加密密码
         let userpsw = Base64.encode(t.userpsw);
         t.setCookie("userpsw", userpsw, 7);
-        t.setCookie("isremember", t.isremember, 7);
+        t.setCookie("checked", t.checked, 7);
       } else {
         t.setCookie("username", "");
         t.setCookie("userpsw", "");
@@ -182,15 +213,17 @@ export default {
       }
       return "";
     },
-    // 保存cookie  键值 和过期天数
-    setCookie: function (cName, value, expiredays) {
+    // 设置cookie, 保存cookie  键值 和过期天数
+    setCookie: function (username, password, exdays) {
+      let userpsw = Base64.encode(password);
       var exdate = new Date();
-      exdate.setDate(exdate.getDate() + expiredays);
-      document.cookie =
-        cName +
-        "=" +
-        decodeURIComponent(value) +
-        (expiredays == null ? "" : ";expires=" + exdate.toGMTString());
+      exdate.setDate(exdate.getDate() + 24*60*60*1000*exdays);
+      //字符串拼接cookie
+      window.document.cookie="username"+ "=" +username+";path=/;expires="+exdate.toGMTString()
+      window.document.cookie="userpsw"+"="+userpsw+";path=/;expires="+exdate.toGMTString()
+    },
+    clearCookies() {
+      this.setCookie("","",-1) // 修改2值都为空，天数为负1天就好了
     }
   },
 };
@@ -308,6 +341,25 @@ color: #666666;
   align-items: center;
   justify-content: space-between;
 }
+.username{
+  position: relative;
+  margin-bottom: 24px;
+  input{
+    width: 270px;
+    height: 40px;
+    margin-left: 10px;
+    padding-left: 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    outline: none;
+    color: #606266;
+    transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  input:focus{
+    outline: none;
+    border-color: #409eff;
+  }
+}
 .info-psw {
   display: flex;
   flex-direction: row;
@@ -315,13 +367,20 @@ color: #666666;
   align-items: center;
   width: 550px;
 }
+.verification-code{
+  color: #008BD6;
+  text-decoration: underline;
+}
 .rand-code{
   cursor: pointer;
 }
+.rand-code:hover{
+  color: #008BD6;
+}
 .tip{
   position: absolute;
-  top: 40px;
-  left: 0;
+  top: 48px;
+  left: 78px;
   font-size: 12px;
   color: #FC0E0E;
 }
@@ -337,10 +396,18 @@ color: #333333;
       text-decoration: underline;
     }
   }
-/deep/.login-btn{
-  width: 280px;
-  height: 44px;
-  background: #008bd6;
+.login-btn{
+  text-align: center;
+  button{
+    width: 330px;
+    height: 44px;
+    background: #008bd6;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+  }
 }
 /deep/.login-form{
   .el-input--small{
@@ -355,5 +422,9 @@ color: #333333;
 }
 /deep/.el-form-item--small.el-form-item:last-child{
   margin-bottom: 0;
+}
+/deep/.save-login{
+  margin-bottom: 24px;
+  margin-left: 78px;
 }
 </style>

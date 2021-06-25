@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -24,15 +24,16 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column prop="orgCode" label="消费者编码" align="center" sortable width="280"></el-table-column>
+        <el-table-column prop="orgCode" label="消费者编码" align="center" sortable width="180"></el-table-column>
         <el-table-column prop="storeName" label="用户昵称" sortable width="150"></el-table-column>
-        <el-table-column prop="address" label="手机号" sortable width="180"></el-table-column>
-        <el-table-column prop="storeType" label="联系地址" align="center" sortable width="190"></el-table-column>
+        <el-table-column prop="address" label="手机号" sortable width="160"></el-table-column>
+        <el-table-column prop="storeType" label="联系地址" sortable width="220" show-overflow-tooltip></el-table-column>
         <el-table-column prop="storeType" label="消费者来源" align="center" sortable width="120"></el-table-column>
-        <el-table-column prop="storeType" label="入会时间" align="center" sortable width="190"></el-table-column>
+        <el-table-column prop="storeType" label="入会时间" align="center" sortable width="160"></el-table-column>
         <el-table-column prop="storeType" label="性别" align="center" sortable width="90"></el-table-column>
         <el-table-column prop="storeType" label="积分余额" align="center" sortable width="110"></el-table-column>
         <el-table-column prop="storeType" label="会员等级" align="center" sortable width="110"></el-table-column>
+        <el-table-column label="" align="center" width="300" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -40,9 +41,9 @@
     </div>
     <div class="inp-bot">
       <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
-        <el-form-item label="昵称" prop="storeName" class="name-search">
-          <el-input v-model="ruleForm.storeName" placeholder="请输入昵称"></el-input>
-        </el-form-item>
+        <div class="search-item">
+          <el-input v-model="ruleForm.name" placeholder="请输入昵称"></el-input>
+        </div>
         <el-form-item label="手机号码" prop="storeName" class="name-search">
           <el-input v-model="ruleForm.storeName" placeholder="请输入手机号码"></el-input>
         </el-form-item>
@@ -78,7 +79,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -106,4 +107,13 @@ export default {
 <style lang="scss" scoped>
 @import '../../../assets/css/reset.scss';
 @import "@/assets/css/image3.scss";
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

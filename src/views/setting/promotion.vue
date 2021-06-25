@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-body">
+    <div class="tab-body inside-table">
       <el-table
       :row-class-name="tableRowClassName"
       ref="singleTable"
@@ -27,12 +27,12 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column label="序号" align="center" sortable width="80"></el-table-column>
-        <el-table-column label="小活动编号" align="center" sortable width="260"></el-table-column>
-        <el-table-column label="小活动名称" sortable width="310" align="center"></el-table-column>
-        <el-table-column label="大活动名称" sortable width="320" align="center"></el-table-column>
-        <el-table-column label="活动对象" sortable align="center" width="190"></el-table-column>
-        <el-table-column label="起止时间" sortable align="center" width="243" ></el-table-column>
-        <el-table-column label="活动状态" sortable align="center" width="193" >  </el-table-column>
+        <el-table-column label="活动编号" align="center" sortable width="180"></el-table-column>
+        <el-table-column label="活动名称" sortable width="160" align="center"></el-table-column>
+        <el-table-column label="活动对象" sortable align="center" width="140"></el-table-column>
+        <el-table-column label="起止时间" sortable align="center" width="300" ></el-table-column>
+        <el-table-column label="活动状态" sortable align="center" width="150" >  </el-table-column>
+        <el-table-column label="" align="center" width="675" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabledata: [],
       totalNum: 0,
@@ -126,6 +126,12 @@ export default {
 
     addStore1() {
       this.$router.push({ path: "/setting/newactivity" });
+    },
+    addStore2() {
+      this.$router.push({ path: "/setting/newactivity2" });
+    },
+    addStore3() {
+      this.$router.push({ path: "/setting/newactivity3" });
     },
 
 
@@ -191,5 +197,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../assets/css/reset.scss'
+@import '../../assets/css/reset.scss';
+/deep/.tab-body{
+  height: 676px;
+}
+/deep/.inside-table .el-table .el-table__header th{
+  padding: 5px 0;
+}
+/deep/.inside-table .el-table .el-table__body td{
+  padding: 2px 0;
+}
 </style>

@@ -33,21 +33,21 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="260"></el-table-column>
-        <el-table-column prop="specsParameter" sortable label="商品规格" width="130"></el-table-column>
-        <el-table-column prop="brandName" sortable label="品牌" width="100"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column>
+        <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column>
         <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="210"></el-table-column> -->
-        <el-table-column label="商品单价" sortable width="120">
+        <el-table-column label="商品单价" sortable width="110">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            {{ scope.row.price }} 元
           </template>
         </el-table-column>
-        <el-table-column label="促销价" sortable width="120">
+        <el-table-column label="促销价" sortable width="110">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            <span class="table-price">{{ scope.row.price }} 元</span>
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="小活动名称"  sortable width="140" ></el-table-column>
+        <el-table-column prop="time" label="活动名称"  sortable width="140" ></el-table-column>
         <el-table-column prop="sum" label="待售出数量"  sortable width="120" ></el-table-column>
         <!-- <el-table-column prop="createTime" label="售出时间" align="center"  sortable width="180" ></el-table-column> -->
         <el-table-column label="订单号" align="center"  sortable width="160" class="aaaa">
@@ -55,8 +55,9 @@
             <span @click="onDetail(scope.row)" class="table-button">{{ scope.row.dealNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="dealType" label="订单类型" align="center"  sortable width="130" ></el-table-column>
-        <el-table-column prop="transactionalNumber" label="支付业务编号" align="center"  sortable width="173" ></el-table-column>
+        <el-table-column prop="dealType" label="订单类型" align="center"  sortable width="120" ></el-table-column>
+        <el-table-column prop="transactionalNumber" label="支付业务编号" align="center"  sortable width="170" ></el-table-column>
+        <!-- <el-table-column label="" align="center" width="100" ></el-table-column> -->
       </el-table>
     </div>
     <div class="bot">
@@ -111,6 +112,21 @@
         <el-button @click="centerDialogVisible = false">取 消</el-button>
          </div>
     </el-dialog>
+    <div class="pay-dialog1" v-show="isAdd">
+      <div class="dialog-content">
+        <div class="dialog-top">
+          <span>新增商品</span>
+          <img @click="onCancel" src="@/assets/images/close.png" alt="">
+        </div>
+        <div class="dialog-body">
+          <input type="text" placeholder="请扫描或输入单品编码" v-model="barcode">
+          <div class="scan-code">
+            <button class="sure" @click="onSure('1')">确定</button>
+            <button @click="onCancel">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="pay-dialog" v-show="isDialog">
       <!-- 活动弹窗 -->
       <div class="dialog-content" v-show="isShowActivity">
@@ -167,20 +183,20 @@
       <!-- 付款弹窗 -->
       <div class="dialog-pay-type" v-show="isPayMoney">
         <div class="dialog-top">
-          <div><span>应收：<span class="price">￥<span>400.00</span></span></span></div>
-          <div><span>实收：<span class="price" style="color: #FB2915">￥<span>400.00</span></span></span></div>
-          <div><span>找零：<span class="price" style="color: #3377FF">￥<span>400.00</span></span></span></div>
+          <div><span>应收：<span class="price">￥<span>{{totalAmount}}</span></span></span></div>
+          <div><span>实收：<span class="price" style="color: #FB2915">￥<span>{{totalAmount}}</span></span></span></div>
+          <div><span>找零：<span class="price" style="color: #3377FF">￥<span>0.00</span></span></span></div>
         </div>
         <div class="dialog-body">
           <div class="item-left">
             <div class="pay-type">选择支付方式</div>
             <div class="card">
-              <div class="card-item" @click="onSelect('1')"><img src="@/assets/images/chuxu.png" alt="">储蓄卡</div>
-              <div class="card-item" @click="onSelect('2')"><img src="@/assets/images/shebao.png" alt="">社保卡</div>
-              <div class="card-item" @click="onSelect('3')"><img src="@/assets/images/rmb.png" alt="">现金</div>
-              <div class="card-item" @click="onSelect('4')"><img src="@/assets/images/zhifubao.png" alt="">支付宝</div>
-              <div class="card-item" @click="onSelect('5')"><img src="@/assets/images/wx.png" alt="">微信</div>
-              <div class="card-item" @click="onSelect('6')"><img src="@/assets/images/pos.png" alt="">POS收银</div>
+              <div class="card-item" @click="onSelect('1')" :class="{active: isShow === '1'}"><img src="@/assets/images/chuxu.png" alt="">储蓄卡</div>
+              <div class="card-item" @click="onSelect('2')" :class="{active: isShow === '2'}"><img src="@/assets/images/shebao.png" alt="">社保卡</div>
+              <div class="card-item" @click="onSelect('3')" :class="{active: isShow === '3'}"><img src="@/assets/images/rmb.png" alt="">现金</div>
+              <div class="card-item" @click="onSelect('4')" :class="{active: isShow === '4'}"><img src="@/assets/images/zhifubao.png" alt="">支付宝</div>
+              <div class="card-item" @click="onSelect('5')" :class="{active: isShow === '5'}"><img src="@/assets/images/wx.png" alt="">微信</div>
+              <div class="card-item" @click="onSelect('6')" :class="{active: isShow === '6'}"><img src="@/assets/images/pos.png" alt="">POS收银</div>
             </div>
             <div class="back" @click="onList">
               <img src="@/assets/images/ic-back.png" alt="">
@@ -257,6 +273,10 @@
                 <span style="width: 56%; color: #fff; background:#438AFE; font-size: 22px; letter-spacing: 2px">结算</span>
               </div>
             </div>
+            <div class="xianjin weixin" v-show="isShow === '5'">
+              <input type="text" v-model="orderNum" placeholder="请输入微信付款码">
+              <button @click="onSurePayr">确定</button>
+            </div>
           </div>
         </div>
       </div>
@@ -286,9 +306,9 @@
             <span>应收金额：</span>
           </div>
           <div class="text-order text-right">
-            <span>201210602110215461</span>
-            <span>储蓄卡</span>
-            <span>￥120.00</span>
+            <span>{{ dealNumber }}</span>
+            <span>微信</span>
+            <span>￥{{totalAmount}}</span>
           </div>
         </div>
         <div class="pay-success-right">
@@ -298,8 +318,8 @@
               <p class="text-success">支付成功</p>
             </div>
             <div class="order-price">
-              <p class="total-price">￥<span>120.00</span></p>
-              <p>实收金额：120.00&nbsp;&nbsp;&nbsp;&nbsp;找零金额：<span style="color: #438AFE;">0.00</span></p>
+              <p class="total-price">￥<span>{{totalAmount}}</span></p>
+              <p>实收金额：{{totalAmount}}&nbsp;&nbsp;&nbsp;&nbsp;找零金额：<span style="color: #438AFE;">0.00</span></p>
             </div>
           </div>
           <div class="success-btn">
@@ -357,6 +377,12 @@ export default {
       isShowCreateCode: false, // 是否生成收款码
       isShowScan: false, // 是否显示扫用户付款码页面
       isPay: true, // 是否支付成功
+      isAdd: false,
+      isBarcode: '',
+      codeObj: {},
+      totalAmount: '', // 订单金额
+      orderNum: '', // 微信付款码
+      dealNumber: ''
     };
   },
   created() {
@@ -385,6 +411,7 @@ export default {
           this.total = res.data.total
           data.forEach((item, index) => {
             item.index = index+1
+            if(item.price) item.price = item.price.toFixed(2)
             item.createTime = moment(item.createTime).format(
               "YYYY-MM-DD HH:mm:ss"
             )
@@ -463,15 +490,46 @@ export default {
     },
     // 启动支付
     onPay(){
+      if(this.multipleSelection.length <= 0) return this.$message('请选择需要支付的商品')
       this.isDialog = true
-      this.isShowActivity = true
-    },
-    // 确定购买
-    onSure(){
       this.isPayMoney = true
-      this.isShowActivity = false
+      this.onOrder()
+      // this.isShowActivity = true
+    },
+    // 确定购买, 确定查询商品信息
+    onSure(val){
+      if(val === '1'){
+        if(this.isBarcode === this.barcode && this.barcode) return this.$message('请勿重复添加商品69编码')
+      // 根据单品编码查询商品信息
+      let params = {
+        "commodityCode": this.barcode // 6922266454295, 6925989489919, 6901826828233, 6959315400247
+      }
+      httpreques("post", params, "/realbrand-management-service/CommodityMgt/CommodityInfo").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+        //   this.isDialog = false
+          this.barcode = ''
+          this.codeObj = res.data.data
+          this.isBarcode = this.codeObj.commodityCode
+          this.tabledata.push(this.codeObj)
+          this.tabledata.forEach((item, index) => {
+              item.index = index+1
+            // item.scanTime = moment(item.scanTime).format(
+            //     "YYYY-MM-DD HH:mm:ss"
+            // )
+          })
+          this.tabledata.reverse()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+      }else{
+        this.isPayMoney = true
+        this.isShowActivity = false
+      }
     },
     onCancel(){
+      this.isAdd = false
       this.isDialog = false
     },
     // 返回列表
@@ -491,6 +549,68 @@ export default {
     onSelect(val){
       this.isShow = val
     },
+    // 生成订单
+    onOrder(){
+      let arr = this.multipleSelection
+      let obj = {}
+      arr.forEach((item, index) => {
+        let { barcode } = item
+        if(!obj[barcode]){
+          obj[barcode] = {
+            barcode,
+            price: item.price,
+            commodityCodeList: []
+          }
+        }
+        obj[barcode].commodityCodeList.push(item.commodityCode)
+      })
+      let list = Object.values(obj)
+      console.log(list)
+      let params = {
+        "itemList": list,
+        "payMethod": 4
+      }
+      httpreques("post", params, "/realbrand-store-service/Sale/generateOrder").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.$message.success('生成订单成功')
+          let data = res.data.data
+          this.totalAmount = data.totalAmount
+          this.dealNumber = data.dealNumber
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    // 门店扫码支付
+    onSurePayr(){
+      let params = {
+        "code": this.orderNum, // 微信付款码
+        "dealNumber": this.dealNumber // 订单号
+      }
+      httpreques("post", params, "/realbrand-store-service/Sale/storeScanCodePay").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.$message.success('支付成功')
+          this.queryPayOrder()
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
+    // 查询支付结果
+    queryPayOrder(){
+      httpreques("post", {"dealNumber": this.dealNumber}, "/realbrand-store-service/Sale/storeScanCodePay").then((res) => {
+        console.log(res);
+        if (res.data.code === "SUCCESS") {
+          this.$message.success('支付成功')
+          this.isPay = false
+          this.isPayMoney = false
+        }else{
+          this.$message(res.data.msg)
+        }
+      })
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -509,7 +629,7 @@ export default {
       return row.address;
     },
     scan(){
-      this.centerDialogVisible = true
+      this.isAdd = true
     }
   },
 };
@@ -518,6 +638,56 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/reset.scss';
 @import '@/assets/css/image1';
+.pay-dialog1{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .dialog-top{
+    span{
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+    img{
+      cursor: pointer;
+    }
+  }
+  .dialog-content .dialog-body{
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    input{
+      width: 380px;
+      height: 44px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      outline: none;
+    }
+    button{
+      height: 44px;
+      padding: 0 28px;
+      background: #FAFCFE;
+      border: 1px solid #BBCBDF;
+      border-radius: 2px;
+      color: #333;
+      outline: none;
+      cursor: pointer;
+    }
+    .sure{
+      margin-right: 12px;
+      background: #438AFE;
+      border: 1px solid #438AFE;
+      color: #fff;
+    }
+  }
+}
 .pay-dialog{
   position: fixed;
   top: 0;
@@ -624,8 +794,9 @@ export default {
     color: #333;
     font-size: 18px;
     div{
+      width: 33%;
       border-right: 1px solid #E7E9EC;
-      padding-right: 70px;
+      text-align: center;
     }
     div:last-child{
       border-right: 0;
@@ -736,7 +907,7 @@ export default {
   height: 100%;
   padding: 26px;
   .num-item{
-    height: 17%;
+    height: 18%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -751,6 +922,7 @@ export default {
       background: #F5F9FC;
       box-shadow: 0px 2px 4px rgba(4, 24, 39, 0.12);
       font-size: 30px;
+      cursor: pointer;
     }
     span:last-child{
       width: 34%;
@@ -900,5 +1072,30 @@ export default {
 }
 .dialog-content .dialog-body .activity-item .el-radio-group .el-radio:first-child{
   padding-left: 0;
+}
+.dialog-pay-type .dialog-body .card >.card-item.active{
+  border: 1px solid #3175FC;
+  border-top: 1px solid #3175FC;
+  background: #EBF0FB;
+}
+.weixin{
+  input{
+    width: 200px;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #3175FC;
+    outline: none;
+    font-size: 14px;
+  }
+  button{
+    height: 30px;
+    padding: 0 20px;
+    margin-left: 20px;
+    border: 1px solid #3175FC;
+    border-radius: 2px;
+    background: #3175FC;
+    color: #fff;
+    outline: none;
+  }
 }
 </style>

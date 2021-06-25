@@ -30,25 +30,26 @@
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column prop="barcode" label="商品69编码" align="center" sortable width="140"></el-table-column>
-        <el-table-column prop="commodityName" label="商品名称" sortable width="350"></el-table-column>
+        <el-table-column prop="commodityName" label="商品名称" sortable width="230" show-overflow-tooltip></el-table-column>
         <!-- <el-table-column prop="specsParameter" label="商品规格" sortable width="160"></el-table-column> -->
         <!-- <el-table-column prop="brandName" label="品牌" sortable width="140"></el-table-column> -->
         <!-- <el-table-column prop="manufacturer" label="生产厂家" sortable width="200"></el-table-column> -->
         <el-table-column label="商品单价" sortable width="120">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            {{ scope.row.price }} 元
           </template>
         </el-table-column>
-        <el-table-column prop="time" label="是否赠品" align="center"  sortable width="170" ></el-table-column>
-        <el-table-column label="促销价" sortable width="140">
+        <el-table-column prop="time" label="是否赠品" align="center"  sortable width="150" ></el-table-column>
+        <el-table-column label="促销价" sortable width="120">
           <template v-slot="scope">
-            ￥{{ scope.row.price }}
+            {{ scope.row.price }} 元
           </template>
         </el-table-column>
         <el-table-column prop="time" label="售出时间" align="center"  sortable width="170" ></el-table-column>
         <el-table-column prop="time" label="订单号" align="center"  sortable width="170" ></el-table-column>
         <el-table-column prop="time" label="订单类型" align="center"  sortable width="150" ></el-table-column>
-        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="193" ></el-table-column>
+        <el-table-column prop="time" label="支付业务编号" align="center"  sortable width="190" ></el-table-column>
+        <el-table-column label="" align="center" width="170" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
