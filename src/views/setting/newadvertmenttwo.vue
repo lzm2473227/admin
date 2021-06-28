@@ -43,7 +43,7 @@
         <tr>
           <td class="table-left">广告类型</td>
           <td class="table-right">
-            <select v-model="ruleForm.type">
+            <select v-model="ruleForm.type" >
               <option value="图片">图片</option>
               <option value="视频">视频</option>
               <option value="文字">文字</option>
@@ -302,5 +302,8 @@ export default {
 /deep/.el-input__inner{
   width: 196px;
   height: 24px;
+}
+/deep/.el-date-picker {
+    width: 518px;
 }
 </style>

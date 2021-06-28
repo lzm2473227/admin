@@ -9,7 +9,7 @@
             alt=""
           /><span class="axis">新增人员</span>
         </div>
-        <div class="print" @click="editclerk('', '1')">
+        <div class="print" @click="editclerk()">
           <img
             class="icon"
             src="../../assets/images/edit.png"
@@ -67,7 +67,7 @@
         <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
         <el-table-column label="身份证号码" align="center" sortable width="200">
           <template v-slot="scope">
-            <span class="detail-info" @click="editclerk(scope.row, '2')">{{scope.row.idNumber}}</span>
+            <span class="detail-info" @click="clerkDetail(scope.row)">{{scope.row.idNumber}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="姓名" show-overflow-tooltip align="center" sortable width="130"></el-table-column>
@@ -233,17 +233,17 @@ export default {
     //删除
     delclerk() {
       if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要删除的人员')
-      let idNumber = []
+      let list = []
       _.forEach(
         JSON.parse(JSON.stringify(this.multipleSelection)),
         function (item, key) {
-          idNumber.push(item.idNumber);
+          list.push(item.idNumber);
         }
       )
         httpreques(
           "post",
           {
-            idNumber: idNumber,
+            list: list,
           },
           "/realbrand-management-service/StoreUserMgt/DeleteStoreUser"
         ).then((result) => {
@@ -261,17 +261,18 @@ export default {
       this.$router.push({path: "/setting/newclerktwo",})
     },
     //编辑
-    editclerk(data, val) {
-      let uuid = ''
-      if(val === '1') {
-        if(this.multipleSelection.length != 1) return this.$message('请选择一项数据进行编辑')
-        uuid = this.multipleSelection[0].uuid
-      }else if(val === '2'){
-        uuid = data.uuid
-      }
+    editclerk() {
+      if(this.multipleSelection.length != 1) return this.$message('请选择一项数据进行编辑')
+      let uuid = this.multipleSelection[0].uuid
       this.$router.push({
         path: "/setting/newclerktwo",
         query: { uuid: uuid },
+      })
+    },
+    clerkDetail(data){
+      this.$router.push({
+        path: "/setting/newclerktwo",
+        query: { uuid: data.uuid },
       })
     },
     changeCurrentPage(val) {

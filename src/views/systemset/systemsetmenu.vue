@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabs: ['当日', '当周', '当月'],
       active: 0,
@@ -88,18 +88,11 @@ export default {
     };
   },
   methods: {
+    add(){
+      this.$router.push("/systemset/newsystemsetmenu")
+    },
     currentchange(val){
       this.pageNum = val
-    },
-    //添加class样式
-    tableRowClassName({row, rowIndex}){
-      if (rowIndex === 0) {
-        return 'warning-row';
-      }
-      return '';
-    },
-    formatter(row, column) {
-      return row.address;
     },
     //选中你选择的条件列表
     setCurrent(row) {
@@ -108,9 +101,6 @@ export default {
     handleCurrentChange(val) {
         this.currentRow = val;
       },
-    // scan(){
-    //   this.centerDialogVisible = true
-    // },
   },
 };
 </script>

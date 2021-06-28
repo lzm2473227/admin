@@ -184,7 +184,7 @@ export default {
     },
     //下架
     soldout(){
-      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要上架的商品')
+      if(this.multipleSelection.length <= 0) return this.$message.error('请选择需要下架的商品')
       let t = this;
       let codearr = [];
       _.forEach(

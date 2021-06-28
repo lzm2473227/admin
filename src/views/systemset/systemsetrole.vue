@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       total: 0,
-      pageSize: 15,
+      pageSize: 20,
       pageNum: 1,
       tabs: ['当日', '当周', '当月'],
       active: 0,

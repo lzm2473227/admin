@@ -39,7 +39,7 @@
     </div>
     <div class="table-main">
       <div class="table-title">
-        <p>新增人员</p>
+        <p>{{msg}}</p>
       </div>
       <form action="#">
         <table border="1" class="">
@@ -528,7 +528,7 @@ export default {
         storeName: this.ruleForm.storeName, // 店铺名称
         telNum: this.ruleForm.telNum,
       };
-      if (this.$route.query.idNumber) {
+      if (this.$route.query.uuid) {
         httpreques(
           "post",
           params,

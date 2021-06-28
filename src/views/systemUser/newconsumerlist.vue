@@ -303,7 +303,7 @@ export default {
         "post",
         {
           pageNum: 1,
-          pageSize: 15,
+          pageSize: 20,
           storeName: this.ruleForm.storeName,
         },
         "/realbrand-management-service/StoreMgt/StoreNameList"

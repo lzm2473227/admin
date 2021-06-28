@@ -77,7 +77,7 @@ export default {
         brandname: "",
       },
       pageNum: 1,
-      pageSize: 15,
+      pageSize: 20,
       tabledata: [],
     };
   },

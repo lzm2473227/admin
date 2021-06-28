@@ -174,7 +174,7 @@ const StoreModel: ModuleType = {
           'insurance','factory','warehouse','logistics','customer','sysuser','systemUser','userlist','consumerlist',
             "systemset","systemsetrole","systemsetmenu",'newuser',"dealer","newdealer","newbank","newsystemsetrole","newlogistics",
           "newconsumerlist","newlogistics","newwarehouse","newfactory","newinsurance","set","noset","account","noaccount","appropriation","noappropriation",
-          'chexk','nochexk',]
+          'chexk','nochexk',"newsystemsetmenu"]
           };
          
         commit('saveCurrentUser', userDetails || {});

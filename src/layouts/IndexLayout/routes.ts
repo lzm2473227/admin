@@ -544,6 +544,12 @@ const IndexLayoutRoutes: Array<RoutesDataItem> = [
         component: () => import("@/views/systemset/newsystemsetrole.vue"),
       },
       {
+        title: "新增岗位",
+        path: "/systemset/newsystemsetmenu",
+        roles: ["newsystemsetmenu"],
+        component: () => import("@/views/systemset/newsystemsetmenu.vue"),
+      },
+      {
         title: "功能菜单",
         path: "/systemset/systemsetmenu",
         roles: ["systemsetmenu"],

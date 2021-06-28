@@ -278,6 +278,11 @@ export default {
       }
     },
     addcomm() {
+      if(!this.form.categoryId) return this.$message('商品分类不能为空')
+      if(!this.form.barcode) return this.$message('商品69码不能为空')
+      if(!this.form.specsParameter) return this.$message('商品规格不能为空')
+      if(!this.form.price) return this.$message('商品价格不能为空')
+      if(!this.form.brandName) return this.$message('商品品牌不能为空')
       let params = {
         barcode: this.form.barcode, //条形码
         brandName: this.form.brandName, //品牌名称

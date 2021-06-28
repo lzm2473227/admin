@@ -40,35 +40,35 @@
             <td>1</td>
             <td>JFGZ-A01</td>
             <td>注册得积分</td>
-            <td>新用户输入手机号完成注册流程，得<input type="text" v-model="tabledata[0]">积分</td>
+            <td>新用户输入手机号完成注册流程，得<input type="text" v-model="points[0]">积分</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
           <tr>
             <td>2</td>
             <td>JFGZ-A02</td>
             <td>登录签到得积分</td>
-            <td>用户登录APP后完成签到，得<input type="text">积分</td>
+            <td>用户登录APP后完成签到，得<input type="text" v-model="points[1]">积分</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
           <tr>
             <td>3</td>
             <td>JFGZ-A03</td>
             <td>线上首次下单得积分</td>
-            <td>用户线上完成首次下单，得<input type="text">积分</td>
+            <td>用户线上完成首次下单，得<input type="text" v-model="points[2]">积分</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
           <tr>
             <td>4</td>
             <td>JFGZ-A04</td>
             <td>线上下单得积分</td>
-            <td>用户线上下单每消费<input type="text">元，得<input type="text">积分</td>
+            <td>用户线上下单每消费<input type="text" v-model="money[3]">元，得<input type="text" v-model="points[3]">积分</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
           <tr>
             <td>5</td>
             <td>JFGZ-A05</td>
             <td>生日当天得N倍积分</td>
-            <td>用户生日当天得倍数积分，倍数为<input type="text">倍</td>
+            <td>用户生日当天得倍数积分，倍数为<input type="text" v-model="points[4]">倍</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
         </table>
@@ -85,7 +85,7 @@
             <td>1</td>
             <td>JFGZ-B01</td>
             <td>线上支付订单积分抵现金</td>
-            <td>线上支付订单<input type="text">积分，抵现金<input type="text">元，最多抵扣订单金额的<input type="text">%</td>
+            <td>线上支付订单<input type="text" v-model="points[5]">积分，抵现金<input type="text" v-model="money[5]">元，最多抵扣订单金额的<input type="text">%</td>
             <td><input type="checkbox" name="..." value="..." checked /></td>
           </tr>
           <tr>
@@ -167,22 +167,12 @@ export default {
         }, {
           value: '选项2',
           label: '第2年'
-// enableState: 0
-// endTime: Moment {_isAMomentObject: true, _i: Fri Jun 25 2021 14:58:43 GMT+0800 (中国标准时间), _isUTC: false, _pf: {…}, _locale: Locale, …}
-// linkPosition: "http://hwpicture.realbrand.net/ccab4117f8e746c1aa948d6d3b820c02.jpg"
-// positionName: "待销售"
-// startTime: Moment {_isAMomentObject: true, _i: Fri Jun 25 2021 14:58:41 GMT+0800 (中国标准时间), _isUTC: false, _pf: {…}, _locale: Locale, …}
-// advertisementNumber: ""
-// advertisementName: "1111"
-// type: "视频"
-// advertisementDescribe: "1111111"
-// id: 0
       }],
       tabledata:[],
-      ruleId:["1111"],
-      money:[10],
-      points:[1],
-      ruleDescribe:["	新用户输入手机号完成注册流程，得新用户输入手机号完成注册流程，得" + this.points +"积分"],
+      ruleId:[""],
+      money:[0,0,0,10,0,1,0],
+      points:[15,3,10,1,0,10,0],
+      ruleDescribe:["	"],
       validityPeriod:1
     };
   },
@@ -212,9 +202,9 @@ export default {
           this.total = res.data.total;
           this.tabledata = res.data.data;
           this.ruleDescribe = res.data.data[0].ruleDescribe;
-          this.tabledata.reverse()
+          // this.tabledata.reverse()
           console.log(this.tabledata);
-          console.log(this.ruleDescribe);
+          // console.log(this.ruleDescribe);
         } else {
           this.$message(res.data.msg);
         }
@@ -222,10 +212,19 @@ export default {
     },
     // 编辑积分
     add(){
-
+      let params = {
+        "money": [0,0,0,10,0,1,0],
+        "points": [15,3,10,1,2,10,0],
+        "ruleDescribe": [`新用户输入手机号完成注册流程，得${this.points[0]}积分`,`用户登录APP后完成签到，得${this.points[1]}积份`,"用户线上完成首次下单，得10积分","用户线上下单每消费10元，得1积分","用户生日当天得倍数积分，倍数为2倍","线上支付订单10积分，抵现金1元，最多抵扣订单金额的20%","与规则【线上下单消费得积分】关联"],
+        "ruleId": ["JFGZ-A01","JFGZ-A02","JFGZ-A03","JFGZ-A04","JFGZ-A05","JFGZ-B01","JFGZ-B02"],
+        "ruleState": [
+          0,0,0,0,0,1,1
+        ],
+        "validityPeriod": 1
+      }
        httpreques(
         "post",
-        {},
+        params,
         "/realbrand-management-service/IntegralMgt/UpdateIntegralRule"
       ).then((res) => {
         console.log(res);
@@ -234,7 +233,8 @@ export default {
             item.index = key + 1; //加入index
           });
           console.log(res.data)
-          this.$message("编辑积分规则成功");
+          this.$message.success("编辑积分规则成功");
+          this.$router.push("integralrule")
         } else {
           this.$message(res.data.msg);
         }

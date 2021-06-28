@@ -73,8 +73,8 @@
             @change="handleChange"
         ></el-cascader>
       </el-form-item>
-      <el-form-item label="活动名称：" style="display:flex">
-        <el-input v-model="ruleForm.sortName" autocomplete="off"></el-input>
+      <el-form-item label="类别名称：" style="display:flex">
+        <el-input v-model="ruleForm.sortName" placeholder="请选择类别名称" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="类别图片：" style="display:flex">
         <el-upload
@@ -290,6 +290,7 @@ export default {
       });
     },
     add() {
+      if(!this.ruleForm.sortName) return this.$message('分类名字不能为空')
       let params = {
         categoryName: this.ruleForm.sortName, //分类名字
         parenId: this.ruleForm.parentId

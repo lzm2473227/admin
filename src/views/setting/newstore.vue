@@ -53,12 +53,12 @@
               <input
                 type="text"
                 placeholder="请输入法人身份证号"
-                v-model="form.code"
+                v-model="form.idNumber"
               />
             </td>
             <td class="table-left">联系号码</td>
             <td class="table-right">
-              <input type="text" placeholder="请输入电话号码" v-model="form.tel" />
+              <input type="text" placeholder="请输入联系号码" v-model="form.telNum" />
             </td>
           </tr>
           <tr style="vertical-align: top">
@@ -99,14 +99,31 @@
               </div>
               <div class="time">
                 <span>营业时段：</span>
-                <el-time-picker
+                <div class="business-time">
+                <select placeholder="" v-model="hoursSelected1">
+                  <option v-for="(item, index) in HOURS" :key="index" :value="item">{{item}}</option>
+                </select>
+                <select placeholder="" v-model="minSelected1">
+                  <option v-for="(item, index) in MIN" :key="index" :value="item">{{item}}</option>
+                </select>
+                </div>
+                <span>至</span>
+                <div class="business-time" style="margin-left: 10px;">
+                <select placeholder="" v-model="hoursSelected2">
+                  <option v-for="(item, index) in HOURS" :key="index" :value="item">{{item}}</option>
+                </select>
+                <select placeholder="" v-model="minSelected2">
+                  <option v-for="(item, index) in MIN" :key="index" :value="item">{{item}}</option>
+                </select>
+                </div>
+                <!-- <el-time-picker
                   is-range
                   v-model="date"
                   range-separator="至"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
                   placeholder="选择时间范围">
-                </el-time-picker>
+                </el-time-picker> -->
               </div>
             </td>
           </tr>
@@ -116,7 +133,7 @@
               <textarea
                 class="table-item"
                 placeholder="请输入门店简介"
-                v-model="form.jianjie"
+                v-model="form.introduction"
               ></textarea>
             </td>
           </tr>
@@ -162,6 +179,8 @@ import {
 export default {
   name: "Newproduct",
   data() {
+    const HOURS = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+    const MIN = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59']
     return {
       options: regionData,
       selectedOptions: [],
@@ -175,17 +194,23 @@ export default {
         city: "",
         province: "",
         name: "",
-        tel: "",
-        code: "",
-        jianjie: "",
+        telNum: "",
+        idNumber: "",
+        introduction: "",
         storeLicence: "", //默认选中显示
       },
+      HOURS,
+      MIN,
       dialogImageUrl: "",
       dialogVisible: false,
       imgArr: [],
       checkList: [],
       date: [],
-      msg: ''
+      msg: '',
+      hoursSelected1: '',
+      hoursSelected2: '',
+      minSelected1: '',
+      minSelected2: '',
     };
   },
   mounted() {
@@ -225,6 +250,11 @@ export default {
                 storeobj.county
               ].code;
             t.form = storeobj;
+            this.checkList = storeobj.businessDate.split(',')
+            this.hoursSelected1 = storeobj.openingTime.split(":")[0]
+            this.minSelected1 = storeobj.openingTime.split(":")[1]
+            this.hoursSelected2 = storeobj.closingTime.split(":")[0]
+            this.minSelected2 = storeobj.closingTime.split(":")[1]
             this.imgArr.push({url: storeobj.storeLicence})
             this.dialogImageUrl = storeobj.storeLicence;
           } else {
@@ -237,16 +267,23 @@ export default {
     addstore() {
       let t = this;
       let params = t.form;
+      let businessDate = this.checkList.join()
+      let openingTime = `${this.hoursSelected1}:${this.minSelected1}:00`
+      let closingTime = `${this.hoursSelected2}:${this.minSelected2}:00`
       if(!params.orgCode) return this.$message.error('门店机构代码不能为空')
       if(!params.storeType) return this.$message.error('请选择门店类型')
       if(!params.name) return this.$message.error('法人代表姓名不能为空')
-      if(!params.tel) return this.$message.error('电话号码不能为空')
-      if(!params.code) return this.$message.error('法人身份证号不能为空')
+      if(!params.telNum) return this.$message.error('电话号码不能为空')
+      if(!params.idNumber) return this.$message.error('法人身份证号不能为空')
       if(!params.storeName) return this.$message.error('门店名称不能为空')
       if(!params.province) return this.$message.error('门店地址不能为空')
-      if(!params.jianjie) return this.$message.error('门店简介不能为空')
+      if(!params.introduction) return this.$message.error('门店简介不能为空')
+      if(!businessDate || !openingTime || !closingTime) return this.$message.error('营业时间不能为空')
       params.id = this.form.id;
       params.orgCode = this.form.orgCode;
+      params.businessDate = businessDate;
+      params.openingTime = openingTime;
+      params.closingTime = closingTime;
       delete params.storeaccount;
       delete params.storepsw;
 
@@ -356,6 +393,13 @@ export default {
   /deep/input{
     border: none
   }
+}
+.table-main table .table-right .business-time select{
+  width: 70px;
+  margin-right: 10px;
+}
+.business-time{
+  display: flex;
 }
 @import "../../assets/css/reset.scss";
 @import "@/assets/css/image2.scss";

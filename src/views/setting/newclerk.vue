@@ -337,7 +337,7 @@ export default {
         "post",
         {
           pageNum: 1,
-          pageSize: 15,
+          pageSize: 20,
           storeName: ""
           // idNumber: this.idNumber,
         },

@@ -27,7 +27,7 @@
         <el-table-column prop="ruleName" label="规则名称" sortable width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="ruleType" label="规则类型" sortable width="150"></el-table-column>
         <el-table-column prop="ruleDescribe" label="规则描述"  sortable width="320" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="validityPeriod" align="center" width="85" ></el-table-column>
+        <el-table-column prop="validityPeriod" label="有效期/年" align="center" width="85" ></el-table-column>
       </el-table>
     </div>
     <div class="bot">
@@ -83,7 +83,7 @@ export default {
           console.log(res.data)
           this.total = res.data.total;
           this.tabledata = res.data.data;
-          this.tabledata.reverse()
+          // this.tabledata.reverse()
         } else {
           this.$message(res.data.msg);
         }
