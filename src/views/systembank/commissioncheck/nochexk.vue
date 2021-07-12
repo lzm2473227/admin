@@ -1,0 +1,135 @@
+<template>
+  <div class="tab">
+    <div class="tab-title">
+      <div class="left">
+                 <div class="print" @click="confirm"><img class="icon" src="@/assets/images/confirm.png" alt=""><span class="axis">确认核算</span></div>
+        <div class="print" @click="exportExcel"><img class="icon" src="../../../assets/images/derive.png" alt=""><span class="axis">导出表格</span></div>
+        <div class="print" @click="statistics"><img class="icon" src="@/assets/images/statistics.png" alt=""><span class="axis">统计数据</span></div>
+      </div>
+      <div class="right">
+        <div class="setup">
+          <img class="set" src="../../../assets/images/ic-设置.png" alt="系统设置" @click="setup">
+        </div>
+      </div>
+    </div>
+    <div class="tab-body">
+      <el-table
+      :row-class-name="tableRowClassName"
+      ref="singleTable"
+      :data="tabledata"
+      style="width: 100%"
+      highlight-current-row
+      @selection-change="handleSelectionChange"
+      :default-sort="{ prop: 'date', order: 'descending' }"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="index" label="序号" align="center" sortable width="80"></el-table-column>
+        <el-table-column prop="commodityCode" label="开户业务编号" align="center" sortable width="130"></el-table-column>
+        <el-table-column prop="barcode" label="开户银行" align="center" sortable width="240"></el-table-column>
+        <el-table-column prop="barcode" label="佣金核准信号" align="center" sortable width="240"></el-table-column>
+        <el-table-column prop="commodityName" label="开卡类型" sortable width="140"></el-table-column>
+        <el-table-column prop="brandName" label="身份证号码" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="开户人姓名" sortable width="140"></el-table-column>
+        <el-table-column prop="manufacturer" label="手机号码" sortable width="150"></el-table-column>
+        <el-table-column prop="manufacturer" label="地址" sortable width="160"></el-table-column>
+        <el-table-column prop="manufacturer" label="开户时间" sortable width="150"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金状态" sortable width="150"></el-table-column>
+        <el-table-column prop="manufacturer" label="店员姓名" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="店员手机号" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金收款银行" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="佣金收款账号" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="门店名称" sortable width="180"></el-table-column>
+        <el-table-column prop="manufacturer" label="经销商名称" sortable width="180"></el-table-column>
+      </el-table>
+    </div>
+    <div class="bot">
+      <Page :total="total" :current="pageNum" :pageSize="pageSize" @changeCurrentPage="changeCurrentPage"></Page>
+    </div>
+    <div class="inp-bot">
+      <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="input-with-select">
+        <el-form-item label="主题活动编号:" prop="meid" class="name-search">
+          <el-input v-model="ruleForm.meid"></el-input>
+        </el-form-item>
+        <el-form-item label="活动主题名称:" prop="type">
+          <el-input v-model="ruleForm.type"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="a" type="primary" @click="submitForm">查询</el-button>
+          <el-button class="a" type="primary" @click="resetForm">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
+</template>
+
+<script>
+import Page from '@/components/Pagination/page.vue'
+import httpreques from '../../../utils/httpreques';
+import moment from "moment";
+
+export default {
+  name: "tab",
+  components: {
+    Page
+  },
+  data() {
+    return {
+      total: 0,
+      pageSize: 20,
+      pageNum: 1,
+      tabledata: [],
+      filePath:"",
+      ruleForm: {
+        a:"",
+      },
+      multipleSelection : [],
+    };
+  },
+  created() {
+    // this.getdata();
+  },
+  methods: {
+    
+    //主题活动列表
+    // getdata() {
+    //   this.tabledata = [];
+    //   httpreques(
+    //     "post",
+    //     {
+    //       meid: this.ruleForm.meid,
+    //       storeName: this.ruleForm.storeName,
+    //       pageNum: this.pageNum,
+    //       pageSize: this.pageSize,
+    //     },
+    //     "/realbrand-management-service/EquipmentMgt/EquipmentList"
+    //   ).then((res) => {
+    //     console.log(res);
+    //     let { data } = res.data;
+    //     this.total = res.data.data? res.data.total:0
+    //     data.forEach((item) => {
+    //       item.bindingTime = moment(item.bindingTime).format(
+    //         "YYYY-MM-DD HH:mm:ss"
+    //       );
+    //     });
+    //     res.data.data.forEach((item,key) => {
+    //       item.index = key + 1; //加入index
+    //       let address = item.province + item.city + item.county;
+    //       item.address = address + item.address;
+    //     })
+    //     this.tabledata = res.data.data
+    //     this.tabledata.reverse();
+    //   });
+    // },
+
+    changeCurrentPage(val) {
+      this.pageNum = val
+      this.getdata();
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import '../../../assets/css/reset.scss';
+@import "@/assets/css/image3.scss";
+</style>

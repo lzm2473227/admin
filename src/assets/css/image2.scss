@@ -1,0 +1,12 @@
+/deep/.tab-body {
+    .el-table .caret-wrapper .sort-caret.ascending,
+    .el-table .caret-wrapper .sort-caret.descending {
+        display: none;
+    }
+    .el-table .caret-wrapper {
+        background: url('../../assets/images/sort.png') center no-repeat;
+        width: 12px;
+        height: 12px;
+        margin-left: 4px;
+    }
+}
